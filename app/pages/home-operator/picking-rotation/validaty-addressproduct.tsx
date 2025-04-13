@@ -68,7 +68,7 @@ export default function ValidatyAddressProduct() {
     <div className="absolute flex flex-col items-center justify-center w-full space-y-1">
       <h1 className="lg:text-7xl text-xl sm:text-5xl mb-14">Produto x Endereço</h1>
       <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 w-full">
           <FormField
               control={form.control}
               name="loadAddress"
