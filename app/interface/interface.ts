@@ -15,16 +15,21 @@ export interface ActivityProps {
     activityName: string | null
     activityState: boolean | null
     activityLocalWork: string | null
-    activityTasks: Task[] | null
+    activityTasks: Object | null
     activityStreet: string | null
     activitySide: string | null
-    activityInitDate: Date | null
+    activityInitDate: Date | null | number
     activityFinisDate: Date | null
 }
 
-export interface Task {
-        address: string,
-        product: string,
-        date: Date,
-        status: boolean
+export interface TaskProps {
+    address: string | null
+    date: number | null
+    status: boolean | null
+}
+
+export interface TaskEndProdProps {
+    address: string | null
+    product: string | null
+    date: number | null
 }

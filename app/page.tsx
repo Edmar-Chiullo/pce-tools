@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { date, z } from "zod"
+import { z } from "zod"
 
 import { acess } from "./aceess";
-import AppAuth from "@/utils/firebase_dir/fb-auth";
-import getUser from "@/utils/firebase_dir/fb-database";
+import AppAuth from "./firebase/fbauth";
+import { getUser } from "./firebase/fbmethod";
 import { selectApp } from "@/utils/define-app";
 import { useLoginContext } from "./context/user-context";
 

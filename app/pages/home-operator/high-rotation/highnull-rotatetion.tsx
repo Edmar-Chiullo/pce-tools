@@ -1,14 +1,17 @@
 'use client'
 
 import { useForm } from "react-hook-form"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Activity } from "@/app/class/class-activity";
+import { Task } from "@/app/class/class-task";
+
+import { useActiviContext } from "@/app/context/acitivy-context";
+import { setActivityDb } from "@/app/firebase/fbmethod";
 
 const formSchema = z.object({
   loadAddress: z.string().min(2, {
@@ -17,7 +20,11 @@ const formSchema = z.object({
 })
 // Component Login....
 export default function HighNullRotation({...props}: any) {
+
+  const [ task, setTask ] = useState([])
   
+  const { atividade }:any = useActiviContext()
+
   useEffect(() => {
     const title:any = document.querySelector('.titleApp')
     title.innerText = ''
@@ -32,37 +39,47 @@ export default function HighNullRotation({...props}: any) {
     },
   })
 
-  function onSubmit(user: z.infer<typeof formSchema>) {
+  function onSubmit({loadAddress}: z.infer<typeof formSchema>) {
+    const initTask = new Task(loadAddress)
+    setTask((tsk):any => [...tsk, initTask])
 
     form.reset({
         loadAddress: "",
     })
   }
 
+  function pushTasks() {
+    atividade.updateTask = JSON.stringify(task)
+    atividade.updateState(false)    
+    setActivityDb(atividade)
+    
+    window.location.reload()
+  }
+
   return (
-    <div className="absolute flex flex-col items-center justify-center w-full space-y-10">
-      <h1 className="lg:text-7xl text-xl sm:text-5xl">Rotativo de aéreo</h1>
+    <div className="absolute flex flex-col items-center justify-center w-full space-y-1">
+      <h1 className="lg:text-7xl text-xl sm:text-5xl mb-14">Rotativo de aéreo</h1>
       <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 lg:w-[40%] md:w-[50%] smLight:w-[90%]">
-          <FormField
-              control={form.control}
-              name="loadAddress"
-              render={({ field }) => (
-              <FormItem>
-                  <FormLabel>Endereço</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Leia o endereço" className="loadAddress h-8" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                  </FormDescription>
-                  <FormMessage />
-              </FormItem>
-              )}
-          />
-          <Button type="submit" className="w-full h-8 mt-10">Confirmar</Button>
-          <Button className="w-full h-8 mt-4">Finalizar</Button>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 w-full">
+            <FormField
+                control={form.control}
+                name="loadAddress"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Endereço</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Leia o endereço" className="loadAddress h-8" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                    </FormDescription>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <Button type="submit" className="w-full h-8 mt-10">Confirmar</Button>
           </form>
+          <Button className="w-full h-8 mt-4" onClick={pushTasks}>Finalizar</Button>
       </Form>
     </div>
-  );
+  )
 }

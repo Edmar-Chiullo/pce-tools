@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button"
 import { objectStreet } from "@/app/objects/object-street"
 import ValidatyAddressProduct from "./picking-rotation/validaty-addressproduct"
 import { Activity } from "@/app/class/class-activity"
-import { useLoginContext } from "@/app/context/user-context"
-import { date } from "@/utils/date-generate"
+import { dateDb } from "@/utils/date-generate"
 import HighNullRotation from "./high-rotation/highnull-rotatetion"
+import { setActivityDb } from "@/app/firebase/fbmethod"
+
+import { useLoginContext } from "@/app/context/user-context"
+import { useActiviContext } from "@/app/context/acitivy-context"
 
 export default function NavigationMenu() {
     const [ selectCenter, setSelectCenter ] = useState<boolean>(true)
@@ -25,7 +28,9 @@ export default function NavigationMenu() {
     const [ center , setCenter ] = useState<string>('')
 
     const [ activity, setActivity ] = useState<Activity>()
+
     const { user } = useLoginContext()
+    const { setAtividade }:any = useActiviContext()
 
     useEffect(() => {
         setSubtitle('Selecione a operação')
@@ -34,15 +39,19 @@ export default function NavigationMenu() {
     function selectForm(aplication: string | null | undefined) {
         switch (aplication) {
             case 'Validação enderço x produto':
-                activity?.updateInitDate(date())
+                activity?.updateInitDate(dateDb())
+                setActivityDb(activity)
                 setValidatyAddressProduct(true)
+                setAtividade(activity)
                 setBtnInit(false)
                 break;
             case 'Aéreo vazio': 
-                activity?.updateInitDate(date())
+                activity?.updateInitDate(dateDb())
+                setActivityDb(activity)
+                setAtividade(activity)
                 setHighRotation(true)
                 setBtnInit(false)
-                break;
+                break;  
             default:
                 break;
         }
@@ -64,6 +73,7 @@ export default function NavigationMenu() {
     function navigation(value: any) {
         let content = value.target.innerText
         const street = content
+        console.log(content)
 
         if (content.slice(0, 2) === 'PP') content = 'PP'
 
@@ -82,7 +92,7 @@ export default function NavigationMenu() {
                 break;
             case 'Validação enderço x produto':
                 setSelectOperation(false)
-                const taskAddressProduct = createActivity({pre:'PSR', activity:content, user:user?.userName, userId: user?.userID })
+                const taskAddressProduct = createActivity({pre:'VEP', activity:content, user:user?.userName, userId: user?.userID })
                 setActivity(taskAddressProduct)
                 setSelectStreet(true)
                 setSubtitle('Selecione a rua')
@@ -91,7 +101,7 @@ export default function NavigationMenu() {
                 setSelectOperation(false)
                 const taskHighNull = createActivity({pre:'AV', activity:content, user:user?.userName, userId: user?.userID })
                 taskHighNull.updateLocalWork(center)   
-                taskHighNull.updateInitDate(date())
+                taskHighNull.updateInitDate(dateDb())
                 setActivity(taskHighNull)
                 setSubtitle('')
                 setBtnInit(true)

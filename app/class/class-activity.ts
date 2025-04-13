@@ -1,5 +1,5 @@
 import { generateId } from "@/utils/date-generate";
-import { ActivityProps, Task } from "../interface/interface";
+import { ActivityProps, TaskProps } from "../interface/interface";
 
 export class Activity implements ActivityProps {
     activityID: string
@@ -8,10 +8,10 @@ export class Activity implements ActivityProps {
     activityName: string | null
     activityState: boolean
     activityLocalWork: string | null
-    activityTasks: Task[] | null
+    activityTasks: Object | null
     activityStreet: string | null
     activitySide: string | null
-    activityInitDate: Date | null
+    activityInitDate: Date | null | number
     activityFinisDate: Date | null
 
     constructor({ ...props }) {
@@ -28,8 +28,8 @@ export class Activity implements ActivityProps {
         this.activityFinisDate = null
     }
     
-    updateTask (task: Task[] | null):void {
-        this.activityTasks = task
+    updateTask (task: Object | null):void {
+        this.activityTasks = task 
     }
 
     updateLocalWork(localWork: string):void {
@@ -44,12 +44,15 @@ export class Activity implements ActivityProps {
         this.activitySide = side
     }
 
-    updateInitDate(date: Date):void {
+    updateInitDate(date: Date | number):void {
         this.activityInitDate = date        
     }
 
     updateFinisHour(date: Date):void {
         this.activityFinisDate = date        
     }
-    
+
+    updateState(state:boolean) {
+        this.activityState = state
+    }
 }

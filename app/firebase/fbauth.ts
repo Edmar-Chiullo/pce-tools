@@ -1,5 +1,5 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "./key-acess/key-acess";
+import { app } from "./fbkey";
 
 export default async function AppAuth(email:string, password:string) {
     const auth = getAuth(app)
