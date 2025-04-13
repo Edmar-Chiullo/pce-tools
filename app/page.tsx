@@ -41,7 +41,9 @@ export default function Login() {
   })
 
   function navigationPage(data:any) {
+    console.log(data)
     const { userID, userPermission }:any = data
+    console.log(userPermission)
     setUser(data)
     const result = selectApp(userPermission)
     return result
@@ -50,17 +52,10 @@ export default function Login() {
   function onSubmit(user: z.infer<typeof formSchema>) {
     getUser(user).then((result) => {
       const values = Object.values(result)
-
-      values.map(value => {
-        const { userID, userPassword }:any = value
-        
-        const page = userID !== user.login || String(userPassword) !== user.password 
-                       ? /**alert('Usuário ou senha invalidos!')*/ navigationPage(value) : navigationPage(value)
-        
-        page ? router.push(page) :  alert('Permissão negada!')
-      })
-    })
-    
+      const acess = values.find(({ userID, userPassword }:any) => userID === user.login && String(userPassword) === user.password)
+      const res = acess ? navigationPage(acess) : false
+      res ? router.push(res) : alert('Usuário ou senha inválidos.')
+    })    
 
     form.reset({
       login: '',  
