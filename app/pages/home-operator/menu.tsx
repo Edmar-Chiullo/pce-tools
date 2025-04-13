@@ -172,7 +172,7 @@ export default function NavigationMenu() {
                         <Button className="w-full text-[20px] text-center font-light" onClick={startTask}>Iniciar</Button>
                     </div>
                 }
-                {validatyAddressProduct && <ValidatyAddressProduct props={activity} />}
+                {validatyAddressProduct && <ValidatyAddressProduct />}
                 {highRotation && <HighNullRotation props={activity} />}
             </div>
         </div>

@@ -1,5 +1,5 @@
 import { generateId } from "@/utils/date-generate";
-import { ActivityProps, TaskProps } from "../interface/interface";
+import { ActivityProps } from "../interface/interface";
 
 export class Activity implements ActivityProps {
     activityID: string

@@ -24,7 +24,7 @@ const formSchema = z.object({
 })
 
 // Component Login....
-export default function ValidatyAddressProduct({...props}:any) {
+export default function ValidatyAddressProduct() {
   
   const [ task, setTask ] = useState([])
   const { atividade }:any = useActiviContext()

@@ -1,13 +1,11 @@
 'use client'
 
-import { useState } from "react" 
 import NavigationMenu from "./menu"
 import { useLoginContext } from "@/app/context/user-context"
 
 export default function appOperator() {
 
-    const { user, setUser } = useLoginContext()
-    const [ centerSelect, setCenterSelect ] = useState()
+    const { user } = useLoginContext()
 
     return (
         <div className="flex flex-col h-[100%] pt-1">
