@@ -50,16 +50,17 @@ export default function Login() {
   function onSubmit(user: z.infer<typeof formSchema>) {
     getUser(user).then((result) => {
       const values = Object.values(result)
+
       values.map(value => {
         const { userID, userPassword }:any = value
         
         const page = userID !== user.login || String(userPassword) !== user.password 
-                      ? alert('Usuário ou senha invalidos!') : navigationPage(value)
+                       ? /**alert('Usuário ou senha invalidos!')*/ navigationPage(value) : navigationPage(value)
         
         page ? router.push(page) :  alert('Permissão negada!')
-
       })
     })
+    
 
     form.reset({
       login: '',  
