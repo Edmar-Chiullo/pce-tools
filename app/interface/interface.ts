@@ -33,3 +33,10 @@ export interface TaskEndProdProps {
     product: string | null
     date: number | null
 }
+
+export interface TaskPickingRotation {
+    address: string | null
+    product: string | null
+    quanti: string | null
+    date: number | null
+}

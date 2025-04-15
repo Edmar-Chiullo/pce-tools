@@ -5,14 +5,15 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 
 import { objectStreet } from "@/app/objects/object-street"
-import ValidatyAddressProduct from "./picking-rotation/validaty-addressproduct"
+import ValidatyAddressProduct from "./validate-address-product/validaty-addressproduct"
 import { Activity } from "@/app/class/class-activity"
 import { dateDb } from "@/utils/date-generate"
-import HighNullRotation from "./high-rotation/highnull-rotatetion"
+import HighNullRotation from "./high-rotation-null/highnull-rotatetion"
 import { setActivityDb } from "@/app/firebase/fbmethod"
 
 import { useLoginContext } from "@/app/context/user-context"
 import { useActiviContext } from "@/app/context/acitivy-context"
+import PickingRotation from "./pincking-rotation/page"
 
 export default function NavigationMenu() {
     const [ selectCenter, setSelectCenter ] = useState<boolean>(true)
@@ -20,6 +21,7 @@ export default function NavigationMenu() {
     const [ selectStreet, setSelectStreet ] = useState<boolean>(false)
     const [ selectSide, setSelectSide ] = useState<boolean>(false)
     const [ highRotation, setHighRotation ] = useState<boolean>(false)
+    const [ pickingRotation, setPickingRotation ] = useState<boolean>(false)
     const [ btnInit, setBtnInit ] = useState<boolean>(false)
 
     const [ subtitle, setSubtitle ] = useState<string>('')
@@ -52,6 +54,13 @@ export default function NavigationMenu() {
                 setHighRotation(true)
                 setBtnInit(false)
                 break;  
+            case 'Rotativo de picking': 
+                activity?.updateInitDate(dateDb())
+                setActivityDb(activity)
+                setAtividade(activity)
+                setPickingRotation(true)
+                setBtnInit(false)
+                break;  
             default:
                 break;
         }
@@ -73,7 +82,6 @@ export default function NavigationMenu() {
     function navigation(value: any) {
         let content = value.target.innerText
         const street = content
-        console.log(content)
 
         if (content.slice(0, 2) === 'PP') content = 'PP'
 
@@ -97,6 +105,14 @@ export default function NavigationMenu() {
                 setSelectStreet(true)
                 setSubtitle('Selecione a rua')
                 break;
+            case 'Rotativo de picking':
+                setSelectOperation(false)
+                const taskPincingRotation = createActivity({pre:'RP', activity:content, user:user?.userName, userId: user?.userID })
+                setActivity(taskPincingRotation)
+                setSubtitle('')
+                setBtnInit(true)
+                break;
+    
             case 'Aéreo vazio': 
                 setSelectOperation(false)
                 const taskHighNull = createActivity({pre:'AV', activity:content, user:user?.userName, userId: user?.userID })
@@ -149,6 +165,7 @@ export default function NavigationMenu() {
                 { selectOperation &&    
                     <div className="absolute z-30 flex flex-col justify-center gap-2 w-full">
                         <Button onClick={(value) => navigation(value)}>Aéreo vazio</Button>
+                        <Button onClick={(value) => navigation(value)}>Rotativo de picking</Button>
                         <Button onClick={(value) => navigation(value)}>Validação enderço x produto</Button>
                     </div>
                 }
@@ -173,7 +190,8 @@ export default function NavigationMenu() {
                     </div>
                 }
                 {validatyAddressProduct && <ValidatyAddressProduct />}
-                {highRotation && <HighNullRotation props={activity} />}
+                {highRotation && <HighNullRotation />}
+                {pickingRotation && <PickingRotation />}
             </div>
         </div>
     )

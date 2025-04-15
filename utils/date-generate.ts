@@ -21,7 +21,7 @@ export function fullDate() {
 
 export function fullDatePrint(date:number) {
     const day = addLeftZZero(datePrintInt(date).getDate())
-    const month = addLeftZZero(datePrintInt(date).getMonth())
+    const month = addLeftZZero(datePrintInt(date).getMonth() + 1)
     const year = datePrintInt(date).getFullYear()
 
     return `${day}/${month}/${year}`

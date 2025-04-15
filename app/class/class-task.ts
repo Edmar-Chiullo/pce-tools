@@ -24,3 +24,18 @@ export class TaskEndProd implements TaskEndProdProps {
         this.date = dateDb()
     }
 }
+
+
+export class TaskPickingRotation implements TaskPickingRotation {
+    address: string | null
+    product: string | null
+    quant: string | null
+    date: number | null
+
+    constructor(data:any) {
+        this.address = data.loadAddress
+        this.product = data.loadProduct
+        this.quant = data.loadProduct
+        this.date = dateDb()
+    }
+}

@@ -43,7 +43,6 @@ export default function Dashboard() {
         if (snapshot.exists()) {
             const tks = snapshot.val() 
             setTasks((object:any) => [...object, tks])
-
         } else {
             return "No data available"
         }
@@ -82,10 +81,16 @@ export default function Dashboard() {
         return tract
     }
 
-    function trackEndProd(activiArray:any) {
+    function trackEndProd({...activiArray}:any) {
         const rerultTask = JSON.parse(activiArray[9])
         const tract = rerultTask.map(({address, date, product }:any) => {
-            return {'Endereço':address, 'Data':fullDatePrint(date), 'Produto': product}
+            return {'Centro':activiArray[2], 
+                    'Atividade':activiArray[3], 
+                    'Operador':activiArray[8], 
+                    'Endereço':address, 
+                    'Data':fullDatePrint(date), 
+                    'Hora':hourPrint(date), 
+                    'Produto': product}
         })
         
         return tract
@@ -101,10 +106,14 @@ export default function Dashboard() {
             let tract
             switch (activi.activityName) {
                 case 'Aéreo vazio':
-                    tract = trackEndNull(activiArray)
+                    tract = trackEndNull({act: activi, tasks: activiArray})
                     exportFileXlsx(tract)
                     break;
                 case 'Validação enderço x produto':
+                    tract = trackEndProd(activiArray)
+                    exportFileXlsx(tract)
+                    break
+                case 'Picking rotation':
                     tract = trackEndProd(activiArray)
                     exportFileXlsx(tract)
                     break

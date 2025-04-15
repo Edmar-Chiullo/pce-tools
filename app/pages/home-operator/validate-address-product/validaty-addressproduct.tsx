@@ -13,6 +13,7 @@ import { setActivityDb } from "@/app/firebase/fbmethod"
 import { Task, TaskEndProd } from "@/app/class/class-task";
 
 import { useActiviContext } from "@/app/context/acitivy-context"
+import { createTasks } from "@/utils/createTask";
 
 const formSchema = z.object({
   loadAddress: z.string().min(2, {
@@ -45,9 +46,9 @@ export default function ValidatyAddressProduct() {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log()
-    const initTask = atividade.activityName === 'Aéreo vazio' ? new Task(data) : new TaskEndProd(data)
-    console.log(initTask)
+    const aplication = atividade.activityName
+
+    const initTask = createTasks({data:data, app:aplication})
     setTask((tsk):any => [...tsk, initTask])
 
     form.reset({
