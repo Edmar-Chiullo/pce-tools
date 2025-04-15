@@ -13,7 +13,7 @@ import { setActivityDb } from "@/app/firebase/fbmethod"
 
 import { useLoginContext } from "@/app/context/user-context"
 import { useActiviContext } from "@/app/context/acitivy-context"
-import PickingRotation from "./pincking-rotation/page"
+import PickingRotation from "./pincking-rotation/picking-rotation"
 
 export default function NavigationMenu() {
     const [ selectCenter, setSelectCenter ] = useState<boolean>(true)

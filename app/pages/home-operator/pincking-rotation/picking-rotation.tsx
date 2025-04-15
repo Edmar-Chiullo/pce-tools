@@ -14,6 +14,7 @@ import { Task, TaskEndProd } from "@/app/class/class-task";
 
 import { useActiviContext } from "@/app/context/acitivy-context";
 import { createTasks } from "@/utils/createTask";
+import { TaskPickingRotation } from "@/app/class/class-task";
 
 const formSchema = z.object({
   loadAddress: z.string().min(2, {
@@ -24,6 +25,9 @@ const formSchema = z.object({
   }),
   loadQuant: z.string().min(2, {
     message: "É preciso inserir a quantidade.",
+  }),
+  loadValid: z.string().min(2, {
+    message: "Insira a data validade.",
   }),
 })
 
@@ -52,7 +56,7 @@ export default function PickingRotation() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     const aplication = atividade.activityName
 
-    const initTask = createTasks({data:data, app:aplication})
+    const initTask = new TaskPickingRotation(aplication)//createTasks({data:data, app:aplication})
 
     setTask((tsk):any => [...tsk, initTask])
 
@@ -113,6 +117,20 @@ export default function PickingRotation() {
                   <FormLabel>Quantidade</FormLabel>
                   <FormControl>
                   <Input placeholder="Quantidade" className="loadQuant h-8" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+              </FormItem>
+              )}
+          />
+          <FormField
+              control={form.control}
+              name="loadValid"
+              render={({ field }) => (
+              <FormItem>
+                  <FormLabel>Validade</FormLabel>
+                  <FormControl>
+                  <Input placeholder="Validade" className="loadValid h-8" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
