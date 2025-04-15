@@ -63,7 +63,8 @@ export default function PickingRotation() {
     form.reset({
         loadAddress: "",
         loadProduct: "",
-        loadQuant: ""
+        loadQuant: "",
+        loadValid: ""
     })
   }
 
