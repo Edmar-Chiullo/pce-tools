@@ -89,12 +89,13 @@ export default function Dashboard() {
         
         const tract = rerultTask.map(({address, date, status }:any) => {
             return {'Centro':activiArray[2], 
-                    'Atividade':activiArray[3], 
-                    'Operador':activiArray[5], 
                     'Endereço':address, 
+                    'Situação': 'VAZIO',
+                    'Operador':activiArray[5], 
                     'Data':fullDatePrint(date), 
                     'Hora':hourPrint(date), 
-                    'Situação': 'VAZIO'}
+                    'Atividade':activiArray[3], 
+                    }
         })
         
         return tract
@@ -104,28 +105,32 @@ export default function Dashboard() {
         const rerultTask = JSON.parse(activiArray[9])
 
         const tract = rerultTask.map(({address, date, product }:any) => {
+
             return {'Centro':activiArray[2], 
-                    'Atividade':activiArray[3], 
-                    'Operador':activiArray[8], 
                     'Endereço':address, 
+                    'Produto': product,
+                    'Operador':activiArray[8], 
                     'Data':fullDatePrint(date), 
                     'Hora':hourPrint(date), 
-                    'Produto': product}
+                    'Atividade':activiArray[3] 
+                    }
         })
         
         return tract
     }  
 
     function trackPickingRotation({...activiArray}:any) {
-        const rerultTask = JSON.parse(activiArray[9])
-        const tract = rerultTask.map(({address, date, product }:any) => {
+        console.log(activiArray)
+        const rerultTask = JSON.parse(activiArray[6])
+        const tract = rerultTask.map(({address, date, product, val }:any) => {
             return {'Centro':activiArray[2], 
-                    'Atividade':activiArray[3], 
+                    'Endereço':address,
+                    'Produto': product, 
                     'Operador':activiArray[8], 
-                    'Endereço':address, 
                     'Data':fullDatePrint(date), 
                     'Hora':hourPrint(date), 
-                    'Produto': product}
+                    'Atividade':activiArray[3], 
+                    }
         })
         
         return tract
@@ -148,7 +153,7 @@ export default function Dashboard() {
                     tract = trackEndProd(activiArray)
                     exportFileXlsx(tract)
                     break
-                case 'Picking rotation':
+                case 'Rotativo de picking':
                     tract = trackPickingRotation(activiArray)
                     exportFileXlsx(tract)
                     break

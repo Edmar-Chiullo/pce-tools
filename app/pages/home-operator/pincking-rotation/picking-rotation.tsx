@@ -49,14 +49,14 @@ export default function PickingRotation() {
     defaultValues: {
         loadAddress: "",
         loadProduct: "",
-        loadQuant: ""
+        loadQuant: "",
+        loadValid: ""
     },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    const aplication = atividade.activityName
-
-    const initTask = new TaskPickingRotation(aplication)//createTasks({data:data, app:aplication})
+    //const aplication = atividade.activityName
+    const initTask = new TaskPickingRotation(data)//createTasks({data:data, app:aplication})
 
     setTask((tsk):any => [...tsk, initTask])
 
@@ -71,6 +71,7 @@ export default function PickingRotation() {
   function pushTasks() {
     atividade.updateTask = JSON.stringify(task)
     atividade.updateState(false)    
+    console.log(atividade)
     setActivityDb(atividade)
     
     window.location.reload()

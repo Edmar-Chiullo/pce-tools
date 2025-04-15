@@ -46,10 +46,9 @@ export default function ValidatyAddressProduct() {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    const aplication = atividade.activityName
-    console.log(atividade.activityName)
+    //const aplication = atividade.activityName
     
-    const initTask = new TaskEndProd(aplication)//createTasks({data:data, app:aplication})
+    const initTask = new TaskEndProd(data)//createTasks({data:data, app:aplication})
     setTask((tsk):any => [...tsk, initTask])
 
     form.reset({
