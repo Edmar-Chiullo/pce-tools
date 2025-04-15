@@ -55,7 +55,6 @@ export default function NavigationMenu() {
                 setBtnInit(false)
                 break;  
             case 'Rotativo de picking': 
-            console.log(aplication)
                 activity?.updateInitDate(dateDb())
                 setActivityDb(activity)
                 setAtividade(activity)
