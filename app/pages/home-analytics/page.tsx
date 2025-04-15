@@ -102,14 +102,12 @@ export default function Dashboard() {
     }
 
     function trackEndProd({...activiArray}:any) {
-        const rerultTask = JSON.parse(activiArray[9])
-
+        const rerultTask = JSON.parse(activiArray[7])
         const tract = rerultTask.map(({address, date, product }:any) => {
-
             return {'Centro':activiArray[2], 
                     'Endereço':address, 
                     'Produto': product,
-                    'Operador':activiArray[8], 
+                    'Operador':activiArray[6], 
                     'Data':fullDatePrint(date), 
                     'Hora':hourPrint(date), 
                     'Atividade':activiArray[3] 
@@ -120,13 +118,12 @@ export default function Dashboard() {
     }  
 
     function trackPickingRotation({...activiArray}:any) {
-        console.log(activiArray)
-        const rerultTask = JSON.parse(activiArray[6])
+        const rerultTask = JSON.parse(activiArray[7])
         const tract = rerultTask.map(({address, date, product, val }:any) => {
             return {'Centro':activiArray[2], 
                     'Endereço':address,
                     'Produto': product, 
-                    'Operador':activiArray[8], 
+                    'Operador':activiArray[6], 
                     'Data':fullDatePrint(date), 
                     'Hora':hourPrint(date), 
                     'Atividade':activiArray[3], 
