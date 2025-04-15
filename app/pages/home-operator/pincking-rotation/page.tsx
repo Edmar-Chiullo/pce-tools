@@ -12,7 +12,7 @@ import { z } from "zod"
 import { setActivityDb } from "@/app/firebase/fbmethod"
 import { Task, TaskEndProd } from "@/app/class/class-task";
 
-import { useActiviContext } from "@/app/context/acitivy-context"
+import { useActiviContext } from "@/app/context/acitivy-context";
 import { createTasks } from "@/utils/createTask";
 
 const formSchema = z.object({

@@ -22,14 +22,16 @@ export default function Dashboard() {
 
     useEffect(() => {
         const db = getDatabase(app)
+        const tasks = ['Aéreo vazio', 'Validação enderço x produto', 'Rotativo de picking']
         const nameTask = 'Aéreo vazio'
         const taskVal = 'Validação enderço x produto'
+        const taskRP = 'Rotativo de picking'
         const strDate = fullDate()
         .replace('/','')
         .replace('/','')
         
-        const pa = ref(db, `activity/${taskVal}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-        onValue(pa, (snapshot) => {
+        const highRotation = ref(db, `activity/${tasks[0]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onValue(highRotation, (snapshot) => {
         if (snapshot.exists()) {
             const tks = snapshot.val() 
             setTasks((object:any) => [...object, tks])
@@ -38,8 +40,8 @@ export default function Dashboard() {
         }
         })
 
-        const path = ref(db, `activity/${nameTask}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-        onValue(path, (snapshot) => {
+        const addressproduct = ref(db, `activity/${tasks[1]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onValue(addressproduct, (snapshot) => {
         if (snapshot.exists()) {
             const tks = snapshot.val() 
             setTasks((object:any) => [...object, tks])
@@ -47,6 +49,17 @@ export default function Dashboard() {
             return "No data available"
         }
         })
+
+        const picingRotation = ref(db, `activity/${tasks[2]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onValue(picingRotation, (snapshot) => {
+        if (snapshot.exists()) {
+            const tks = snapshot.val() 
+            setTasks((object:any) => [...object, tks])
+        } else {
+            return "No data available"
+        }
+        })
+
     }, [])
 
     function getElementId(element: any) {
@@ -71,17 +84,39 @@ export default function Dashboard() {
         return value
     }
 
-    function trackEndNull(activiArray:any) {
+    function trackEndNull({...activiArray}:any) {
         const rerultTask = JSON.parse(activiArray[7])
         
         const tract = rerultTask.map(({address, date, status }:any) => {
-            return {'Endereço':address, 'Data':fullDatePrint(date), 'Situação': 'VAZIO'}
+            return {'Centro':activiArray[2], 
+                    'Atividade':activiArray[3], 
+                    'Operador':activiArray[5], 
+                    'Endereço':address, 
+                    'Data':fullDatePrint(date), 
+                    'Hora':hourPrint(date), 
+                    'Situação': 'VAZIO'}
         })
         
         return tract
     }
 
     function trackEndProd({...activiArray}:any) {
+        const rerultTask = JSON.parse(activiArray[9])
+
+        const tract = rerultTask.map(({address, date, product }:any) => {
+            return {'Centro':activiArray[2], 
+                    'Atividade':activiArray[3], 
+                    'Operador':activiArray[8], 
+                    'Endereço':address, 
+                    'Data':fullDatePrint(date), 
+                    'Hora':hourPrint(date), 
+                    'Produto': product}
+        })
+        
+        return tract
+    }  
+
+    function trackPickingRotation({...activiArray}:any) {
         const rerultTask = JSON.parse(activiArray[9])
         const tract = rerultTask.map(({address, date, product }:any) => {
             return {'Centro':activiArray[2], 
@@ -95,7 +130,7 @@ export default function Dashboard() {
         
         return tract
     }  
-    
+
     function importXLSX(element: any) {
         const elementId = getElementId(element)
         const elementTesk = getElementTask(element)
@@ -106,7 +141,7 @@ export default function Dashboard() {
             let tract
             switch (activi.activityName) {
                 case 'Aéreo vazio':
-                    tract = trackEndNull({act: activi, tasks: activiArray})
+                    tract = trackEndNull(activiArray)
                     exportFileXlsx(tract)
                     break;
                 case 'Validação enderço x produto':
@@ -114,7 +149,7 @@ export default function Dashboard() {
                     exportFileXlsx(tract)
                     break
                 case 'Picking rotation':
-                    tract = trackEndProd(activiArray)
+                    tract = trackPickingRotation(activiArray)
                     exportFileXlsx(tract)
                     break
                 default:
