@@ -30,12 +30,14 @@ export class TaskPickingRotation implements TaskPickingRotation {
     address: string | null
     product: string | null
     quant: string | null
+    valid: string | null
     date: number | null
 
     constructor(data:any) {
         this.address = data.loadAddress
         this.product = data.loadProduct
-        this.quant = data.loadProduct
+        this.quant = data.loadQuant
+        this.valid = data.loadValid
         this.date = dateDb()
     }
 }

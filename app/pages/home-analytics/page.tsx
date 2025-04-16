@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 
 import { app } from "@/app/firebase/fbkey"
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 
 import { fullDate, fullDatePrint, hourPrint } from "@/utils/date-generate"
 import { exportFileXlsx } from "@/utils/ger-xlsx";
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 export default function Dashboard() {
 
     const [ tasks, setTasks ] = useState<any>([])
+    const [ listTask, setListTask ] = useState<any>([])
     const [ color, setColor ] = useState<any>()
     const [ status, setStatus ] = useState<any>()
     const [ clock, setClock ] = useState<any>()
@@ -118,6 +119,7 @@ export default function Dashboard() {
     }  
 
     function trackPickingRotation({...activiArray}:any) {
+        console.log(activiArray)
         const rerultTask = JSON.parse(activiArray[7])
         const tract = rerultTask.map(({address, date, product, val }:any) => {
             return {'Centro':activiArray[2], 
@@ -160,17 +162,18 @@ export default function Dashboard() {
         })
     }
     
+    let arr = []
     return (
         <div className="flex w-full p-2">
             <div className="flex flex-col w-[60%] p-1">
                 <h1 className="self-center">Atividades em execução</h1>
                 <div className="box-activity flex flex-col gap-1">
                     {
+                        
                         tasks && tasks.map((activi:any) => {
                             const act = Object.values(activi)
                             return act.map((a:any, i:number) => {
-                                const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = a.activi
-                            
+                                const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = a.activi                                
                                 let color = activityState ? 'bg-orange-100' : 'bg-green-100' 
                                 let hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50' 
                                 let status = activityState ? 'Executando' : 'Finalizado'
