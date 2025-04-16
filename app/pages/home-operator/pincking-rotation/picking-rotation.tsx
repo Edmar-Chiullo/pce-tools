@@ -57,7 +57,6 @@ export default function PickingRotation() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     //const aplication = atividade.activityName
     const initTask = new TaskPickingRotation(data)//createTasks({data:data, app:aplication})
-    console.log(data)
     setTask((tsk):any => [...tsk, initTask])
 
     form.reset({

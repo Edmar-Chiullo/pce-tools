@@ -40,14 +40,16 @@ export function datePrintInt(dt:number) {
     return date
 }
 
-
-
 export function hour() {
     const hour = addLeftZZero(datePrint().getHours())
     const minutes = addLeftZZero(datePrint().getMinutes())
     const seconds = addLeftZZero(datePrint().getSeconds())
 
     return `${hour}:${minutes}:${seconds}`
+}
+
+export function validateDate(valid:string) {
+    return `${valid.slice(0,2)}/${valid.slice(2,4)}/${valid.slice(4,8)}`
 }
 
 export function datePrint() {

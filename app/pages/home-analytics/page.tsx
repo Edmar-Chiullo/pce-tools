@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { app } from "@/app/firebase/fbkey"
 import { getDatabase, ref, onValue, set } from "firebase/database";
 
-import { fullDate, fullDatePrint, hourPrint } from "@/utils/date-generate"
+import { fullDate, fullDatePrint, hourPrint, validateDate } from "@/utils/date-generate"
 import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { getActivityTwo } from "@/app/firebase/fbmethod";
 import { tractDate } from "@/utils/trac-date";
@@ -121,10 +121,12 @@ export default function Dashboard() {
     function trackPickingRotation({...activiArray}:any) {
         console.log(activiArray)
         const rerultTask = JSON.parse(activiArray[7])
-        const tract = rerultTask.map(({address, date, product, val }:any) => {
+        const tract = rerultTask.map(({address, date, product, quant, valid }:any) => {
             return {'Centro':activiArray[2], 
                     'Endereço':address,
-                    'Produto': product, 
+                    'Produto': product,
+                    'Quantidade': quant,
+                    'Validade': validateDate(valid), 
                     'Operador':activiArray[6], 
                     'Data':fullDatePrint(date), 
                     'Hora':hourPrint(date), 
