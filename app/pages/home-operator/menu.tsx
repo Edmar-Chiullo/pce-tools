@@ -103,7 +103,6 @@ export default function NavigationMenu() {
                 const taskAddressProduct = createActivity({pre:'VEP', activity:content, user:user?.userName, userId: user?.userID })
                 taskAddressProduct.updateLocalWork(center)   
                 setActivity(taskAddressProduct)
-                // setSelectStreet(true)
                 setSubtitle('')
                 setBtnInit(true)
                 break;
@@ -125,26 +124,6 @@ export default function NavigationMenu() {
                 setSubtitle('')
                 setBtnInit(true)
                 break
-            // case 'PP':
-            //     console.log(activity)
-            //     activity?.updateLocalWork(center)
-            //     activity?.updateStreet(street)
-            //     setSelectStreet(false)
-            //     setSelectSide(true)
-            //     setSubtitle('Selecione o lado')
-            //     break;
-            // case 'Par':
-            //     activity?.updateSide(content)
-            //     setSelectSide(false)
-            //     setSubtitle('')
-            //     setBtnInit(true)
-            //     break;
-            // case 'Impar':
-            //     activity?.updateSide(content)
-            //     setSelectSide(false)                
-            //     setSubtitle('')
-            //     setBtnInit(true)
-            //     break;
             default:
                 break;
         }

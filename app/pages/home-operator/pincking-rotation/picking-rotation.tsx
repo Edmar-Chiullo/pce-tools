@@ -55,8 +55,7 @@ export default function PickingRotation() {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    //const aplication = atividade.activityName
-    const initTask = new TaskPickingRotation(data)//createTasks({data:data, app:aplication})
+    const initTask = new TaskPickingRotation(data)
     setTask((tsk):any => [...tsk, initTask])
 
     form.reset({
@@ -76,18 +75,18 @@ export default function PickingRotation() {
   }
 
   return (
-    <div className="absolute flex flex-col items-center justify-center w-full space-y-1">
-      <h1 className="lg:text-7xl text-xl sm:text-5xl mb-14">Produto x Endereço</h1>
+    <div className="absolute flex flex-col gap-3 items-center justify-center w-full">
+      <h1 className="md:text-xl lg:text-2xl">Rotativo De Picking</h1>
       <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 w-full">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <FormField
               control={form.control}
               name="loadAddress"
               render={({ field }) => (
               <FormItem>
-                  <FormLabel>Endereço</FormLabel>
+                  <FormLabel className="text-[11px]">Endereço</FormLabel>
                   <FormControl>
-                  <Input placeholder="Leia o endereço" className="loadAddress h-8" {...field} />
+                    <Input placeholder="Leia o endereço" className="loadAddress h-7 md:h-8 lg:h-9" {...field} />
                   </FormControl>
                   <FormDescription>
                   </FormDescription>
@@ -100,9 +99,9 @@ export default function PickingRotation() {
               name="loadProduct"
               render={({ field }) => (
               <FormItem>
-                  <FormLabel>Produto</FormLabel>
+                  <FormLabel className="text-[11px]">Produto</FormLabel>
                   <FormControl>
-                  <Input placeholder="Leia o produto" className="loadProduct h-8" {...field} />
+                    <Input placeholder="Leia o produto" className="loadProduct h-7 md:h-8 lg:h-9" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
@@ -114,9 +113,9 @@ export default function PickingRotation() {
               name="loadQuant"
               render={({ field }) => (
               <FormItem>
-                  <FormLabel>Quantidade</FormLabel>
+                  <FormLabel className="text-[11px]">Quantidade</FormLabel>
                   <FormControl>
-                  <Input placeholder="Quantidade" className="loadQuant h-8" {...field} />
+                    <Input placeholder="Quantidade" className="loadQuant h-7 md:h-8 lg:h-9" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
@@ -128,18 +127,18 @@ export default function PickingRotation() {
               name="loadValid"
               render={({ field }) => (
               <FormItem>
-                  <FormLabel>Validade</FormLabel>
+                  <FormLabel className="text-[11px]">Validade</FormLabel>
                   <FormControl>
-                  <Input placeholder="Validade" className="loadValid h-8" {...field} />
+                    <Input placeholder="Validade" className="loadValid h-7 md:h-8 lg:h-9" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
               </FormItem>
               )}
           />
-          <Button type="submit" className="w-full h-8 mt-6">Confirmar</Button>
+          <Button type="submit" className="w-full h-7 md:h-9 lg:h-10 mt-3">Confirmar</Button>
           </form>
-          <Button className="w-full h-8 mt-2" onClick={pushTasks}>Finalizar</Button>
+          <Button className="w-full h-7 md:h-9 lg:h-10 mt-1" onClick={pushTasks}>Finalizar</Button>
       </Form>
     </div>
   );

@@ -2,11 +2,10 @@ function addLeftZZero(value:number) {
     return value < 10 ? `0${value}` : value 
 }
 
-
 export function generateId(pre: string) {
-    const hour = datePrint().getHours()
-    const minutes = datePrint().getMinutes()
-    const seconds = datePrint().getSeconds()
+    const hour = addLeftZZero(datePrint().getHours())
+    const minutes = addLeftZZero(datePrint().getMinutes())
+    const seconds = addLeftZZero(datePrint().getSeconds())
 
     return `${pre}${hour}${minutes}${seconds}`
 }

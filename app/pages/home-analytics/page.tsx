@@ -5,21 +5,28 @@ import { useEffect, useState } from "react"
 import { app } from "@/app/firebase/fbkey"
 import { getDatabase, ref, onValue, set } from "firebase/database";
 
-import { fullDate, fullDatePrint, hourPrint, validateDate } from "@/utils/date-generate"
+import { dateDb, datePrint, datePrintInt, fullDate, fullDatePrint, hourPrint, validateDate } from "@/utils/date-generate"
 import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { getActivityTwo } from "@/app/firebase/fbmethod";
+import { getElementId, getElementTask } from "@/utils/get-elementHtml";
+import { trackEndNull, trackEndProd, trackPickingRotation } from "@/utils/treatment-data-print";
+import UploadExcel from "@/app/pages/home-analytics/import-file";
 import { tractDate } from "@/utils/trac-date";
+import handler from "@/app/pages/api/read-file";
 
 import { Button } from "@/components/ui/button";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { valDate } from "@/utils/valid-data-print";
+import { lstat } from "fs";
 
 export default function Dashboard() {
 
     const [ tasks, setTasks ] = useState<any>([])
-    const [ listTask, setListTask ] = useState<any>([])
+    const [ taskPickingRotation, setTaskPickingRotation ] = useState<any>([])
     const [ color, setColor ] = useState<any>()
     const [ status, setStatus ] = useState<any>()
     const [ clock, setClock ] = useState<any>()
+    const [ inputFileController, setInputFileController ] = useState<string>('')
 
     useEffect(() => {
         const db = getDatabase(app)
@@ -44,7 +51,7 @@ export default function Dashboard() {
         const addressproduct = ref(db, `activity/${tasks[1]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
         onValue(addressproduct, (snapshot) => {
         if (snapshot.exists()) {
-            const tks = snapshot.val() 
+            const tks = snapshot.val()
             setTasks((object:any) => [...object, tks])
         } else {
             return "No data available"
@@ -54,8 +61,8 @@ export default function Dashboard() {
         const picingRotation = ref(db, `activity/${tasks[2]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
         onValue(picingRotation, (snapshot) => {
         if (snapshot.exists()) {
-            const tks = snapshot.val() 
-            setTasks((object:any) => [...object, tks])
+            const actList = snapshot.val()
+            setTasks((object:any) => [...object, actList])
         } else {
             return "No data available"
         }
@@ -63,79 +70,6 @@ export default function Dashboard() {
 
     }, [])
 
-    function getElementId(element: any) {
-        const parentElement = element.target.parentElement
-        const chOne = parentElement.children[0]
-        const chTwo = chOne.children[0]
-        const chThree = chTwo.children[0]
-        
-        const value = chThree.children[1].innerText
-
-        return value
-    }
-
-    function getElementTask(element: any) {
-        const parentElement = element.target.parentElement
-        const chOne = parentElement.children[0]
-        const chTwo = chOne.children[1]
-        const chThree = chTwo.children[1]
-        
-        const value = chThree.children[1].innerText
-
-        return value
-    }
-
-    function trackEndNull({...activiArray}:any) {
-        const rerultTask = JSON.parse(activiArray[7])
-        
-        const tract = rerultTask.map(({address, date, status }:any) => {
-            return {'Centro':activiArray[2], 
-                    'Endereço':address, 
-                    'Situação': 'VAZIO',
-                    'Operador':activiArray[5], 
-                    'Data':fullDatePrint(date), 
-                    'Hora':hourPrint(date), 
-                    'Atividade':activiArray[3], 
-                    }
-        })
-        
-        return tract
-    }
-
-    function trackEndProd({...activiArray}:any) {
-        const rerultTask = JSON.parse(activiArray[7])
-        const tract = rerultTask.map(({address, date, product }:any) => {
-            return {'Centro':activiArray[2], 
-                    'Endereço':address, 
-                    'Produto': product,
-                    'Operador':activiArray[6], 
-                    'Data':fullDatePrint(date), 
-                    'Hora':hourPrint(date), 
-                    'Atividade':activiArray[3] 
-                    }
-        })
-        
-        return tract
-    }  
-
-    function trackPickingRotation({...activiArray}:any) {
-        console.log(activiArray)
-        const rerultTask = JSON.parse(activiArray[7])
-        const tract = rerultTask.map(({address, date, product, quant, valid }:any) => {
-            return {'Centro':activiArray[2], 
-                    'Endereço':address,
-                    'Produto': product,
-                    'Quantidade': quant,
-                    'Validade': validateDate(valid), 
-                    'Operador':activiArray[6], 
-                    'Data':fullDatePrint(date), 
-                    'Hora':hourPrint(date), 
-                    'Atividade':activiArray[3], 
-                    }
-        })
-        
-        return tract
-    }  
 
     function importXLSX(element: any) {
         const elementId = getElementId(element)
@@ -163,62 +97,67 @@ export default function Dashboard() {
             }
         })
     }
-    
-    let arr = []
-    return (
-        <div className="flex w-full p-2">
-            <div className="flex flex-col w-[60%] p-1">
-                <h1 className="self-center">Atividades em execução</h1>
-                <div className="box-activity flex flex-col gap-1">
-                    {
-                        
-                        tasks && tasks.map((activi:any) => {
-                            const act = Object.values(activi)
-                            return act.map((a:any, i:number) => {
-                                const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = a.activi                                
-                                let color = activityState ? 'bg-orange-100' : 'bg-green-100' 
-                                let hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50' 
-                                let status = activityState ? 'Executando' : 'Finalizado'
 
-                                return  (
-                                    <div key={activityID} className={`flex justify-between gap-8 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
-                                        <div className="flex flex-col gap-1">
-                                            <div className="flex gap-4 font-light text-[14px]">
-                                                <div className="flex gap-1">
-                                                    <span>Cod. Atividade:</span>
-                                                    <span>{activityID}</span> 
+    
+    return (
+        <div className="flexw-full items-end p-2">
+            <div className="flex flex-col w-[60%] p-1">
+                <h1 className="self-end mr-10 text-2xl">PCE TOOLS</h1>
+                <div className="box-activity flex w-[100%] flex-col justify-end gap-1">
+                    <h1 className="ml-2">Atividades em execução</h1>
+                    <ScrollArea className="flex justify-center h-[500px] border-t-2 pl-1 pr-1">
+                        {
+                            tasks && tasks.map((tasks:any) => {
+                                const act = Object.values(tasks)
+                                return act.map(({ activi }:any, i:number) => {
+                                    const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activi 
+                                    let color = activityState ? 'bg-orange-100' : 'bg-green-100' 
+                                    let hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50' 
+                                    let status = activityState ? 'Executando' : 'Finalizado'
+
+                                    const print = valDate(activityInitDate)
+                                    if (print) return  (
+                                        <div key={activityID} className={`flex justify-between mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
+                                            <div className="flex flex-col gap-1">
+                                                <div className="flex gap-4 font-light text-[14px]">
+                                                    <div className="flex gap-1">
+                                                        <span>Cod. Atividade:</span>
+                                                        <span>{activityID}</span> 
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <span>Data:</span>
+                                                        <span>{fullDatePrint(activityInitDate)}</span> 
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <span>Hora:</span>
+                                                        <span>{hourPrint(activityInitDate)}</span>                                             
+                                                    </div>
+                                                    <div className="flex gap-6">
+                                                        <span>{activityLocalWork}</span>   
+                                                        <span>{}</span>                                          
+                                                    </div>
                                                 </div>
-                                                <div className="flex gap-1">
-                                                    <span>Data:</span>
-                                                    <span>{fullDatePrint(activityInitDate)}</span> 
-                                                </div>
-                                                <div className="flex gap-1">
-                                                    <span>Hora:</span>
-                                                    <span>{hourPrint(activityInitDate)}</span>                                             
-                                                </div>
-                                                <div className="flex gap-6">
-                                                    <span>{activityLocalWork}</span>   
-                                                    <span>{}</span>                                          
+                                                <div className="nameOperator flex gap-6">
+                                                    <div className="flex gap-1">
+                                                        <span>Colaborador:</span>
+                                                        <h1>{activtyUserName}</h1>
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <span>Atividade:</span>
+                                                        <span>{activityName}</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="nameOperator flex gap-6">
-                                                <div className="flex gap-1">
-                                                    <span>Colaborador:</span>
-                                                    <h1>{activtyUserName}</h1>
-                                                </div>
-                                                <div className="flex gap-1">
-                                                    <span>Atividade:</span>
-                                                    <span>{activityName}</span>
-                                                </div>
-                                            </div>
+                                            <Button className="self-center w-20 h-8 text-[10px] rounded-3xl" onClick={(element) => importXLSX(element)}>{status}</Button>
                                         </div>
-                                        <Button className="self-center w-20 h-8 text-[10px] rounded-3xl" onClick={(element) => importXLSX(element)}>{status}</Button>
-                                    </div>
-                                )                    
+                                    )                    
+                                })
                             })
-                        })
-                    }
+                        }
+                    </ScrollArea>
                 </div>
+            </div>
+            <div className="self-start w-[40%]">
             </div>
         </div>
     )

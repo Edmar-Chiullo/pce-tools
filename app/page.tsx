@@ -41,9 +41,7 @@ export default function Login() {
   })
 
   function navigationPage(data:any) {
-    console.log(data)
     const { userID, userPermission }:any = data
-    console.log(userPermission)
     setUser(data)
     const result = selectApp(userPermission)
     return result

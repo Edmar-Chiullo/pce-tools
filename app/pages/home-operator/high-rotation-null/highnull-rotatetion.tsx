@@ -57,8 +57,8 @@ export default function HighNullRotation({...props}: any) {
   }
 
   return (
-    <div className="absolute flex flex-col items-center justify-center w-full space-y-1">
-      <h1 className="lg:text-7xl text-xl sm:text-5xl mb-14">Rotativo de aéreo</h1>
+    <div className="absolute flex flex-col items-center justify-center w-full">
+      <h1 className="md:text-xl lg:text-2xl mb-14">Rotativo de aéreo</h1>
       <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 w-full">
             <FormField
@@ -66,9 +66,9 @@ export default function HighNullRotation({...props}: any) {
                 name="loadAddress"
                 render={({ field }) => (
                 <FormItem>
-                    <FormLabel>Endereço</FormLabel>
+                    <FormLabel className="text-[11px]">Endereço</FormLabel>
                     <FormControl>
-                      <Input placeholder="Leia o endereço" className="loadAddress h-8" {...field} />
+                      <Input placeholder="Leia o endereço" className="loadAddress h-7 md:h-8 lg:h-9" {...field} />
                     </FormControl>
                     <FormDescription>
                     </FormDescription>
@@ -76,9 +76,9 @@ export default function HighNullRotation({...props}: any) {
                 </FormItem>
                 )}
             />
-            <Button type="submit" className="w-full h-8 mt-10">Confirmar</Button>
+            <Button type="submit" className="w-full h-7 md:h-9 lg:h-10 mt-10">Confirmar</Button>
           </form>
-          <Button className="w-full h-8 mt-4" onClick={pushTasks}>Finalizar</Button>
+          <Button className="w-full h-7 md:h-9 lg:h-10 mt-4" onClick={pushTasks}>Finalizar</Button>
       </Form>
     </div>
   )
