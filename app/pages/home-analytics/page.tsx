@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 
 import { app } from "@/app/firebase/fbkey"
-import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 import { dateDb, datePrint, datePrintInt, fullDate, fullDatePrint, hourPrint, validateDate } from "@/utils/date-generate"
 import { exportFileXlsx } from "@/utils/ger-xlsx";
@@ -36,7 +36,7 @@ export default function Dashboard() {
         const taskRP = 'Rotativo de picking'
         const strDate = fullDate()
         .replace('/','')
-        .replace('/','')
+        .replace('/','')        
         
         const highRotation = ref(db, `activity/${tasks[0]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
         onValue(highRotation, (snapshot) => {
@@ -70,7 +70,6 @@ export default function Dashboard() {
 
     }, [])
 
-
     function importXLSX(element: any) {
         const elementId = getElementId(element)
         const elementTesk = getElementTask(element)
@@ -97,7 +96,6 @@ export default function Dashboard() {
             }
         })
     }
-
     
     return (
         <div className="flexw-full items-end p-2">

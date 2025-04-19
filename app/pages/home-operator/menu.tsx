@@ -149,7 +149,7 @@ export default function NavigationMenu() {
                     <div className="absolute z-30 flex flex-col justify-center gap-2 w-full">
                         <Button onClick={(value) => navigation(value)}>Aéreo vazio</Button>
                         <Button onClick={(value) => navigation(value)}>Rotativo de picking</Button>
-                        <Button onClick={(value) => navigation(value)}>Validação enderço x produto</Button>
+                        <Button onClick={(value) => navigation(value)}>Validação endereço x produto</Button>
                     </div>
                 }
                 {selectStreet && 

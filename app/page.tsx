@@ -11,7 +11,9 @@ import { z } from "zod"
 
 import { acess } from "./aceess";
 import AppAuth from "./firebase/fbauth";
+import { db } from "./firebase/fbkey";
 import { getUser } from "./firebase/fbmethod";
+
 import { selectApp } from "@/utils/define-app";
 import { useLoginContext } from "./context/user-context";
 
@@ -27,6 +29,7 @@ const formSchema = z.object({
 })
 
 // Component Login....
+
 export default function Login() {
   
   const { user, setUser } = useLoginContext()
@@ -59,7 +62,6 @@ export default function Login() {
       login: '',  
       password: ''
     })
-
   }
 
   return (

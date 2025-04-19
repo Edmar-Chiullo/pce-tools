@@ -1,11 +1,10 @@
 import { ActivityProps } from "../interface/interface";
-import { app } from "./fbkey";
-import { getDatabase, ref, child, get, onValue, set } from "firebase/database";
+import { db } from "./fbkey";
+import { getDatabase, ref, child, get, onValue, set, connectDatabaseEmulator } from "firebase/database";
 
 import { fullDate } from "@/utils/date-generate";
 
-const db = getDatabase(app);
-const re = ref(getDatabase(app))
+const re = ref(db)
 
 // Get data.....
 export async function getUser({...user}) {
