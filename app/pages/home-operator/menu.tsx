@@ -40,7 +40,7 @@ export default function NavigationMenu() {
 
     function selectForm(aplication: string | null | undefined) {
         switch (aplication) {
-            case 'Validação enderço x produto':
+            case 'Validação endereço x produto':
                 activity?.updateInitDate(dateDb())
                 setActivityDb(activity)
                 setValidatyAddressProduct(true)
@@ -98,7 +98,7 @@ export default function NavigationMenu() {
                 setSelectOperation(true)
                 setSubtitle('Selecione a operação')
                 break;
-            case 'Validação enderço x produto':
+            case 'Validação endereço x produto':
                 setSelectOperation(false)
                 const taskAddressProduct = createActivity({pre:'VEP', activity:content, user:user?.userName, userId: user?.userID })
                 taskAddressProduct.updateLocalWork(center)   
@@ -130,6 +130,7 @@ export default function NavigationMenu() {
     }
 
     function startTask() {
+        console.log(activity?.activityName)
         selectForm(activity?.activityName)
     }
 

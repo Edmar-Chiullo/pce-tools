@@ -17,22 +17,25 @@ import handler from "@/app/pages/api/read-file";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { valDate } from "@/utils/valid-data-print";
-import { lstat } from "fs";
 
 export default function Dashboard() {
 
     const [ tasks, setTasks ] = useState<any>([])
     const [ taskPickingRotation, setTaskPickingRotation ] = useState<any>([])
-    const [ color, setColor ] = useState<any>()
-    const [ status, setStatus ] = useState<any>()
+    const [ taskHighRotation, setTaskHighRotation ] = useState<any>([])
+    const [ taskValidProEnd, setTaskValidProEnd ] = useState<any>([])
     const [ clock, setClock ] = useState<any>()
     const [ inputFileController, setInputFileController ] = useState<string>('')
 
+    function funPickinRotation(taskList:any) {
+        if (taskPickingRotation[0]) console.log(taskPickingRotation[0])
+    }
+
     useEffect(() => {
         const db = getDatabase(app)
-        const tasks = ['Aéreo vazio', 'Validação enderço x produto', 'Rotativo de picking']
+        const tasks = ['Aéreo vazio', 'Validação endereço x produto', 'Rotativo de picking']
         const nameTask = 'Aéreo vazio'
-        const taskVal = 'Validação enderço x produto'
+        const taskVal = 'Validação endereço x produto'
         const taskRP = 'Rotativo de picking'
         const strDate = fullDate()
         .replace('/','')
@@ -41,8 +44,8 @@ export default function Dashboard() {
         const highRotation = ref(db, `activity/${tasks[0]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
         onValue(highRotation, (snapshot) => {
         if (snapshot.exists()) {
-            const tks = snapshot.val() 
-            setTasks((object:any) => [...object, tks])
+            const actList = snapshot.val()
+            setTasks((object:any) => [...object, actList])
         } else {
             return "No data available"
         }
@@ -51,8 +54,8 @@ export default function Dashboard() {
         const addressproduct = ref(db, `activity/${tasks[1]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
         onValue(addressproduct, (snapshot) => {
         if (snapshot.exists()) {
-            const tks = snapshot.val()
-            setTasks((object:any) => [...object, tks])
+            const actList = snapshot.val()
+            setTasks((object:any) => [...object, actList])
         } else {
             return "No data available"
         }
@@ -83,7 +86,7 @@ export default function Dashboard() {
                     tract = trackEndNull(activiArray)
                     exportFileXlsx(tract)
                     break;
-                case 'Validação enderço x produto':
+                case 'Validação endereço x produto':
                     tract = trackEndProd(activiArray)
                     exportFileXlsx(tract)
                     break
