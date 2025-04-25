@@ -70,6 +70,7 @@ export default function PickingRotation() {
     atividade.updateTask = JSON.stringify(task)
     atividade.updateState(false)    
     setActivityDb(atividade)
+    console.log(atividade)
     
     window.location.reload()
   }

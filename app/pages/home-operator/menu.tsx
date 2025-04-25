@@ -45,6 +45,8 @@ export default function NavigationMenu() {
                 setActivityDb(activity)
                 setValidatyAddressProduct(true)
                 setAtividade(activity)
+                console.log(activity)
+
                 setBtnInit(false)
                 break;
             case 'Aéreo vazio': 
@@ -52,6 +54,7 @@ export default function NavigationMenu() {
                 setActivityDb(activity)
                 setAtividade(activity)
                 setHighRotation(true)
+                console.log(activity)
                 setBtnInit(false)
                 break;  
             case 'Rotativo de picking': 
@@ -59,6 +62,7 @@ export default function NavigationMenu() {
                 setActivityDb(activity)
                 setAtividade(activity)
                 setPickingRotation(true)
+                console.log(activity)
                 setBtnInit(false)
                 break;  
             default:
@@ -130,7 +134,6 @@ export default function NavigationMenu() {
     }
 
     function startTask() {
-        console.log(activity?.activityName)
         selectForm(activity?.activityName)
     }
 

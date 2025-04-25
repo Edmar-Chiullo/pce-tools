@@ -61,6 +61,7 @@ export default function ValidatyAddressProduct() {
     atividade.updateTask = JSON.stringify(task)
     atividade.updateState(false)    
     setActivityDb(atividade)
+    console.log(atividade)
     
     window.location.reload()
   }

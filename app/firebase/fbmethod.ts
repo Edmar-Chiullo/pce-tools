@@ -1,12 +1,12 @@
 import { ActivityProps } from "../interface/interface";
 import { db } from "./fbkey";
-import { getDatabase, ref, child, get, onValue, set, connectDatabaseEmulator } from "firebase/database";
+import { ref, child, get, onValue, set } from "firebase/database";
 
 import { fullDate } from "@/utils/date-generate";
 
 const re = ref(db)
 
-// Get data.....
+// Get data....
 export async function getUser({...user}) {
     const result = get(child(re, `users/`)).then((snapshot) => {
       return snapshot.exists() ? snapshot.val() : "Usuário não encontrado!"
@@ -17,10 +17,22 @@ export async function getUser({...user}) {
     return result
 }
 
+export async function getTaskes({...tasks}) {
+  const result = get(child(re, `activity/${tasks.descricao}/${tasks.dateAno}/${tasks.dateMes}/`)).then((snapshot) => {
+    return snapshot.exists() ? snapshot.val() : false
+  }).catch((error) => {
+      return error
+  })
+
+  return result
+}
+
+
 export async function getActivity(activity:any) {
   const strDate = fullDate()
   .replace('/','')
   .replace('/','')
+  
   const path = ref(db, `activity/${activity}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
   onValue(path, (snapshot) => {
     if (snapshot.exists()) {

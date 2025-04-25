@@ -52,6 +52,7 @@ export default function HighNullRotation({...props}: any) {
     atividade.updateTask = JSON.stringify(task)
     atividade.updateState(false)    
     setActivityDb(atividade)
+    console.log(atividade)
     
     window.location.reload()
   }

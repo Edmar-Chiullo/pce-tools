@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react"
 
 import { app } from "@/app/firebase/fbkey"
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, onChildAdded, onChildChanged } from "firebase/database";
 
 import { dateDb, datePrint, datePrintInt, fullDate, fullDatePrint, hourPrint, validateDate } from "@/utils/date-generate"
 import { exportFileXlsx } from "@/utils/ger-xlsx";
-import { getActivityTwo } from "@/app/firebase/fbmethod";
+import { getActivityTwo, getTaskes } from "@/app/firebase/fbmethod";
 import { getElementId, getElementTask } from "@/utils/get-elementHtml";
 import { trackEndNull, trackEndProd, trackPickingRotation } from "@/utils/treatment-data-print";
 import UploadExcel from "@/app/pages/home-analytics/import-file";
@@ -17,61 +17,116 @@ import handler from "@/app/pages/api/read-file";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { valDate } from "@/utils/valid-data-print";
+import { object } from "zod";
 
 export default function Dashboard() {
 
     const [ tasks, setTasks ] = useState<any>([])
-    const [ taskPickingRotation, setTaskPickingRotation ] = useState<any>([])
-    const [ taskHighRotation, setTaskHighRotation ] = useState<any>([])
-    const [ taskValidProEnd, setTaskValidProEnd ] = useState<any>([])
+    const [ taskConcluid, setTaskConcluid ] = useState<any>()
     const [ clock, setClock ] = useState<any>()
     const [ inputFileController, setInputFileController ] = useState<string>('')
 
-    function funPickinRotation(taskList:any) {
-        if (taskPickingRotation[0]) console.log(taskPickingRotation[0])
-    }
+    useEffect(() => {
+        if (!taskConcluid) return
+
+        const id = taskConcluid.activi.activityID
+        setTasks((t:any) => t.filter((task:any) => id !== task.activi.activityID))
+        setTasks((object:any) => [...object, taskConcluid])
+        
+    }, [taskConcluid])
+
+    useEffect(() => console.log(tasks), [tasks])
 
     useEffect(() => {
         const db = getDatabase(app)
-        const tasks = ['Aéreo vazio', 'Validação endereço x produto', 'Rotativo de picking']
+        const tasksDescription = ['Aéreo vazio', 'Validação endereço x produto', 'Rotativo de picking']
         const nameTask = 'Aéreo vazio'
         const taskVal = 'Validação endereço x produto'
         const taskRP = 'Rotativo de picking'
         const strDate = fullDate()
         .replace('/','')
         .replace('/','')        
+
+        // Buscando atividades aéreo vazio
+        getTaskes({descricao: tasksDescription[0], dateAno: strDate.slice(4,8), dateMes: strDate.slice(2,8)})
+        .then((result) => {
+            const resultArr = Object.values(result)
+            setTasks(resultArr)
+            getTaskes({descricao: tasksDescription[2], dateAno: strDate.slice(4,8), dateMes: strDate.slice(2,8)})
+            .then((result) => {
+                const resultArr = Object.values(result)
+                resultArr.map((el) => setTasks((object:any) => [...object, el]))
+                getTaskes({descricao: tasksDescription[1], dateAno: strDate.slice(4,8), dateMes: strDate.slice(2,8)})
+                .then((result) => {
+                    const resultArr = Object.values(result)
+                    resultArr.map((el) => setTasks((object:any) => [...object, el]))
+                })
+            })
+        })
+
+        const highRotation = ref(db, `activity/${tasksDescription[0]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
+        onChildAdded(highRotation, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTasks((object:any) => [...object, result])
+            } else {
+                return "No data available"
+            }
+        })
+
+        const highRotationChange = ref(db, `activity/${tasksDescription[0]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onChildChanged(highRotationChange, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTaskConcluid(result)
+            } else {
+                return "No data available"
+            }
+        })
         
-        const highRotation = ref(db, `activity/${tasks[0]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-        onValue(highRotation, (snapshot) => {
-        if (snapshot.exists()) {
-            const actList = snapshot.val()
-            setTasks((object:any) => [...object, actList])
-        } else {
-            return "No data available"
-        }
+        // Buscando atividades Rotativo de picking
+        const pickingRotation = ref(db, `activity/${tasksDescription[2]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
+        onChildAdded(pickingRotation, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTasks((object:any) => [...object, result])
+            } else {
+                return "No data available"
+            }
         })
 
-        const addressproduct = ref(db, `activity/${tasks[1]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-        onValue(addressproduct, (snapshot) => {
-        if (snapshot.exists()) {
-            const actList = snapshot.val()
-            setTasks((object:any) => [...object, actList])
-        } else {
-            return "No data available"
-        }
+        const pickingRotationChange = ref(db, `activity/${tasksDescription[2]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onChildChanged(pickingRotationChange, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTaskConcluid(result)
+            } else {
+                return "No data available"
+            }
+        })
+        // Buscando atividades Rotativo de aereo cheio
+
+        const highRotationFull = ref(db, `activity/${tasksDescription[1]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
+        onChildAdded(highRotationFull, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTasks((object:any) => [...object, result])
+            } else {
+                return "No data available"
+            }
         })
 
-        const picingRotation = ref(db, `activity/${tasks[2]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-        onValue(picingRotation, (snapshot) => {
-        if (snapshot.exists()) {
-            const actList = snapshot.val()
-            setTasks((object:any) => [...object, actList])
-        } else {
-            return "No data available"
-        }
+        const highRotationFullChange = ref(db, `activity/${tasksDescription[1]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onChildChanged(highRotationFullChange, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTaskConcluid(result)
+            } else {
+                return "No data available"
+            }
         })
-
     }, [])
+
 
     function importXLSX(element: any) {
         const elementId = getElementId(element)
@@ -110,7 +165,7 @@ export default function Dashboard() {
                         {
                             tasks && tasks.map((tasks:any) => {
                                 const act = Object.values(tasks)
-                                return act.map(({ activi }:any, i:number) => {
+                                return act.map((activi:any, i:number) => {
                                     const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activi 
                                     let color = activityState ? 'bg-orange-100' : 'bg-green-100' 
                                     let hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50' 
