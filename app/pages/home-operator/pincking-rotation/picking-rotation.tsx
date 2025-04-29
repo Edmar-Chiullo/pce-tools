@@ -70,13 +70,12 @@ export default function PickingRotation() {
     atividade.updateTask = JSON.stringify(task)
     atividade.updateState(false)    
     setActivityDb(atividade)
-    console.log(atividade)
     
     window.location.reload()
   }
 
   return (
-    <div className="absolute flex flex-col gap-3 items-center justify-center w-full">
+    <div className="absolute flex flex-col items-center justify-center w-full">
       <h1 className="md:text-xl lg:text-2xl">Rotativo De Picking</h1>
       <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">

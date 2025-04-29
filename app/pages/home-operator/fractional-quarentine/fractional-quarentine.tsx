@@ -70,9 +70,9 @@ export default function FractionalQuarentine() {
   }
 
   return (
-    <div className="absolute flex flex-col gap-3 items-center justify-center w-full">
+    <div className="absolute flex flex-col gap-1 items-center justify-center w-full">
       <h1 className="md:text-xl lg:text-2xl">Quarentena Fracionada</h1>
-      <h4>{atividade.activityID}</h4>
+      <h4 className="place-self-start">{atividade.activityID}</h4>
       <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
             <FormField

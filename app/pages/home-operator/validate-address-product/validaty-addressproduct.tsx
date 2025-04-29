@@ -61,16 +61,15 @@ export default function ValidatyAddressProduct() {
     atividade.updateTask = JSON.stringify(task)
     atividade.updateState(false)    
     setActivityDb(atividade)
-    console.log(atividade)
     
     window.location.reload()
   }
 
   return (
     <div className="absolute flex flex-col items-center justify-center w-full">
-      <h1 className="md:text-xl lg:text-2xl mb-14">Produto x Endereço</h1>
+      <h1 className="md:text-xl lg:text-2xl">Produto x Endereço</h1>
       <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 w-full">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <FormField
               control={form.control}
               name="loadAddress"
