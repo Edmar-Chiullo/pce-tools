@@ -40,3 +40,9 @@ export interface TaskPickingRotation {
     quanti: string | null
     date: number | null
 }
+
+export interface TaskFractionalQuarentineProps {
+    product: string | null
+    quant: string | null
+    valid: string | null
+}

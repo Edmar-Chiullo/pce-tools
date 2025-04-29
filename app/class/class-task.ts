@@ -1,5 +1,5 @@
 import { dateDb } from "@/utils/date-generate";
-import { TaskProps, TaskEndProdProps } from "../interface/interface";
+import { TaskProps, TaskEndProdProps, TaskFractionalQuarentineProps } from "../interface/interface";
 
 export class Task implements TaskProps {
     address: string | null
@@ -39,5 +39,16 @@ export class TaskPickingRotation implements TaskPickingRotation {
         this.quant = data.loadQuant
         this.valid = data.loadValid
         this.date = dateDb()
+    }
+}
+
+export class TaskFractionalQuarentine implements TaskFractionalQuarentineProps {
+    product: string | null
+    quant: string | null
+    valid: string | null
+    constructor(data:any) {
+        this.product = data.loadProduct
+        this.quant = data.loadQuant
+        this.valid = data.loadValid
     }
 }

@@ -14,6 +14,7 @@ import { setActivityDb } from "@/app/firebase/fbmethod"
 import { useLoginContext } from "@/app/context/user-context"
 import { useActiviContext } from "@/app/context/acitivy-context"
 import PickingRotation from "./pincking-rotation/picking-rotation"
+import FractionalQuarentine from "./fractional-quarentine/fractional-quarentine"
 
 export default function NavigationMenu() {
     const [ selectCenter, setSelectCenter ] = useState<boolean>(true)
@@ -22,6 +23,7 @@ export default function NavigationMenu() {
     const [ selectSide, setSelectSide ] = useState<boolean>(false)
     const [ highRotation, setHighRotation ] = useState<boolean>(false)
     const [ pickingRotation, setPickingRotation ] = useState<boolean>(false)
+    const [ fractionalQuarentine, setFractonalQuarentine ] = useState<boolean>(false)
     const [ btnInit, setBtnInit ] = useState<boolean>(false)
 
     const [ subtitle, setSubtitle ] = useState<string>('')
@@ -45,7 +47,6 @@ export default function NavigationMenu() {
                 setActivityDb(activity)
                 setValidatyAddressProduct(true)
                 setAtividade(activity)
-                console.log(activity)
 
                 setBtnInit(false)
                 break;
@@ -54,7 +55,6 @@ export default function NavigationMenu() {
                 setActivityDb(activity)
                 setAtividade(activity)
                 setHighRotation(true)
-                console.log(activity)
                 setBtnInit(false)
                 break;  
             case 'Rotativo de picking': 
@@ -62,7 +62,13 @@ export default function NavigationMenu() {
                 setActivityDb(activity)
                 setAtividade(activity)
                 setPickingRotation(true)
-                console.log(activity)
+                setBtnInit(false)
+                break;  
+            case 'Quarentena fracionada': 
+                activity?.updateInitDate(dateDb())
+                setActivityDb(activity)
+                setAtividade(activity)
+                setFractonalQuarentine(true)
                 setBtnInit(false)
                 break;  
             default:
@@ -118,13 +124,23 @@ export default function NavigationMenu() {
                 setSubtitle('')
                 setBtnInit(true)
                 break;
-    
+                    
             case 'Aéreo vazio': 
                 setSelectOperation(false)
                 const taskHighNull = createActivity({pre:'AV', activity:content, user:user?.userName, userId: user?.userID })
                 taskHighNull.updateLocalWork(center)   
                 taskHighNull.updateInitDate(dateDb())
                 setActivity(taskHighNull)
+                setSubtitle('')
+                setBtnInit(true)
+                break
+            case 'Quarentena fracionada': 
+            console.log(content)
+                setSelectOperation(false)
+                const taskFractional = createActivity({pre:'PL', activity:content, user:user?.userName, userId: user?.userID })
+                taskFractional.updateLocalWork(center)   
+                taskFractional.updateInitDate(dateDb())
+                setActivity(taskFractional)
                 setSubtitle('')
                 setBtnInit(true)
                 break
@@ -154,6 +170,7 @@ export default function NavigationMenu() {
                         <Button onClick={(value) => navigation(value)}>Aéreo vazio</Button>
                         <Button onClick={(value) => navigation(value)}>Rotativo de picking</Button>
                         <Button onClick={(value) => navigation(value)}>Validação endereço x produto</Button>
+                        <Button onClick={(value) => navigation(value)}>Quarentena fracionada</Button>
                     </div>
                 }
                 {selectStreet && 
@@ -179,6 +196,7 @@ export default function NavigationMenu() {
                 {validatyAddressProduct && <ValidatyAddressProduct />}
                 {highRotation && <HighNullRotation />}
                 {pickingRotation && <PickingRotation />}
+                {fractionalQuarentine && <FractionalQuarentine />}
             </div>
         </div>
     )

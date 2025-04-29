@@ -9,7 +9,7 @@ import { dateDb, datePrint, datePrintInt, fullDate, fullDatePrint, hourPrint, va
 import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { getActivityTwo, getTaskes } from "@/app/firebase/fbmethod";
 import { getElementId, getElementTask } from "@/utils/get-elementHtml";
-import { trackEndNull, trackEndProd, trackPickingRotation } from "@/utils/treatment-data-print";
+import { trackEndNull, trackEndProd, trackPickingRotation, trackFractional } from "@/utils/treatment-data-print";
 import UploadExcel from "@/app/pages/home-analytics/import-file";
 import { tractDate } from "@/utils/trac-date";
 import handler from "@/app/pages/api/read-file";
@@ -35,11 +35,9 @@ export default function Dashboard() {
         
     }, [taskConcluid])
 
-    useEffect(() => console.log(tasks), [tasks])
-
     useEffect(() => {
         const db = getDatabase(app)
-        const tasksDescription = ['Aéreo vazio', 'Validação endereço x produto', 'Rotativo de picking']
+        const tasksDescription = ['Aéreo vazio', 'Validação endereço x produto', 'Rotativo de picking', 'Quarentena fracionada']
         const nameTask = 'Aéreo vazio'
         const taskVal = 'Validação endereço x produto'
         const taskRP = 'Rotativo de picking'
@@ -60,6 +58,12 @@ export default function Dashboard() {
                 .then((result) => {
                     const resultArr = Object.values(result)
                     resultArr.map((el) => setTasks((object:any) => [...object, el]))
+                    getTaskes({descricao: tasksDescription[3], dateAno: strDate.slice(4,8), dateMes: strDate.slice(2,8)})
+                    .then((result) => {
+                        const resultArr = Object.values(result)
+                        resultArr.map((el) => setTasks((object:any) => [...object, el]))
+                    })
+    
                 })
             })
         })
@@ -84,7 +88,7 @@ export default function Dashboard() {
             }
         })
         
-        // Buscando atividades Rotativo de picking
+        // Buscando atividades Rotativo de picking...
         const pickingRotation = ref(db, `activity/${tasksDescription[2]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
         onChildAdded(pickingRotation, (snapshot) => {
             if (snapshot.exists()) {
@@ -104,7 +108,7 @@ export default function Dashboard() {
                 return "No data available"
             }
         })
-        // Buscando atividades Rotativo de aereo cheio
+        // Buscando atividades Rotativo de aereo cheio...
 
         const highRotationFull = ref(db, `activity/${tasksDescription[1]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
         onChildAdded(highRotationFull, (snapshot) => {
@@ -125,7 +129,31 @@ export default function Dashboard() {
                 return "No data available"
             }
         })
+    
+        // Buscando quarentena fracionada...
+
+        const fractionalAdd = ref(db, `activity/${tasksDescription[3]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
+        onChildAdded(fractionalAdd, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTasks((object:any) => [...object, result])
+            } else {
+                return "No data available"
+            }
+        })
+
+        const fractionalChange = ref(db, `activity/${tasksDescription[3]}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onChildChanged(fractionalChange, (snapshot) => {
+            if (snapshot.exists()) {
+                const result = snapshot.val()
+                setTaskConcluid(result)
+            } else {
+                return "No data available"
+            }
+        })
+
     }, [])
+
 
 
     function importXLSX(element: any) {
@@ -149,7 +177,11 @@ export default function Dashboard() {
                     tract = trackPickingRotation(activiArray)
                     exportFileXlsx(tract)
                     break
-                default:
+                case 'Quarentena fracionada':
+                    tract = trackFractional(activiArray)
+                    exportFileXlsx(tract)
+                    break
+            default:
                     break;
             }
         })
