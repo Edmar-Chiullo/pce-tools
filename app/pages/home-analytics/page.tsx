@@ -249,7 +249,7 @@ export default function Dashboard() {
                         <h1 className="ml-2">Atividades em execução</h1>
                         <div className="flex gap-2">
                             <Input type="text" className="input-quary w-32 h-8"/>
-                            <Button className="w-16 h-8" onClick={onSubmit}>
+                            <Button className="w-16 h-8 cursor-pointer hover:scale-[1.04]" onClick={onSubmit}>
                                 <Image 
                                     src={'/lupa-de-pesquisa.png'}
                                     width={24}
@@ -302,7 +302,7 @@ export default function Dashboard() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button className="self-center w-20 h-8 text-[10px] rounded-3xl" onClick={(element) => importXLSX(element)}>{status}</Button>
+                                            <Button className="self-center w-20 h-8 text-[10px] rounded-3xl cursor-pointer hover:scale-[1.04]" onClick={(element) => importXLSX(element)}>{status}</Button>
                                         </div>
                                     )                    
                                 })
