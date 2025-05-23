@@ -17,14 +17,18 @@ import { createTasks } from "@/utils/createTask";
 import { TaskPickingRotation } from "@/app/class/class-task";
 
 const formSchema = z.object({
-  loadProduct: z.string().min(2, {
+  loadProduct: z.string().min(1, {
     message: "É preciso ler o código do produto.",
+  }).max(14, {
+    message: "O valor não corresponde ao DUN ou EAN do produto."
   }),
   loadQuant: z.string().min(2, {
     message: "É preciso inserir a quantidade.",
   }),
-  loadValid: z.string().min(2, {
-    message: "Insira a data validade.",
+  loadValid: z.string().min(8, {
+    message: "Quantidade de caracter não pode ser inferior à 8 caracters.",
+  }).max(8, {
+    message: "Quantidade de caracter não pode ser superior à 8 caracters.",
   }),
 })
 

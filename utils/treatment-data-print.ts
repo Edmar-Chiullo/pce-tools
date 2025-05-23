@@ -6,6 +6,7 @@ export function trackEndNull({...activiArray}:any) {
     
     const tract = rerultTask.map(({address, date, status }:any) => {
         return {'Centro':activiArray[2], 
+                'Tarefa': activiArray[0],
                 'Endereço':address, 
                 'Situação': 'VAZIO',
                 'Operador':activiArray[5], 
@@ -23,6 +24,7 @@ export function trackEndProd({...activiArray}:any) {
     const tract = rerultTask.map(({address, date, product }:any) => {
         return {'Centro':activiArray[2], 
                 'Endereço':address, 
+                'Tarefa': activiArray[0],
                 'Produto': product,
                 'Operador':activiArray[6], 
                 'Data':fullDatePrint(date), 
@@ -39,6 +41,7 @@ export function trackFractional({...activiArray}:any) {
     const tract = rerultTask.map(({ product, valid, quant }:any) => {
         return {'Centro':activiArray[2],
                 'Pallet': activiArray[0], 
+                'Tarefa': activiArray[0],
                 'Produto': product,
                 'Quantidade': quant,
                 'Data validade': validateDate(valid), 
@@ -54,6 +57,7 @@ export function trackPickingRotation({...activiArray}:any) {
     const rerultTask = JSON.parse(activiArray[7])
     const tract = rerultTask.map(({address, date, product, quant, valid }:any) => {
         return {'Centro':activiArray[2], 
+                'Tarefa': activiArray[0],
                 'Endereço':address,
                 'Produto': product,
                 'Quantidade': quant,

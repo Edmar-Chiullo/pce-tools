@@ -27,6 +27,17 @@ export async function getTaskes({...tasks}) {
   return result
 }
 
+export async function getTaske({...tasks}) {
+  const result = get(child(re, `activity/${tasks.descricao}/${tasks.dateAno}/${tasks.dateMes}/${tasks.id}/`)).then((snapshot) => {
+    console.log(`activity/${tasks.descricao}/${tasks.dateAno}/${tasks.dateMes}/${tasks.id}/`)
+    return snapshot.exists() ? snapshot.val() : false
+  }).catch((error) => {
+      return error
+  })
+
+  return result
+}
+
 
 export async function getActivity(activity:any) {
   const strDate = fullDate()

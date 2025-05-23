@@ -14,8 +14,10 @@ import { useActiviContext } from "@/app/context/acitivy-context";
 import { setActivityDb } from "@/app/firebase/fbmethod";
 
 const formSchema = z.object({
-  loadAddress: z.string().min(2, {
-    message: "É preciso ler o código do endereço.",
+  loadAddress: z.string().min(9, {
+    message: "O código do endereço precisa conter no mínimo 9 dígitos..",
+  }).max(9, {
+    message: "Quantidade de dígitos superior ao do endereço cadastrado."
   }),
 })
 // Component Login....
@@ -39,8 +41,22 @@ export default function HighNullRotation({...props}: any) {
     },
   })
 
+  function validAddress(address:any) {
+    const prefix = [ 'PP', 'FR', 'TP', 'FB', 'BL', 'CF']
+    const result = prefix.filter((pr) => pr === address)
+    
+    return result[0]
+  }
+
   function onSubmit({loadAddress}: z.infer<typeof formSchema>) {
-    const initTask = new Task(loadAddress)
+    const initCharAddress = loadAddress.slice(0,2)
+   
+    const result = validAddress(initCharAddress)
+    if(!result) {
+      alert('Código no campo endereço não é válido.')
+      return
+    } 
+  const initTask = new Task(loadAddress)
     setTask((tsk):any => [...tsk, initTask])
 
     form.reset({

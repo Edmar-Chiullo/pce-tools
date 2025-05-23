@@ -15,20 +15,27 @@ import { Task, TaskEndProd } from "@/app/class/class-task";
 import { useActiviContext } from "@/app/context/acitivy-context";
 import { createTasks } from "@/utils/createTask";
 import { TaskPickingRotation } from "@/app/class/class-task";
+import { iniciarAtividade } from "@/utils/timer";
 
 const formSchema = z.object({
-  loadAddress: z.string().min(2, {
-    message: "É preciso ler o código do endereço.",
+  loadAddress: z.string().min(9, {
+    message: "O código do endereço precisa conter no mínimo 9 dígitos..",
+  }).max(9, {
+    message: "Quantidade de dígitos superior ao do endereço cadastrado."
   }),
   loadProduct: z.string().min(2, {
     message: "É preciso ler o código do produto.",
+  }).max(14, {
+    message: "O valor não corresponde ao DUN ou EAN do produto."
   }),
-  loadQuant: z.string().min(2, {
+  loadQuant: z.string().min(1, {
     message: "É preciso inserir a quantidade.",
   }),
-  loadValid: z.string().min(2, {
-    message: "Insira a data validade.",
-  }),
+   loadValid: z.string().min(8, {
+    message: "Quantidade de caracter não pode ser inferior à 8 caracters.",
+  }).max(8, {
+    message: "Quantidade de caracter não pode ser superior à 8 caracters.",
+  })
 })
 
 // Component Login....
@@ -54,7 +61,22 @@ export default function PickingRotation() {
     },
   })
 
+  function validAddress(address:any) {
+    const prefix = [ 'PP', 'FR', 'TP', 'FB', 'BL', 'CF']
+    const result = prefix.filter((pr) => pr === address)
+    
+    return result[0]
+  }
+
   function onSubmit(data: z.infer<typeof formSchema>) {
+    const { loadAddress, loadProduct, loadQuant, loadValid }:any = data
+    const initCharAddress = loadAddress.slice(0,2)
+   
+    const result = validAddress(initCharAddress)
+    if(!result) {
+      alert('Código no campo endereço não é válido.')
+      return
+    } 
     const initTask = new TaskPickingRotation(data)
     setTask((tsk):any => [...tsk, initTask])
 

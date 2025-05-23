@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState } from "react"
+import Image from "next/image";
 
 import { app } from "@/app/firebase/fbkey"
 import { getDatabase, ref, onValue, onChildAdded, onChildChanged } from "firebase/database";
 
 import { dateDb, datePrint, datePrintInt, fullDate, fullDatePrint, hourPrint, validateDate } from "@/utils/date-generate"
 import { exportFileXlsx } from "@/utils/ger-xlsx";
-import { getActivityTwo, getTaskes } from "@/app/firebase/fbmethod";
+import { getActivityTwo, getTaske, getTaskes } from "@/app/firebase/fbmethod";
 import { getElementId, getElementTask } from "@/utils/get-elementHtml";
 import { trackEndNull, trackEndProd, trackPickingRotation, trackFractional } from "@/utils/treatment-data-print";
 import UploadExcel from "@/app/pages/home-analytics/import-file";
@@ -18,6 +19,9 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { valDate } from "@/utils/valid-data-print";
 import { object } from "zod";
+import { Input } from "@/components/ui/input";
+import ResultQuery from "./query";
+import { Console } from "console";
 
 export default function Dashboard() {
 
@@ -25,10 +29,12 @@ export default function Dashboard() {
     const [ taskConcluid, setTaskConcluid ] = useState<any>()
     const [ clock, setClock ] = useState<any>()
     const [ inputFileController, setInputFileController ] = useState<string>('')
+    const [ component, setComponent ] = useState(false)
+    const [ objQuery, setObjQuery ] = useState<any>(null)
+    const [ statusObjQuery, setStatusObjQuery ] = useState<any>()
 
     useEffect(() => {
         if (!taskConcluid) return
-
         const id = taskConcluid.activi.activityID
         setTasks((t:any) => t.filter((task:any) => id !== task.activi.activityID))
         setTasks((object:any) => [...object, taskConcluid])
@@ -154,11 +160,10 @@ export default function Dashboard() {
 
     }, [])
 
-
-
     function importXLSX(element: any) {
         const elementId = getElementId(element)
         const elementTesk = getElementTask(element)
+        setObjQuery(null)
 
         getActivityTwo({id: elementId, task: elementTesk}).then((result) => {
             const { activi } = result
@@ -182,18 +187,79 @@ export default function Dashboard() {
                     exportFileXlsx(tract)
                     break
             default:
-                    break;
+                    break
             }
         })
     }
     
+    function onSubmit() {
+        const data:any = document.querySelector('.input-quary')
+        const result = tasks.filter((obj:any) => obj.activi.activityID === data.value.trim())
+        const { activi } = result[0]
+        console.log(tasks)
+        activi.activityState ? setStatusObjQuery('Executando') : setStatusObjQuery('Finalizado') 
+        setObjQuery(activi)
+        data.value = ''
+    }
+
     return (
-        <div className="flexw-full items-end p-2">
+        <div className="flex w-full items-end p-2">
+            {objQuery &&
+                <div className="absolute z-10 w-[60%] h-[400px] bg-zinc-50 rounded-1xl">
+                    <div key={objQuery.activityID} className={`flex justify-between mt-1 rounded-sm pl-2 pr-2`}>
+                        <div className="flex flex-col gap-1">
+                            <div className="flex gap-4 font-light text-[14px]">
+                                <div className="flex gap-1">
+                                    <span>Cod. Atividade:</span>
+                                    <span>{objQuery.activityID}</span> 
+                                </div>
+                                <div className="flex gap-1">
+                                    <span>Data:</span>
+                                    <span>{fullDatePrint(objQuery.activityInitDate)}</span> 
+                                </div>
+                                <div className="flex gap-1">
+                                    <span>Hora:</span>
+                                    <span>{hourPrint(objQuery.activityInitDate)}</span>                                             
+                                </div>
+                                <div className="flex gap-6">
+                                    <span>{objQuery.activityLocalWork}</span>   
+                                    <span>{}</span>                                          
+                                </div>
+                            </div>
+                            <div className="nameOperator flex gap-6">
+                                <div className="flex gap-1">
+                                    <span>Colaborador:</span>
+                                    <h1>{objQuery.activtyUserName}</h1>
+                                </div>
+                                <div className="flex gap-1">
+                                    <span>Atividade:</span>
+                                    <span>{objQuery.activityName}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <Button className="self-center w-20 h-8 text-[10px] rounded-3xl text" onClick={(element) => importXLSX(element)}>{statusObjQuery}</Button>
+                    </div>
+                
+                </div>
+            }
             <div className="flex flex-col w-[60%] p-1">
                 <h1 className="self-end mr-10 text-2xl">PCE TOOLS</h1>
-                <div className="box-activity flex w-[100%] flex-col justify-end gap-1">
-                    <h1 className="ml-2">Atividades em execução</h1>
-                    <ScrollArea className="flex justify-center h-[500px] border-t-2 pl-1 pr-1">
+                <div className="box-activity flex w-[100%] mt-15 flex-col justify-end gap-1">
+                    <div className="flex justify-between w-full">
+                        <h1 className="ml-2">Atividades em execução</h1>
+                        <div className="flex gap-2">
+                            <Input type="text" className="input-quary w-32 h-8"/>
+                            <Button className="w-16 h-8" onClick={onSubmit}>
+                                <Image 
+                                    src={'/lupa-de-pesquisa.png'}
+                                    width={24}
+                                    height={24}
+                                    alt="Pesquisar tarefa"
+                                />
+                            </Button>
+                        </div>
+                    </div>
+                    <ScrollArea className="flex justify-center h-[400px] border-t-2 pl-1 pr-1">
                         {
                             tasks && tasks.map((tasks:any) => {
                                 const act = Object.values(tasks)
@@ -204,7 +270,7 @@ export default function Dashboard() {
                                     let status = activityState ? 'Executando' : 'Finalizado'
 
                                     const print = valDate(activityInitDate)
-                                    if (print) return  (
+                                    /**if (print) */return  (
                                         <div key={activityID} className={`flex justify-between mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                                             <div className="flex flex-col gap-1">
                                                 <div className="flex gap-4 font-light text-[14px]">
@@ -245,7 +311,7 @@ export default function Dashboard() {
                     </ScrollArea>
                 </div>
             </div>
-            <div className="self-start w-[40%]">
+            <div className="self-start w-[40%] mt-10">
             </div>
         </div>
     )

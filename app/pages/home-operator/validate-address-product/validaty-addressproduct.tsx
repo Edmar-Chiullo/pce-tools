@@ -16,11 +16,15 @@ import { useActiviContext } from "@/app/context/acitivy-context"
 import { createTasks } from "@/utils/createTask";
 
 const formSchema = z.object({
-  loadAddress: z.string().min(2, {
+  loadAddress: z.string().min(9, {
     message: "É preciso ler o código do endereço.",
+  }).max(9, {
+    message: "Quantidade de dígitos superior ao do endereço cadastrado."
   }),
-  loadProduct: z.string().min(2, {
+  loadProduct: z.string().min(1, {
     message: "É preciso ler o código do produto.",
+  }).max(14, {
+    message: "O valor não corresponde ao DUN ou EAN do produto."
   }),
 })
 
@@ -45,9 +49,25 @@ export default function ValidatyAddressProduct() {
     },
   })
 
+  function validAddress(address:any) {
+    const prefix = [ 'PP', 'FR', 'TP', 'FB', 'BL', 'CF']
+    const result = prefix.filter((pr) => pr === address)
+    
+    return result[0]
+  }
+
   function onSubmit(data: z.infer<typeof formSchema>) {
     //const aplication = atividade.activityName
+    const { loadAddress, loadProduct, loadQuant, loadValid }:any = data
+    const initCharAddress = loadAddress.slice(0,2)
+   
+    const result = validAddress(initCharAddress)
     
+    if(!result) {
+      alert('Código no campo endereço não é válido.')
+      return
+    } 
+
     const initTask = new TaskEndProd(data)//createTasks({data:data, app:aplication})
     setTask((tsk):any => [...tsk, initTask])
 
