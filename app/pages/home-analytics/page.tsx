@@ -194,9 +194,8 @@ export default function Dashboard() {
     
     function onSubmit() {
         const data:any = document.querySelector('.input-quary')
-        const result = tasks.filter((obj:any) => obj.activi.activityID === data.value.trim())
+        const result = tasks.filter((obj:any) => obj.activi.activityID === data.value.trim().toUpperCase())
         const { activi } = result[0]
-        console.log(tasks)
         activi.activityState ? setStatusObjQuery('Executando') : setStatusObjQuery('Finalizado') 
         setObjQuery(activi)
         data.value = ''
