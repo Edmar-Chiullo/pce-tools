@@ -270,7 +270,7 @@ export default function Dashboard() {
                                     let status = activityState ? 'Executando' : 'Finalizado'
 
                                     const print = valDate(activityInitDate)
-                                    /**if (print) */return  (
+                                    if (print) return  (
                                         <div key={activityID} className={`flex justify-between mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                                             <div className="flex flex-col gap-1">
                                                 <div className="flex gap-4 font-light text-[14px]">
