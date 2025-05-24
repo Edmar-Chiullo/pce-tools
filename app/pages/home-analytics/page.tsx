@@ -42,6 +42,8 @@ export default function Dashboard() {
     }, [taskConcluid])
 
     useEffect(() => {
+        const data:any = document.querySelector('.input-quary')
+        if (data) data.focus()
         const db = getDatabase(app)
         const tasksDescription = ['Aéreo vazio', 'Validação endereço x produto', 'Rotativo de picking', 'Quarentena fracionada']
         const nameTask = 'Aéreo vazio'
@@ -192,8 +194,24 @@ export default function Dashboard() {
         })
     }
     
+    function validAddress(address:any) {
+        const prefix = [ 'AV', 'RP', 'VE', 'PL']
+        const result = prefix.filter((pr) => pr === address)
+        
+        return result[0]
+    }
+
     function onSubmit() {
         const data:any = document.querySelector('.input-quary')
+
+        const initCharAddress = data.value.trim().toUpperCase().slice(0,2)
+        const prx = validAddress(initCharAddress)
+
+        if(!prx) {
+            alert('Código inserido não é válido.')
+            return
+        }
+
         const result = tasks.filter((obj:any) => obj.activi.activityID === data.value.trim().toUpperCase())
         const { activi } = result[0]
         activi.activityState ? setStatusObjQuery('Executando') : setStatusObjQuery('Finalizado') 
@@ -204,8 +222,8 @@ export default function Dashboard() {
     return (
         <div className="flex w-full items-end p-2">
             {objQuery &&
-                <div className="absolute z-10 w-[60%] h-[400px] bg-zinc-50 rounded-1xl">
-                    <div key={objQuery.activityID} className={`flex justify-between mt-1 rounded-sm pl-2 pr-2`}>
+                <div className="absolute z-10 w-[59%] h-[403px] bg-white rounded-1xl">
+                    <div key={objQuery.activityID} className={`flex justify-between mt-1 rounded-sm pl-2 pr-2 bg-zinc-50 hover:bg-zinc-100`}>
                         <div className="flex flex-col gap-1">
                             <div className="flex gap-4 font-light text-[14px]">
                                 <div className="flex gap-1">
@@ -236,7 +254,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
                         </div>
-                        <Button className="self-center w-20 h-8 text-[10px] rounded-3xl text" onClick={(element) => importXLSX(element)}>{statusObjQuery}</Button>
+                        <Button className="self-center w-20 h-8 text-[12px] rounded-3xl cursor-pointer hover:scale-[1.04]" onClick={(element) => importXLSX(element)}>{statusObjQuery}</Button>
                     </div>
                 
                 </div>
@@ -244,10 +262,10 @@ export default function Dashboard() {
             <div className="flex flex-col w-[60%] p-1">
                 <h1 className="self-end mr-10 text-2xl">PCE TOOLS</h1>
                 <div className="box-activity flex w-[100%] mt-15 flex-col justify-end gap-1">
-                    <div className="flex justify-between w-full">
-                        <h1 className="ml-2">Atividades em execução</h1>
+                    <div className="flex justify-between w-full h-9">
+                        <h1 className="ml-2 self-end">Atividades em execução</h1>
                         <div className="flex gap-2">
-                            <Input type="text" className="input-quary w-32 h-8"/>
+                            <Input type="text" placeholder="Insira o código" className="input-quary w-32 h-8"/>
                             <Button className="w-16 h-8 cursor-pointer hover:scale-[1.04]" onClick={onSubmit}>
                                 <Image 
                                     src={'/lupa-de-pesquisa.png'}
@@ -301,7 +319,7 @@ export default function Dashboard() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button className="self-center w-20 h-8 text-[10px] rounded-3xl cursor-pointer hover:scale-[1.04]" onClick={(element) => importXLSX(element)}>{status}</Button>
+                                            <Button className="self-center w-20 h-8 text-[12px] rounded-3xl cursor-pointer hover:scale-[1.04]" onClick={(element) => importXLSX(element)}>{status}</Button>
                                         </div>
                                     )                    
                                 })
