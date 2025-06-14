@@ -31,5 +31,3 @@ export class TimerPrint {
     //     this.timer = iniciarAtividade(t)
     // }
 }
-
-// Exemplo de uso:

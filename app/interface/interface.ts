@@ -46,3 +46,49 @@ export interface TaskFractionalQuarentineProps {
     quant: string | null
     valid: string | null
 }
+
+export interface ReceiptProps {
+    bulkId: string | null
+    bulkDriver: string | null
+    bulkDriverPhoneNumber: string | null
+    bulkCarrier: string | null
+    bulkAgenda: string | null
+    bulkPlate: string | null
+    bulkControl: string | null
+    bulkDate: number | null
+    bulkState: string | undefined | null
+    bulkStateDescription: string | undefined | null
+}
+
+export interface ReceiptMelloProps {
+    bulkId: string | null
+    bulkDriver: string | null
+    bulkDriverPhoneNumber: string | null
+    bulkCpdOperator: string | null
+    bulkReceiptOperator: string | null
+    bulkDoca: string | null
+    bulkCarrier: string | null
+    bulkAgenda: string | null
+    bulkPlate: string | null
+    bulkControl: string | null
+    bulkCpdDate: number | null
+    bulkReceiptDate: number | null | string
+    bulkQtPallet: number | null | string
+    bulkTipoCarga: string | null
+    bulkState: string | undefined | null
+    bulkStateCpdDescription: string | undefined | null
+    bulkStateReceiptDescription: string | undefined | null
+}
+
+export interface ReceiptOperatorProps {
+    bulkId: string | null
+    bulkFilial: string | null
+    bulkAgenda: string | null
+    bulkDoca: string | null
+    bulkControle: string | null
+    bulkTipoCarga: string | null
+    bulkQtPallet: string | null
+    bulkDate: number | null
+    bulkState: string | undefined | null
+    bulkStateDescription: string | undefined | null
+}

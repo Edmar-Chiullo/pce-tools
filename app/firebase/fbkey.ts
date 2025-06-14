@@ -21,8 +21,8 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app)
 
-// if (typeof window !== "undefined" && location.hostname === "localhost") {
-//   connectDatabaseEmulator(db, "localhost", 9000);
-// }
+if (typeof window !== "undefined" && location.hostname === "localhost") {
+  connectDatabaseEmulator(db, "localhost", 9000);
+}
 
 //const analytics = getAnalytics(app);  

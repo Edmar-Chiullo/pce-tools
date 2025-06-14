@@ -55,7 +55,6 @@ export default function Login() {
       const values = Object.values(result)
       const acess = values.find(({ userID, userPassword }:any) => userID === user.login && String(userPassword) === user.password)
       const res = acess ? navigationPage(acess) : false
-      console.log(values)
       res ? router.push(res) : alert('Usuário ou senha inválidos.')
     })    
 

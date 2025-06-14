@@ -1,8 +1,9 @@
-import { ActivityProps } from "../interface/interface";
+import { ActivityProps, ReceiptMelloProps, ReceiptOperatorProps, ReceiptProps } from "../interface/interface";
 import { db } from "./fbkey";
 import { ref, child, get, onValue, set } from "firebase/database";
 
 import { fullDate } from "@/utils/date-generate";
+import { ReceiptMello } from "../class/class-task";
 
 const re = ref(db)
 
@@ -29,7 +30,6 @@ export async function getTaskes({...tasks}) {
 
 export async function getTaske({...tasks}) {
   const result = get(child(re, `activity/${tasks.descricao}/${tasks.dateAno}/${tasks.dateMes}/${tasks.id}/`)).then((snapshot) => {
-    console.log(`activity/${tasks.descricao}/${tasks.dateAno}/${tasks.dateMes}/${tasks.id}/`)
     return snapshot.exists() ? snapshot.val() : false
   }).catch((error) => {
       return error
@@ -38,6 +38,18 @@ export async function getTaske({...tasks}) {
   return result
 }
 
+export async function getReceipt() {
+  const strDate = fullDate()
+  .replace('/','')
+  .replace('/','')
+  const result = get(child(re, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)).then((snapshot) => {
+    return snapshot.exists() ? snapshot.val() : false
+  }).catch((error) => {
+      return error
+  })
+
+  return result
+}
 
 export async function getActivity(activity:any) {
   const strDate = fullDate()
@@ -77,5 +89,39 @@ export async function setActivityDb({...activity}:ActivityProps | undefined) {
 
   set(ref(db,`activity/${activity.activityName}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${activity.activityID}`), {
     activi: activity
+  });
+}
+
+
+export async function setBulkCpd({...carga}:ReceiptMelloProps | undefined) {
+  const strDate = fullDate()
+  .replace('/','')
+  .replace('/','')
+
+  set(ref(db,`activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${carga.bulkId}`), {
+    carga
+  });
+}
+
+
+export async function upBulkCpd({...carga}:ReceiptProps | undefined) {
+  const strDate = fullDate()
+  .replace('/','')
+  .replace('/','')
+
+  set(ref(db,`activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${carga.bulkId}`), {
+    activi: carga
+  });
+}
+
+
+export async function setBulkReceipt({...carga}:ReceiptOperatorProps | undefined) {
+  console.log(carga)
+  const strDate = fullDate()
+  .replace('/','')
+  .replace('/','')
+
+  set(ref(db,`activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${carga.bulkId}`), {
+    activi: carga
   });
 }

@@ -1,9 +1,8 @@
 'use client'
 
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { useState, ReactNode } from "react";
 
 import { ActivityProps } from "../interface/interface";
-import { Activity } from "../class/class-activity";
 import { ActiviContext } from "./acitivy-context";
 
 export const ActiviContextProvider = ({ children }: { children: ReactNode }) => {
