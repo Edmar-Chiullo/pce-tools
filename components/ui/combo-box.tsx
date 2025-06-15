@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { CheckIcon, ChevronsDown, ChevronsDownUp, ChevronsUpDownIcon, LucideChevronsDown, LucideChevronsDownUp } from "lucide-react"
+import { useState } from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button";
@@ -14,17 +15,17 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { setBulkCpd } from "@/app/firebase/fbmethod"
-import { useRouter } from "next/navigation"
-import { carga } from "../../utils/create-carga"
-
-import { useReceiptContext } from "@/app/context/carga-context"
-import { useLoginContext } from "@/app/context/user-context";
+import { box } from "@/app/pages/receipt-operator/box";
 
 const FormSchema = z.object({
   status: z.string({
+    required_error: "Por favor, selecionar oo controle.",
+  }),
+
+  box: z.string({
     required_error: "Por favor, selecione a opção.",
   }),
+
 })
 
 export default function Combobox({props}:any) {
@@ -34,19 +35,17 @@ export default function Combobox({props}:any) {
     resolver: zodResolver(FormSchema),
   })
   
-  const [open, setOpen] = React.useState(false)
-
+  const [openStatus, setOpenStatus] = useState(false);
+  const [openBox, setOpenBox] = useState(false);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     lbCarga(data)
 
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    form.reset({
+      status: '',
+      box: ''
     })
+
   }
 
   return (
@@ -57,55 +56,108 @@ export default function Combobox({props}:any) {
           name="status"
           render={({ field }) => (
             <FormItem className="flex flex-col w-full">
-              <FormLabel>Selecionar opção</FormLabel>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      name="status"
-                      className={cn("w-[200px] justify-between", !field.value && "text-muted-foreground")}
-                    >
-                      {field.value ? carga.find((framework:any) => framework.bulkControl === field.value)?.bulkControl : "Selecione a opção..."}
-                      <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder={"Selecione a opção..."}/>
-                      <CommandList>
-                        <CommandEmpty>Controle não encontrado.</CommandEmpty>
-                        <CommandGroup>
-                          {carga.map((framework:any) => (
-                            framework.bulkState === 'Entrada' ? (                            
+              <FormLabel>Selecionar controlar</FormLabel>
+              <Popover open={openStatus} onOpenChange={setOpenStatus}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={openStatus}
+                    className={cn("w-[200px] justify-between", !field.value && "text-muted-foreground")}
+                  >
+                    {field.value
+                      ? carga.find((f: any) => f.bulkControl === field.value)?.bulkControl
+                      : "Selecione a opção..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Selecione a opção..." />
+                    <CommandList>
+                      <CommandEmpty>Controle não encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        {carga.map((f: any) =>
+                          f.bulkState === "Entrada" ? (
                             <CommandItem
-                              key={framework.bulkControl}
-                              value={framework.bulkControl}
-                              className="flex items-center justify-center cursor-pointer border-b-2"
+                              key={f.bulkControl}
+                              value={f.bulkControl}
                               onSelect={(currentValue) => {
-                                form.setValue('status', currentValue)
-                                setOpen(false)
+                                form.setValue("status", currentValue);
+                                setOpenStatus(false);
                               }}
+                              className="flex items-center justify-center cursor-pointer border-b-2"
                             >
                               <CheckIcon
-                                className={cn("mr-2 h-4 w-4", field.value === framework.bulkControl ? "opacity-100" : "opacity-0")}
+                                className={cn("mr-2 h-4 w-4", field.value === f.bulkControl ? "opacity-100" : "opacity-0")}
                               />
-                              {`CONTROLE: ${framework.bulkControl}`}
+                              {`CONTROLE: ${f.bulkControl}`}
                             </CommandItem>
-                            ): '' 
-                          ))}                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                          ) : null
+                        )}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full hover:scale-[1.02]">Altorizar descarga</Button>
+        <FormField
+          control={form.control}
+          name="box"
+          render={({ field }) => (
+            <FormItem className="flex flex-col w-full">
+              <FormLabel>Selecionar box</FormLabel>
+              <Popover open={openBox} onOpenChange={setOpenBox}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={openBox}
+                    className={cn("w-[200px] justify-between", !field.value && "text-muted-foreground")}
+                  >
+                    {field.value ? box.find((f: any) => f.value === field.value)?.value : "Selecione a opção..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Selecione a opção..." />
+                    <CommandList>
+                      <CommandEmpty>Box não encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        {box.map((f: any) => (
+                          <CommandItem
+                            key={f.value}
+                            value={f.value}
+                            onSelect={(currentValue) => {
+                              form.setValue("box", currentValue);
+                              setOpenBox(false);
+                            }}
+                            className="flex items-center justify-center cursor-pointer border-b-2"
+                          >
+                            <CheckIcon
+                              className={cn("mr-2 h-4 w-4", field.value === f.value ? "opacity-100" : "opacity-0")}
+                            />
+                            {`BOX: ${f.value}`}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="w-full hover:scale-[1.02]">
+          Autorizar descarga
+        </Button>
       </form>
     </Form>
-
-  )
+  );
 }

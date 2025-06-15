@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
 
-import { ref, onChildAdded } from "firebase/database";
+import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
@@ -74,6 +74,18 @@ export default function ReceiptScreen() {
             return "No data available"
         }
     })    
+
+    const highRotationFullChange = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+    onChildChanged(highRotationFullChange, (snapshot) => {
+        if (snapshot.exists()) {
+            const result = snapshot.val()
+
+            console.log(result)
+        } else {
+            return "No data available"
+        }
+    })
+
   }, [])
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -97,19 +109,16 @@ export default function ReceiptScreen() {
     router.push('/pages/receipt-update')
   }
 
-
   function open(value: any) {
-    bulk.map((el) => {
-      console.log(el.bulkControl)
-    })
     const element = bulk.filter(({bulkControl}) => bulkControl === value)
     return element
   }
 
   function lbCarga(id:string) {
-    const { status }:any = id
+    const { status, box }:any = id
+    console.log(id)
     const i = open(status)
-    const obj = alterIdCarga({dataForm:i[0], situacao:'recebendo', user:user})
+    const obj = alterIdCarga({dataForm:i[0], situacao:'recebendo', box: box, user:user})
     setBulkCpd(obj) 
   }
 
@@ -138,9 +147,9 @@ export default function ReceiptScreen() {
       <div className="w-full h-24">
 
       </div>
-      <div className="flex h-[82%]">
+      <div className="flex w-full h-[82%]">
         <Combobox props={{carga:bulk, lbCarga:lbCarga}}/>
-        <div className="relative self-end w-[100%] h-[100%] rounded-md p-1 bg-zinc-50">
+        <div className="relative w-[80%] h-[100%] rounded-md p-1 bg-zinc-50">
           <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
             <ul className="grid grid-cols-7 gap-8 text-zinc-50">
               <li className="col-start-1 place-self-center">Controle</li>
