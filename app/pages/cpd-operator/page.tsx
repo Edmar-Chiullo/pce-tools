@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 
-import { ref, onChildAdded } from "firebase/database";
+import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
@@ -72,6 +72,17 @@ export default function ReceiptScreen() {
             return "No data available"
         }
     })    
+    
+    const alterCarga = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+        onChildChanged(alterCarga, (snapshot) => {
+            if (snapshot.exists()) {
+                const { carga } = snapshot.val()
+                setBulk((prev) => prev.filter(({ bulkId }) => bulkId !== carga.bulkId))
+                setBulk((object:any) => [...object, carga])
+            } else {
+                return "No data available"
+            }
+        })
   }, [])
 
   useEffect(() => {
@@ -118,11 +129,13 @@ export default function ReceiptScreen() {
   }
 
   return (
-    <div className="main flex p-3 h-screen">
-      <div className="flex flex-col items-center justify-center gap-10 w-80 h-[95vh] pl-3">
-        <h1 className="lg:text-2xl md:text-6xl sm:text-4xl self-start">CPD - RECEBIMENTO</h1>
+    <div className="main flex flex-col p-3 w-full h-screen">
+      <div className="flex justify-center items-center w-full h-24">
+        <h1 className="text-4xl">Recebimento</h1>
+      </div>
+      <div className="flex items-center justify-between gap-9 w-full h-[80%]">
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="self-start flex flex-col gap-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="self-start flex flex-col gap-2 w-72">
               <FormField
                   control={form.control}
                   name="motorista"
@@ -211,51 +224,53 @@ export default function ReceiptScreen() {
               <Button type="submit" className="w-full h-8 cursor-pointer">Salvar</Button>
             </form>
         </Form>
-      </div>
-      <div className="relative self-end w-[100%] h-[82%] rounded-md p-1 bg-zinc-50">
-        <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
-          <ul className="grid grid-cols-11 gap-8 text-zinc-50">
-            <li className="col-start-1 col-span-2">Motorista</li>
-            <li className="col-start-3 col-span-2">Transportadora</li>
-            <li className="col-start-5 place-self-center">Agenda</li>
-            <li className="col-start-6 place-self-center">Controle</li>
-            <li className="col-start-7 place-self-center">Telefone</li>
-            <li className="col-start-8 place-self-center">Status</li>
-            <li className="col-start-9 place-self-center">Data</li>
-            <li className="col-start-10 place-self-center">Timer</li>
-            <li className="col-start-11 place-self-end mr-2">Editar</li>
-          </ul>
+        <div className="relative self-end w-full h-[100%] rounded-md bg-zinc-50">
+          <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
+            <ul className="grid grid-cols-11 gap-8 text-zinc-50">
+              <li className="col-start-1 col-span-2">Motorista</li>
+              <li className="col-start-3 col-span-2">Transportadora</li>
+              <li className="col-start-5 place-self-center">Agenda</li>
+              <li className="col-start-6 place-self-center">Controle</li>
+              <li className="col-start-7 place-self-center">Telefone</li>
+              <li className="col-start-8 place-self-center">Status</li>
+              <li className="col-start-9 place-self-center">Data</li>
+              <li className="col-start-10 place-self-center">Timer</li>
+              <li className="col-start-11 place-self-end mr-2">Editar</li>
+            </ul>
+          </div>
+          <ScrollArea className="w-full h-[100%]">
+            {
+              bulk.map((carga, key) => {
+                const color = carga.bulkState === 'recebendo' ? 'bg-amber-300' : 'bg-cyan-50'
+                const colorFinsh = carga.bulkState === 'Finalizada' ? 'bg-red-500' : ''
+                return (
+                  <div key={key} className="w-full h-6 bg-zinc-100 hover:bg-zinc-300">
+                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] ${color} ${colorFinsh}`}>
+                      <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
+                      <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
+                      <li className="col-start-5 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
+                      <li className="col-start-6 place-self-center">{carga.bulkControl.toUpperCase()}</li>
+                      <li className="col-start-7 place-self-center">{carga.bulkDriverPhoneNumber.toUpperCase()}</li>
+                      <li className="col-start-8 place-self-center">{fullDatePrint(carga.bulkCpdDate)}</li>
+                      <li className="col-start-9 place-self-center">{hourPrint(carga.bulkCpdDate)}</li>
+                      <li className="col-start-10 place-self-center"><Timer props={{date:carga.bulkCpdDate, k:key}} /></li>
+                      <li id={carga.bulkId} onClick={(value) => openCarga(value)} className="col-start-11 place-self-end self-start pr-5"> 
+                        <Image 
+                          onClick={(value) => openCarga(value)}
+                          className="cursor-pointer hover:scale-[1.10]"
+                          src={'/proximo.png'}
+                          width={20}
+                          height={20} 
+                          alt="Proxima página."
+                        />
+                      </li>
+                    </ul>
+                  </div>
+                )
+              })
+            }
+          </ScrollArea>
         </div>
-        <ScrollArea className="w-full h-full">
-          {
-            bulk.map((carga, key) => {
-              return (
-                <div key={key} className="w-full h-6 mb-1 pl-1 pr-1 rounded-[4px] bg-zinc-100 hover:bg-zinc-200">
-                  <ul className="grid grid-cols-11 gap-8 text-[15px]">
-                    <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
-                    <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
-                    <li className="col-start-5 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
-                    <li className="col-start-6 place-self-center">{carga.bulkControl.toUpperCase()}</li>
-                    <li className="col-start-7 place-self-center">{carga.bulkDriverPhoneNumber.toUpperCase()}</li>
-                    <li className="col-start-8 place-self-center">{fullDatePrint(carga.bulkCpdDate)}</li>
-                    <li className="col-start-9 place-self-center">{hourPrint(carga.bulkCpdDate)}</li>
-                    <li className="col-start-10 place-self-center"><Timer props={{date:carga.bulkCpdDate, k:key}} /></li>
-                    <li id={carga.bulkId} onClick={(value) => openCarga(value)} className="col-start-11 place-self-end self-start pr-5"> 
-                      <Image 
-                        onClick={(value) => openCarga(value)}
-                        className="cursor-pointer hover:scale-[1.10]"
-                        src={'/proximo.png'}
-                        width={20}
-                        height={20} 
-                        alt="Proxima página."
-                      />
-                    </li>
-                  </ul>
-                </div>
-              )
-            })
-          }
-        </ScrollArea>
       </div>
     </div>
   );

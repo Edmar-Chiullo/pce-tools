@@ -17,7 +17,7 @@ export function carga({...data}) {
         bulkReceiptOperator: carga.bulkReceiptOperator,
         bulkCpdDate: carga.bulkCpdDate,
         bulkReceiptDate: carga.bulkReceiptDate,
-        bulkState: carga.bulkState,
+        bulkState: carga.bulkState === 'Entrada'? carga.bulkState: 'recebendo',
         bulkStateCpdDescription: carga.bulkStateCpdDescription,
         bulkStateReceiptDescription: carga.bulkStateReceiptDescription
     }

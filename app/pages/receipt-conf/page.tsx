@@ -58,47 +58,54 @@ export default function ReceiptScreen() {
   }
 
   return (
-    <div className="main flex p-3 h-screen">
-        <div className="flex flex-col items-center justify-center gap-10 w-80 h-[95vh] pl-3">
-            <h1 className="lg:text-2xl md:text-6xl sm:text-4xl self-start">CPD - RECEBIMENTO</h1>
+        <div className="main flex flex-col p-3 h-screen">
+        <div className="flex justify-center items-center w-full h-24">
+            <h1 className="text-4xl">Recebimento</h1>
         </div>
-        <div className="relative self-end w-[100%] h-[82%] rounded-md p-1 bg-zinc-50">
+        <div className="flex justify-end gap-9 w-full h-[82%]">
+            <div className="relative w-[80%] h-[100%] rounded-md p-1 bg-zinc-50">
             <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
-            <ul className="grid grid-cols-7 gap-8 text-zinc-50">
+                <ul className="grid grid-cols-7 gap-8 text-zinc-50">
                 <li className="col-start-1 place-self-center">Controle</li>
                 <li className="col-start-2 place-self-center">Doca</li>
                 <li className="col-start-3 place-self-center">Agenda</li>
                 <li className="col-start-4 place-self-center">Data</li>
                 <li className="col-start-5 place-self-center">Hora</li>
                 <li className="col-start-6 place-self-center">Tempo</li>
-                <li className="col-start-7 place-self-center mr-2">Situação</li>
-            </ul>
+                <li className="col-start-7 place-self-center mr-2">Editar</li>
+                </ul>
             </div>
             <ScrollArea className="w-full h-full">
-            {
+                {
                 bulk.map((carga, key) => {
-                return (
-                    <div key={key} className="w-full h-10 mb-1 pl-1 pr-1 rounded-[4px] bg-zinc-100 hover:bg-zinc-200">
-                    <ul className="grid grid-cols-7 gap-8 text-[15px]">
+                    if (carga.bulkState === 'recebendo') return (
+                    <div key={key} className="flex items-center w-full h-6 rounded-[4px] bg-zinc-200 hover:bg-zinc-300">
+                        <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                         <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                         <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
                         <li className="col-start-3 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
                         <li className="col-start-4 place-self-center">{fullDatePrint(carga.bulkReceiptDate).toUpperCase()}</li>
                         <li className="col-start-5 place-self-center">{hourPrint(carga.bulkReceiptDate).toUpperCase()}</li>
                         <li className="col-start-6 place-self-center"><Timer props={{date:carga.bulkReceiptDate, k:key}} /></li>
-                        <li id={carga.bulkId} onClick={(value) => openCarga(value)} className="col-start-7 place-self-center self-start pt-1"> 
-                        <Button className="h-8">
-                            {carga.bulkState}
-                        </Button>
-                        </li>
-                        
-                    </ul>
+                        <li id={carga.bulkId} className="col-start-7 place-self-center self-start "> 
+                            <Image 
+                            onClick={(value) => openCarga(value)}
+                            className="cursor-pointer hover:scale-[1.10]"
+                            src={'/proximo.png'}
+                            width={20}
+                            height={20} 
+                            alt="Proxima página."
+                            />
+                            
+                        </li>              
+                        </ul>
                     </div>
-                )
+                    )
                 })
-            }
+                }
             </ScrollArea>
+            </div>
         </div>
-    </div>
-  );
+        </div> 
+    )
 }

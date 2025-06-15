@@ -1,15 +1,14 @@
 'use client'
 
 import * as React from "react"
-import { CheckIcon, ChevronsDown, ChevronsDownUp, ChevronsUpDownIcon, LucideChevronsDown, LucideChevronsDownUp } from "lucide-react"
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react"
 import { useState } from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "@/components/ui/command"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import {Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { toast } from "sonner";
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -50,7 +49,7 @@ export default function Combobox({props}:any) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 p-1">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-1">
         <FormField
           control={form.control}
           name="status"
@@ -86,10 +85,10 @@ export default function Combobox({props}:any) {
                                 form.setValue("status", currentValue);
                                 setOpenStatus(false);
                               }}
-                              className="flex items-center justify-center cursor-pointer border-b-2"
+                              className="cursor-pointer border-b-2"
                             >
                               <CheckIcon
-                                className={cn("mr-2 h-4 w-4", field.value === f.bulkControl ? "opacity-100" : "opacity-0")}
+                                className={cn("h-4 w-4", field.value === f.bulkControl ? "opacity-100" : "opacity-0")}
                               />
                               {`CONTROLE: ${f.bulkControl}`}
                             </CommandItem>
@@ -136,7 +135,7 @@ export default function Combobox({props}:any) {
                               form.setValue("box", currentValue);
                               setOpenBox(false);
                             }}
-                            className="flex items-center justify-center cursor-pointer border-b-2"
+                            className=" cursor-pointer border-b-2"
                           >
                             <CheckIcon
                               className={cn("mr-2 h-4 w-4", field.value === f.value ? "opacity-100" : "opacity-0")}
@@ -154,7 +153,7 @@ export default function Combobox({props}:any) {
           )}
         />
 
-        <Button type="submit" className="w-full hover:scale-[1.02]">
+        <Button type="submit" className="w-full hover:scale-[1.02] mt-2 ">
           Autorizar descarga
         </Button>
       </form>

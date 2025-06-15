@@ -28,6 +28,7 @@ import { ReceiptOperator } from "@/app/class/class-task";
 import Timer from "@/components/ui/span";
 import { alterIdCarga } from "./alterIdCarga";
 import { setBulkCpd } from "@/app/firebase/fbmethod";
+import { extractionData } from "@/utils/alter-object";
 
 const formSchema = z.object({
   filial: z.string().min(2, {
@@ -75,12 +76,12 @@ export default function ReceiptScreen() {
         }
     })    
 
-    const highRotationFullChange = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-    onChildChanged(highRotationFullChange, (snapshot) => {
+    const alterCarga = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
+    onChildChanged(alterCarga, (snapshot) => {
         if (snapshot.exists()) {
-            const result = snapshot.val()
-
-            console.log(result)
+            const { carga } = snapshot.val()
+            setBulk((prev) => prev.filter(({ bulkId }) => bulkId !== carga.bulkId))
+            setBulk((object:any) => [...object, carga])
         } else {
             return "No data available"
         }
@@ -116,7 +117,6 @@ export default function ReceiptScreen() {
 
   function lbCarga(id:string) {
     const { status, box }:any = id
-    console.log(id)
     const i = open(status)
     const obj = alterIdCarga({dataForm:i[0], situacao:'recebendo', box: box, user:user})
     setBulkCpd(obj) 
@@ -144,10 +144,10 @@ export default function ReceiptScreen() {
 
   return (
     <div className="main flex flex-col p-3 h-screen">
-      <div className="w-full h-24">
-
+      <div className="flex justify-center items-center w-full h-24">
+        <h1 className="text-4xl">Recebimento</h1>
       </div>
-      <div className="flex w-full h-[82%]">
+      <div className="flex gap-9 w-full h-[82%]">
         <Combobox props={{carga:bulk, lbCarga:lbCarga}}/>
         <div className="relative w-[80%] h-[100%] rounded-md p-1 bg-zinc-50">
           <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
@@ -165,18 +165,16 @@ export default function ReceiptScreen() {
             {
               bulk.map((carga, key) => {
                 if (carga.bulkState === 'recebendo') return (
-                  <div key={key} className="w-full h-10 mb-1 pl-1 pr-1 rounded-[4px] bg-zinc-100 hover:bg-zinc-200">
-                    <ul className="grid grid-cols-7 gap-8 text-[15px]">
+                  <div key={key} className="flex items-center w-full h-6 rounded-[4px] bg-zinc-200 hover:bg-zinc-300">
+                    <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
                       <li className="col-start-3 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
                       <li className="col-start-4 place-self-center">{fullDatePrint(carga.bulkReceiptDate).toUpperCase()}</li>
                       <li className="col-start-5 place-self-center">{hourPrint(carga.bulkReceiptDate).toUpperCase()}</li>
                       <li className="col-start-6 place-self-center"><Timer props={{date:carga.bulkReceiptDate, k:key}} /></li>
-                      <li id={carga.bulkId} onClick={(value) => openCarga(value)} className="col-start-7 place-self-center self-start pt-1"> 
-                        <Button className="h-8 hover:scale-[1.02]">
-                          {carga.bulkState}
-                        </Button>
+                      <li id={carga.bulkId} className="col-start-7 place-self-center self-start "> 
+                          {carga.bulkState.toUpperCase()}
                       </li>              
                     </ul>
                   </div>
