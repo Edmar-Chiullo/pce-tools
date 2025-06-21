@@ -8,9 +8,6 @@ import Image from "next/image";
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 
-import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Combobox from "@/components/ui/combo-box";
 import { useForm } from "react-hook-form"
@@ -29,6 +26,7 @@ import Timer from "@/components/ui/span";
 import { alterIdCarga } from "./alterIdCarga";
 import { setBulkCpd } from "@/app/firebase/fbmethod";
 import { extractionData } from "@/utils/alter-object";
+import { getReceipt } from "@/app/firebase/fbmethod";
 
 const formSchema = z.object({
   filial: z.string().min(2, {
@@ -55,37 +53,55 @@ const formSchema = z.object({
 export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
+  const [ userName, setUserName ] = useState<string | null>('')
+  
   const { setReceipt } = useReceiptContext()
-    const { receipt }:any = useReceiptContext()
-    const { user } = useLoginContext() 
+  const { receipt }:any = useReceiptContext()
+  const { user } = useLoginContext() 
 
   const router = useRouter()
 
   useEffect(() => {
-    const strDate = fullDate()
-    .replace('/','')
-    .replace('/','')
+    const userLogin:any = localStorage.getItem('userName')
+    userLogin ? setUserName(userLogin) : router.push('/')
 
-    const cargaReceipt = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
-    onChildAdded(cargaReceipt, (snapshot) => {
-        if (snapshot.exists()) {
-            const result = Object.values(snapshot.val())
-            setBulk((object:any) => [...object, result[0]])
-        } else {
-            return "No data available"
-        }
-    })    
 
-    const alterCarga = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-    onChildChanged(alterCarga, (snapshot) => {
-        if (snapshot.exists()) {
-            const { carga } = snapshot.val()
-            setBulk((prev) => prev.filter(({ bulkId }) => bulkId !== carga.bulkId))
-            setBulk((object:any) => [...object, carga])
-        } else {
-            return "No data available"
-        }
+    getReceipt().then((val) => {
+      const arr = Object.values(val)
+      setBulk(arr)
+    
     })
+
+    const strDate = fullDate().replace(/\//g, "");
+
+    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+
+    const cargaReceipt = ref(db, basePath) 
+      onChildAdded(cargaReceipt, (snapshot) => {
+        if (snapshot.exists()) {
+          const arr = snapshot.val();
+          const { carga } = arr;
+
+          setBulk((prev) => {
+            const exists = prev.some((item) => item.carga.bulkId === carga.bulkId);
+            if (!exists) {
+              return [...prev, { carga }];
+            }
+            return prev;
+          });
+        }
+      });  
+
+    const alterCarga = ref(db, basePath)
+      onChildChanged(alterCarga, (snapshot) => {
+        if (snapshot.exists()) {
+          const { carga } = snapshot.val();
+          const id = carga.bulkId;
+          setBulk((prev) =>
+            prev.map((item) => item.carga.bulkId === id ? { carga } : item)
+          );
+        }
+      });
 
   }, [])
   
@@ -111,43 +127,26 @@ export default function ReceiptScreen() {
   }
 
   function open(value: any) {
-    const element = bulk.filter(({bulkControl}) => bulkControl === value)
+    const element = bulk.filter(({carga}) => carga.bulkControl === value)
     return element
   }
 
   function lbCarga(id:string) {
     const { status, box }:any = id
     const i = open(status)
-    const obj = alterIdCarga({dataForm:i[0], situacao:'recebendo', box: box, user:user})
+    const obj = alterIdCarga({dataForm:i[0], situacao:'recebendo', box:box, user:user})
     setBulkCpd(obj) 
-  }
-
-  function onSubmit(cargo: z.infer<typeof formSchema>) {
-
-    const statusCarga = 'Recebendo'
-    const descriptionCarga = 'Recebimento chão'
-    
-    const carga = new ReceiptOperator(cargo)
-    carga.alterBulkState(statusCarga)
-    carga.alterBulkStateDescription(descriptionCarga)
-    
-    setBulkReceipt(carga)    
-    form.reset({
-      filial: "",
-      agenda: "",
-      doca: "",
-      controle: "",
-      tipo_carga: "",
-      qt_pallet: ""
-    })
   }
 
   return (
     <div className="main flex flex-col p-3 h-screen">
+      <div className="flex justify-end items-center w-full h-2">
+        <h5>{userName}</h5>
+      </div>
       <div className="flex justify-center items-center w-full h-24">
         <h1 className="text-4xl">Recebimento</h1>
       </div>
-      <div className="flex gap-9 w-full h-[82%]">
+      <div className="flex gap-9 w-full h-[80%]">
         <Combobox props={{carga:bulk, lbCarga:lbCarga}}/>
         <div className="relative w-[80%] h-[100%] rounded-md p-1 bg-zinc-50">
           <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
@@ -163,9 +162,9 @@ export default function ReceiptScreen() {
           </div>
           <ScrollArea className="w-full h-full">
             {
-              bulk.map((carga, key) => {
+              bulk.map(({carga}, key) => {
                 if (carga.bulkState === 'recebendo') return (
-                  <div key={key} className="flex items-center w-full h-6 rounded-[4px] bg-zinc-200 hover:bg-zinc-300">
+                  <div key={key} className="flex items-center w-full h-6 rounded-[4px] bg-zinc-200 hover:bg-zinc-300 mb-[1.50px]">
                     <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>

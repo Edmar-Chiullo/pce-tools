@@ -66,6 +66,7 @@ export interface ReceiptMelloProps {
     bulkDriverPhoneNumber: string | null
     bulkCpdOperator: string | null
     bulkReceiptOperator: string | null
+    bulkReceiptConf: string | null | number
     bulkDoca: string | null
     bulkCarrier: string | null
     bulkAgenda: string | null

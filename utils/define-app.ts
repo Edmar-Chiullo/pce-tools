@@ -3,13 +3,15 @@
 export function selectApp(userPermission:string) {
     switch (userPermission) {
         case 'pce-analytics':
-            return 'pages/home-analytics/'
+            return 'pages/homeanalytics/'
         case 'pce-operation':
-            return 'pages/home-operator/' 
+            return 'pages/homeoperator/' 
         case 'cpd-operation':
-            return 'pages/cpd-operator/'
+            return 'pages/cpdoperator/'
         case 'receipt-operator':
-            return 'pages/receipt-operator/'
+            return 'pages/receiptoperator/'
+        case 'receipt-conf':
+            return 'pages/receiptconf/'
         default:
             return 'Tipo de permissão não encontrada'
     }

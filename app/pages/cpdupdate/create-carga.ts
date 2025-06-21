@@ -10,6 +10,7 @@ export function carga({...data}) {
         bulkAgenda: dataForm.ticket,
         bulkPlate: dataForm.placa,
         bulkCpdOperator: carga.bulkCpdOperator, 
+        bulkReceiptConf: carga.bulkReceiptConf,
         bulkDoca: carga.bulkDoca,
         bulkTipoCarga: carga.bulkTipoCarga,
         bulkControl: dataForm.controle,

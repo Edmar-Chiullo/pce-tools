@@ -1,8 +1,8 @@
 import { dateDb } from "@/utils/date-generate"
 
 
-export function alterIdCarga({...data}) {
-        const { dataForm, situacao, user, box } = data
+export function finishCarga({...data}) {
+        const { dataForm, label, text, conf, tpallet, tcarga } = data
     const obj = {
         bulkId: dataForm.bulkId,
         bulkDriver: dataForm.bulkDriver,
@@ -11,16 +11,18 @@ export function alterIdCarga({...data}) {
         bulkAgenda: dataForm.bulkAgenda,
         bulkPlate: dataForm.bulkPlate,
         bulkCpdOperator: dataForm.bulkCpdOperator, 
-        bulkDoca: box,
-        bulkTipoCarga: dataForm.bulkTipoCarga,
+        bulkDoca: dataForm.bulkDoca,
+        bulkTipoCarga: tcarga,
         bulkControl: dataForm.bulkControl,
-        bulkQtPallet: dataForm.bulkQtPallet,
-        bulkReceiptOperator: user.userName,
+        bulkQtPallet: tpallet,
+        bulkReceiptOperator: dataForm.bulkReceiptOperator,
+        bulkReceiptConf: conf,
         bulkCpdDate: dataForm.bulkCpdDate,
-        bulkReceiptDate: dateDb(),
-        bulkState: situacao,
+        bulkReceiptDate: dataForm.bulkReceiptDate,
+        bulkConfDate: dateDb(),
+        bulkState: label,
         bulkStateCpdDescription: dataForm.bulkStateCpdDescription,
-        bulkStateReceiptDescription: dataForm.bulkStateReceiptDescription
+        bulkStateReceiptDescription: text
     }
     return obj
 }

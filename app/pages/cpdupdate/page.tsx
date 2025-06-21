@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from "react";
+
 import { useReceiptContext } from "@/app/context/carga-context"
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -7,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+
+import Image from "next/image";
 
 import { setBulkCpd } from "@/app/firebase/fbmethod";
 import { useRouter } from "next/navigation";
@@ -34,8 +38,9 @@ const formSchema = z.object({
 })
         
 export default function PegeResponse() {
-
+    
     const { receipt }:any = useReceiptContext()
+
     const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -62,7 +67,7 @@ export default function PegeResponse() {
         telefone: ""
         })
 
-        router.push('/pages/cpd-operator')
+        router.push('/pages/cpdoperator')
     }
 
     function pushMessage() {
@@ -72,8 +77,16 @@ export default function PegeResponse() {
     
     return (
     <div className="absolute top-0 left-0 z-10 w-full h-full bg-zinc-50 rounded-[4px] p-1">
+        <Image 
+             onClick={() => router.push('/pages/cpdoperator')}
+                className="ml-3 mt-2 cursor-pointer hover:scale-[1.10]"
+                src={'/seta-esquerda.png'}
+                width={20}
+                height={20} 
+                alt="Proxima página."
+        />
         <div className="flex flex-col items-center justify-center gap-4 w-full h-56 pl-3">
-        <h1 className="lg:text-2xl md:text-6xl sm:text-4xl self-start">EDITAR</h1>
+        <h1 className="lg:text-2xl md:text-6xl sm:text-4xl self-start">Editar</h1>
         <div className="flex w-full">
             <div>
                 <Form {...form}>
@@ -164,6 +177,27 @@ export default function PegeResponse() {
                         )}
                     />
                     <Button type="submit" className="absolute self-center right-1 bottom-2 text-2xl w-32 h-26 bg-zinc-950 hover:bg-zinc-700 cursor-pointer">Editar</Button>
+                    </form>
+                </Form>
+            </div>
+            <div className='hidden'>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="relative self-start flex flex-wrap gap-2">
+                        <FormField
+                            control={form.control}
+                            name="motorista"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Motorista</FormLabel>
+                                <FormControl>
+                                <Input placeholder="Motorista" className="motorista w-72 h-8" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
                     </form>
                 </Form>
             </div>

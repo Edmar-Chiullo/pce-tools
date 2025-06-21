@@ -11,7 +11,7 @@ import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { getActivityTwo, getTaske, getTaskes } from "@/app/firebase/fbmethod";
 import { getElementId, getElementTask } from "@/utils/get-elementHtml";
 import { trackEndNull, trackEndProd, trackPickingRotation, trackFractional } from "@/utils/treatment-data-print";
-import UploadExcel from "@/app/pages/home-analytics/import-file";
+import UploadExcel from "@/app/pages/homeanalytics/import-file";
 import { tractDate } from "@/utils/trac-date";
 import handler from "@/app/pages/api/read-file";
 

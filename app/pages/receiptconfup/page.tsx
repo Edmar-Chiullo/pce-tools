@@ -2,24 +2,31 @@
 
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Textarea } from "@/components/ui/textarea";
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 
+import Image from "next/image";
+
 import { setBulkCpd } from "@/app/firebase/fbmethod"
-import { setBulkReceipt } from "@/app/firebase/fbmethod";
 import { useRouter } from "next/navigation"
-import { carga } from "@/utils/create-carga";
 
 import { useReceiptContext } from "@/app/context/carga-context"
-import { useLoginContext } from "@/app/context/user-context";
-import Combobox from "@/components/ui/combo-box";
-
 import { finishCarga } from "./finishCarga";
         
 const FormSchema = z.object({
+    conf: z.string().min(2, {
+        message: "É nescessario inserir o número de inscrição.",
+    }),
+    tpallet: z.string().min(2, {
+        message: "Insira o total de pallet.",
+    }), 
+    tcarga: z.string().min(2, {
+        message: "Insira o tipo da carga.",
+    }), 
     items: z.array(z.string()).refine((value) => value.some((item) => item), {
         message: "You have to select at least one item.",
     }),
@@ -31,31 +38,39 @@ const FormSchema = z.object({
 export default function PegeResponse() {
 
     const { receipt }:any = useReceiptContext()
-    const { user } = useLoginContext() 
     const router = useRouter()
-
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-        items: [],
-        observation: 'Finalizado.'
+            conf: '',    
+            tpallet: '',
+            tcarga: '',
+            items: [],
+            observation: 'Finalizado.'
         },
     })
 
-    function onSubmit({items, observation }: z.infer<typeof FormSchema>) {
-        const obj = finishCarga({dataForm:receipt, label:items[0], text:observation})
+    function onSubmit({conf, tpallet, tcarga, items, observation }: z.infer<typeof FormSchema>) {
+        const obj = finishCarga({dataForm:receipt, label:items[0], text:observation, conf,  tpallet, tcarga})
         setBulkCpd(obj)
-        router.push('/pages/receipt-conf')
+
+        form.reset({
+            conf: '',
+            tpallet: '',
+            tcarga: ''
+        })
+
+        router.push('/pages/receiptconf')
     }
 
     const items = [
         {
             id: "Finalizada",
-            label: "Finalizada",
+            label: "Finalizada com sussesso!",
         },
         {
-            id: "varia",
+            id: "avaria",
             label: "Finalizada com avária",
         },
         {
@@ -77,12 +92,68 @@ export default function PegeResponse() {
     ] as const
     
     return (
-    <div className="w-full h-full bg-zinc-50 rounded-[4px] p-1">
-        <div className="flexitems-center justify-center gap-4 w-full h-56 pl-3">
-            <h1 className="text-2xl">Finalizar carga</h1>
+    <div className="w-full h-full bg-zinc-50 rounded-[4px] pt-1 p-6">
+        <div className="flexitems-center justify-center w-full">
+            <Image 
+                onClick={() => router.push('/pages/receiptconf')}
+                className="cursor-pointer hover:scale-[1.10] mb-2"
+                src={'/seta-esquerda.png'}
+                width={20}
+                height={20} 
+                alt="Proxima página."
+            />
+            
+            <h1 className="text-2xl mb-2">Finalizar carga</h1>
             <hr />
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 mt-2">
+                    <div className="flex justify-between">
+                        <FormField
+                            control={form.control}
+                            name="conf"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Identificação do conferente</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Número de inscrição" className="conf w-96" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="tpallet"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Quantidade de pallet</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Quantidade de pallet" className="tpallet w-96" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="tcarga"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Tipo da carga</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Tipo da carga" className="tcarga w-96" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                    </div>
                     <FormField
                         control={form.control}
                         name="items"
@@ -145,7 +216,7 @@ export default function PegeResponse() {
                                 />
                                 </FormControl>
                                 <FormDescription>
-                                    Você pode mencionar texto breve mencionando o estado atual da carga.
+                                    Você pode mencionar um texto breve sobre o estado atual da carga.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>

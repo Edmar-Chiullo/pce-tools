@@ -51,6 +51,7 @@ export async function getReceipt() {
   return result
 }
 
+
 export async function getActivity(activity:any) {
   const strDate = fullDate()
   .replace('/','')

@@ -44,7 +44,8 @@ export default function Login() {
   })
 
   function navigationPage(data:any) {
-    const { userID, userPermission }:any = data
+    const { userID, userPermission, userName }:any = data
+    localStorage.setItem('userName', userName)
     setUser(data)
     const result = selectApp(userPermission)
     return result

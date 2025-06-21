@@ -6,6 +6,7 @@ import { useEffect } from "react";
 
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
+import { getReceipt } from "@/app/firebase/fbmethod";
 
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -53,36 +54,62 @@ export default function ReceiptScreen() {
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ callResponse, setCallResponse ] = useState<boolean>(false)
   const [ elementResponse, setElementResponse ] = useState<any | null>()
+  const [ userName, setUserName ] = useState<string | null>('')
 
   const { setReceipt } = useReceiptContext()
   const { user } = useLoginContext()
   const router = useRouter()
 
   useEffect(() => {
-    const strDate = fullDate()
-    .replace('/','')
-    .replace('/','')
+    const userLogin:any = localStorage.getItem('userName')
+    userLogin ? setUserName(userLogin) : router.push('/')
 
-    const cargaReceipt = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)   
-    onChildAdded(cargaReceipt, (snapshot) => {
+    getReceipt().then((val) => {
+      const arr = Object.values(val)
+      setBulk(arr)
+    })
+
+    // const handleBeforeUnload = () => {
+    //   localStorage.removeItem(userLogin);
+    //   localStorage.removeItem('user');
+    // };
+
+    const strDate = fullDate().replace(/\//g, "");
+    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+
+    const alterCarga = ref(db, basePath)
+      onChildChanged(alterCarga, (snapshot) => {
         if (snapshot.exists()) {
-            const result = Object.values(snapshot.val())
-            setBulk((object:any) => [...object, result[0]])
-        } else {
-            return "No data available"
+          const { carga } = snapshot.val();
+          const id = carga.bulkId;
+
+          setBulk((prev) =>
+            prev.map((item) => item.carga.bulkId === id ? { carga } : item)
+          );
         }
-    })    
-    
-    const alterCarga = ref(db, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)
-        onChildChanged(alterCarga, (snapshot) => {
-            if (snapshot.exists()) {
-                const { carga } = snapshot.val()
-                setBulk((prev) => prev.filter(({ bulkId }) => bulkId !== carga.bulkId))
-                setBulk((object:any) => [...object, carga])
-            } else {
-                return "No data available"
+      });    
+    const cargaReceipt = ref(db, basePath)   
+      onChildAdded(cargaReceipt, (snapshot) => {
+        if (snapshot.exists()) {
+          const arr = snapshot.val();
+          const { carga } = arr;
+
+          setBulk((prev) => {
+            const exists = prev.some((item) => item.carga.bulkId === carga.bulkId);
+            if (!exists) {
+              return [...prev, { carga }];
             }
-        })
+            return prev;
+          });
+        }
+      });
+
+    // window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // return () => {
+    //   window.removeEventListener('beforeunload', handleBeforeUnload);
+    // };
+
   }, [])
 
   useEffect(() => {
@@ -103,11 +130,17 @@ export default function ReceiptScreen() {
 
   function openCarga(value: any) {
     const parent = value.target.parentElement
-    const element = bulk.filter(({bulkId}) => bulkId === parent.id)
+    const element = bulk.filter(({carga}) => carga.bulkId === parent.id)
+    const { carga } = element[0]
+    
+    // if (carga.bulkState === 'recebendo' || carga.bulkState === 'Finalizada') {
+    //   alert('Carga não pode ser editada.')
+    //   return
+    // }
+    
+    setReceipt(carga)
 
-    setReceipt(element[0])
-
-    router.push('/pages/cpd-update')
+    router.push('/pages/cpdupdate')
   }
 
   function onSubmit(cargo: z.infer<typeof formSchema>) {
@@ -130,6 +163,9 @@ export default function ReceiptScreen() {
 
   return (
     <div className="main flex flex-col p-3 w-full h-screen">
+      <div className="flex justify-end items-center w-full h-2">
+        <h5>{userName}</h5>
+      </div>
       <div className="flex justify-center items-center w-full h-24">
         <h1 className="text-4xl">Recebimento</h1>
       </div>
@@ -221,7 +257,7 @@ export default function ReceiptScreen() {
                   </FormItem>
                   )}
               />
-              <Button type="submit" className="w-full h-8 cursor-pointer">Salvar</Button>
+              <Button type="submit" className="w-full h-8 cursor-pointer mt-3">Salvar</Button>
             </form>
         </Form>
         <div className="relative self-end w-full h-[100%] rounded-md bg-zinc-50">
@@ -240,12 +276,14 @@ export default function ReceiptScreen() {
           </div>
           <ScrollArea className="w-full h-[100%]">
             {
-              bulk.map((carga, key) => {
-                const color = carga.bulkState === 'recebendo' ? 'bg-amber-300' : 'bg-cyan-50'
-                const colorFinsh = carga.bulkState === 'Finalizada' ? 'bg-red-500' : ''
+              bulk.map(({carga}, key) => {
+                const color = carga.bulkState === 'recebendo' ? 'bg-amber-100' : 'bg-cyan-50'
+                const colorFinsh = carga.bulkState === 'Finalizada' ? 'bg-green-300' : ''
+                const colorFinishWithDiv = carga.bulkState === 'avaria' || carga.bulkState === 'sobra' || 
+                  carga.bulkState === 'falta' || carga.bulkState === 'trocado' || carga.bulkState === 'divergencia' ? 'bg-red-300' : ''
                 return (
                   <div key={key} className="w-full h-6 bg-zinc-100 hover:bg-zinc-300">
-                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] ${color} ${colorFinsh}`}>
+                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] ${color} ${colorFinsh} ${colorFinishWithDiv}`}>
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
                       <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
                       <li className="col-start-5 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>

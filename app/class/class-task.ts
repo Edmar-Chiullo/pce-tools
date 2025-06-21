@@ -132,6 +132,7 @@ export class ReceiptMello implements ReceiptMelloProps {
     bulkPlate: string | null
     bulkCpdOperator: string | null
     bulkReceiptOperator: string | null
+    bulkReceiptConf: string | null | number
     bulkCpdDate: number | null
     bulkReceiptDate: number | null | string
     bulkStateCpdDescription: string | undefined | null
@@ -152,6 +153,7 @@ export class ReceiptMello implements ReceiptMelloProps {
         this.bulkAgenda = carga.ticket
         this.bulkPlate = carga.placa
         this.bulkCpdOperator = cpdOperator.userName
+        this.bulkReceiptConf = 'no value'
         this.bulkDoca = 'no value'
         this.bulkControl = carga.controle
         this.bulkTipoCarga = 'no value'
