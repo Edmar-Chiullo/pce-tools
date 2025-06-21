@@ -15,6 +15,7 @@ import Image from "next/image";
 import { setBulkCpd } from "@/app/firebase/fbmethod";
 import { useRouter } from "next/navigation";
 import { carga } from "./create-carga";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   motorista: z.string().min(2, {
@@ -35,11 +36,20 @@ const formSchema = z.object({
   telefone: z.string().min(2, {
     message: "Inserir o número de telefone.",
   }), 
+  textarea: z.string().min(2, {
+    message: "Inserir descrição sobre a carga.",
+  }), 
 })
         
 export default function PegeResponse() {
+
+    const [ state, setState ] = useState<string | null>(null)
     
     const { receipt }:any = useReceiptContext()
+
+    useEffect(() => {
+        setState(receipt.bulkState)
+    }, [])
 
     const router = useRouter()
 
@@ -51,23 +61,24 @@ export default function PegeResponse() {
         placa: receipt?.bulkPlate,
         ticket: receipt?.bulkAgenda,
         controle: receipt?.bulkControl,
-        telefone: receipt?.bulkDriverPhoneNumber
+        telefone: receipt?.bulkDriverPhoneNumber,
+        textarea: receipt?.bulkStateReceiptDescription
     },
     })
 
     function onSubmit(cargo: z.infer<typeof formSchema>) {
-        const obj = carga({dataForm:cargo, carga:receipt})
-        setBulkCpd(obj)  
+        // const obj = carga({dataForm:cargo, carga:receipt})
+        // setBulkCpd(obj)  
         
-        form.reset({
-        motorista: "",
-        transportadora: "",
-        placa: "",
-        ticket: "",
-        telefone: ""
-        })
+        // form.reset({
+        // motorista: "",
+        // transportadora: "",
+        // placa: "",
+        // ticket: "",
+        // telefone: ""
+        // })
 
-        router.push('/pages/cpdoperator')
+        // router.push('/pages/cpdoperator')
     }
 
     function pushMessage() {
@@ -86,9 +97,9 @@ export default function PegeResponse() {
                 alt="Proxima página."
         />
         <div className="flex flex-col items-center justify-center gap-4 w-full h-56 pl-3">
-        <h1 className="lg:text-2xl md:text-6xl sm:text-4xl self-start">Editar</h1>
-        <div className="flex w-full">
-            <div>
+        <h1 className="lg:text-2xl md:text-6xl sm:text-4xl self-start">{state === 'Finalizada' ? 'Liberar canhoto' : 'Editar'}</h1>
+        <div className={`flex flex-col w-full h-[70%]`}>
+            <div className={` ${state === 'Finalizada' ? 'hidden' : 'none'}`}>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="relative self-start flex flex-wrap gap-2">
                     <FormField
@@ -180,17 +191,18 @@ export default function PegeResponse() {
                     </form>
                 </Form>
             </div>
-            <div className='hidden'>
+            <hr className={`w-full h-20 p-4 ${state === 'Finalizada' ? 'none' : 'hidden'}`} />
+            <div className={`w-full h-20 p-4 ${state === 'Finalizada' ? 'none' : 'hidden'}`}>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="relative self-start flex flex-wrap gap-2">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="relative flex flex-col gap-2 h-full">
                         <FormField
                             control={form.control}
-                            name="motorista"
+                            name="textarea"
                             render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Motorista</FormLabel>
+                            <FormItem className="w-full">
+                                <FormLabel>Descrição</FormLabel>
                                 <FormControl>
-                                <Input placeholder="Motorista" className="motorista w-72 h-8" {...field} />
+                                    <Textarea placeholder="Descrição" className="text-area w-full h-48" {...field}/>
                                 </FormControl>
                                 <FormDescription>
                                 </FormDescription>
@@ -198,19 +210,13 @@ export default function PegeResponse() {
                             </FormItem>
                             )}
                         />
+                        <Button type="submit" className="w-32">Finalizar</Button>            
                     </form>
                 </Form>
             </div>
         </div>
         </div>
-        <hr />
-        <div className="flex items-end gap-2 w-full h-48 p-3">
-        <Button onClick={pushMessage} className="w-32">Mensagem</Button>
-        <Button className="w-32">Divergência</Button>
-        <Button className="w-32">Finalizada</Button>
-        <Button className="w-32">Avaria</Button>
-        <Button className="w-32">Produto trocado</Button>
-        </div>
+        <hr className={`w-full h-20 p-4 ${state === 'Finalizada' ? 'hidden' : 'none'}`}/>
     </div>
     )
 }

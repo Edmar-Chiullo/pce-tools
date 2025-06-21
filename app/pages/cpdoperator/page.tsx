@@ -55,6 +55,11 @@ export default function ReceiptScreen() {
   const [ callResponse, setCallResponse ] = useState<boolean>(false)
   const [ elementResponse, setElementResponse ] = useState<any | null>()
   const [ userName, setUserName ] = useState<string | null>('')
+  const [timeoutIds, setTimeoutIds] = useState<string[]>([]);
+
+  const handleTimeout = (bulkId: string) => {
+    setTimeoutIds((prev) => [...prev, bulkId]);
+  };
 
   const { setReceipt } = useReceiptContext()
   const { user } = useLoginContext()
@@ -282,7 +287,9 @@ export default function ReceiptScreen() {
                 const colorFinishWithDiv = carga.bulkState === 'avaria' || carga.bulkState === 'sobra' || 
                   carga.bulkState === 'falta' || carga.bulkState === 'trocado' || carga.bulkState === 'divergencia' ? 'bg-red-300' : ''
                 return (
-                  <div key={key} className="w-full h-6 bg-zinc-100 hover:bg-zinc-300">
+                    <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId)
+                        ? 'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'
+                    }`}>
                     <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] ${color} ${colorFinsh} ${colorFinishWithDiv}`}>
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
                       <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
@@ -291,8 +298,14 @@ export default function ReceiptScreen() {
                       <li className="col-start-7 place-self-center">{carga.bulkDriverPhoneNumber.toUpperCase()}</li>
                       <li className="col-start-8 place-self-center">{fullDatePrint(carga.bulkCpdDate)}</li>
                       <li className="col-start-9 place-self-center">{hourPrint(carga.bulkCpdDate)}</li>
-                      <li className="col-start-10 place-self-center"><Timer props={{date:carga.bulkCpdDate, k:key}} /></li>
-                      <li id={carga.bulkId} onClick={(value) => openCarga(value)} className="col-start-11 place-self-end self-start pr-5"> 
+                      <li className="col-start-10 place-self-center">
+                        <Timer props={{
+                          date: carga.bulkCpdDate,
+                          onLimitReached: () => handleTimeout(carga.bulkId),
+                          limitSeconds: 1200000
+                        }} />
+                      </li>
+                      <li id={carga.bulkId} className="col-start-11 place-self-end self-start pr-5"> 
                         <Image 
                           onClick={(value) => openCarga(value)}
                           className="cursor-pointer hover:scale-[1.10]"

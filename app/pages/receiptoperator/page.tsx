@@ -54,13 +54,17 @@ export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ userName, setUserName ] = useState<string | null>('')
-  
+  const [timeoutIds, setTimeoutIds] = useState<string[]>([]);
+
   const { setReceipt } = useReceiptContext()
   const { receipt }:any = useReceiptContext()
   const { user } = useLoginContext() 
-
   const router = useRouter()
 
+  const handleTimeout = (bulkId: string) => {
+    setTimeoutIds((prev) => [...prev, bulkId]);
+  };
+  
   useEffect(() => {
     const userLogin:any = localStorage.getItem('userName')
     userLogin ? setUserName(userLogin) : router.push('/')
@@ -164,14 +168,22 @@ export default function ReceiptScreen() {
             {
               bulk.map(({carga}, key) => {
                 if (carga.bulkState === 'recebendo') return (
-                  <div key={key} className="flex items-center w-full h-6 rounded-[4px] bg-zinc-200 hover:bg-zinc-300 mb-[1.50px]">
+                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId)
+                      ? 'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'
+                  }`}>
                     <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
                       <li className="col-start-3 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
                       <li className="col-start-4 place-self-center">{fullDatePrint(carga.bulkReceiptDate).toUpperCase()}</li>
                       <li className="col-start-5 place-self-center">{hourPrint(carga.bulkReceiptDate).toUpperCase()}</li>
-                      <li className="col-start-6 place-self-center"><Timer props={{date:carga.bulkReceiptDate, k:key}} /></li>
+                      <li className="col-start-6 place-self-center">
+                        <Timer props={{
+                          date: carga.bulkReceiptDate,
+                          onLimitReached: () => handleTimeout(carga.bulkId),
+                          limitSeconds: 12000000
+                        }} />
+                      </li>
                       <li id={carga.bulkId} className="col-start-7 place-self-center self-start "> 
                           {carga.bulkState.toUpperCase()}
                       </li>              
