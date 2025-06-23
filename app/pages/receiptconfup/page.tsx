@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation"
 
 import { useReceiptContext } from "@/app/context/carga-context"
 import { finishCarga } from "./finishCarga";
+import { handlePrint } from "../../../utils/print";
         
 const FormSchema = z.object({
     conf: z.string().min(2, {
@@ -37,7 +38,7 @@ const FormSchema = z.object({
 
 export default function PegeResponse() {
 
-    const { receipt }:any = useReceiptContext()
+    const { receipt, setReceipt }:any = useReceiptContext()
     const router = useRouter()
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -54,6 +55,7 @@ export default function PegeResponse() {
     function onSubmit({conf, tpallet, tcarga, items, observation }: z.infer<typeof FormSchema>) {
         const obj = finishCarga({dataForm:receipt, label:items[0], text:observation, conf,  tpallet, tcarga})
         setBulkCpd(obj)
+        setReceipt(obj)
 
         form.reset({
             conf: '',
@@ -223,6 +225,7 @@ export default function PegeResponse() {
                         )}
                         />
                     <Button type="submit">Finalizar</Button>
+                    <Button type="button" onClick={() => handlePrint(receipt)}>Imprimir</Button>
                 </form>
             </Form>
         </div>

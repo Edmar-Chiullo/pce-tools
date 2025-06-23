@@ -81,8 +81,11 @@ export default function ReceiptScreen() {
         <h5>{userName}</h5>
       </div>
 
-      <div className="flex justify-center items-center w-full h-24">
+      <div className="flex justify-center items-center w-full h-12">
         <h1 className="text-4xl">Recebimento</h1>
+      </div>
+      <div className="flex justify-end items-center w-full h-6 pr-3">
+        <span onClick={() => router.push('/pages/finishcargas')} className="cursor-pointer">Cargas liberadas</span>
       </div>
       <div className="flex justify-end gap-9 w-full h-[80%]">
         <div className="relative w-[82%] h-[100%] rounded-md p-1 bg-zinc-50">
