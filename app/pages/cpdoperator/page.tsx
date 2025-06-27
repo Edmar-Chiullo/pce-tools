@@ -25,6 +25,7 @@ import Image from "next/image";
 
 import { useReceiptContext } from "@/app/context/carga-context";
 import { useLoginContext } from "@/app/context/user-context";
+import { EvolutionApi } from "@/app/evolution-api/evolution-methods";
 
 const formSchema = z.object({
   motorista: z.string().min(2, {
@@ -138,10 +139,10 @@ export default function ReceiptScreen() {
     const element = bulk.filter(({carga}) => carga.bulkId === parent.id)
     const { carga } = element[0]
     
-    // if (carga.bulkState === 'recebendo' || carga.bulkState === 'Finalizada') {
-    //   alert('Carga não pode ser editada.')
-    //   return
-    // }
+    if (carga.bulkState === 'recebendo' || carga.bulkState === 'Finalizada') {
+      alert('Carga não pode ser editada.')
+      return
+    }
     
     setReceipt(carga)
 
@@ -149,6 +150,13 @@ export default function ReceiptScreen() {
   }
 
   function onSubmit(cargo: z.infer<typeof formSchema>) {
+    try {      
+      const evolution = new EvolutionApi()
+      const restult = evolution.sentText(cargo)
+    } catch (error) {
+      return `Erro ao tentar enviar messagem. Error: ${error}`
+    }
+
     const statusCarga = 'Entrada'
     const descriptionCarga = 'Liberada pelo CPD'
     

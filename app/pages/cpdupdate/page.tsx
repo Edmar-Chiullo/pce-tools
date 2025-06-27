@@ -67,25 +67,21 @@ export default function PegeResponse() {
     })
 
     function onSubmit(cargo: z.infer<typeof formSchema>) {
-        // const obj = carga({dataForm:cargo, carga:receipt})
-        // setBulkCpd(obj)  
+                
+        const obj = carga({dataForm:cargo, carga:receipt})
+        setBulkCpd(obj)  
         
-        // form.reset({
-        // motorista: "",
-        // transportadora: "",
-        // placa: "",
-        // ticket: "",
-        // telefone: ""
-        // })
+        form.reset({
+        motorista: "",
+        transportadora: "",
+        placa: "",
+        ticket: "",
+        telefone: ""
+        })
 
-        // router.push('/pages/cpdoperator')
+        router.push('/pages/cpdoperator')
     }
 
-    function pushMessage() {
-        const linkWhatsapp = `https://wa.me/55${receipt.bulkDriverPhoneNumber}?text=Opa`;
-        window.open(linkWhatsapp, '_blank');
-    }
-    
     return (
     <div className="absolute top-0 left-0 z-10 w-full h-full bg-zinc-50 rounded-[4px] p-1">
         <Image 
