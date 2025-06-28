@@ -138,7 +138,7 @@ export default function ReceiptScreen() {
   function lbCarga(id:string) {
     const { status, box }:any = id
     const i = open(status)
-    const obj = alterIdCarga({dataForm:i[0], situacao:'recebendo', box:box, user:user})
+    const obj = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:user})
     setBulkCpd(obj) 
   }
 
@@ -167,7 +167,7 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-full">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkState === 'recebendo') return (
+                if (carga.bulkState === 'carro estacionado' || carga.bulkState === 'inicio conferência') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId)
                       ? 'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'
                   }`}>
@@ -184,7 +184,7 @@ export default function ReceiptScreen() {
                           limitSeconds: 12000000
                         }} />
                       </li>
-                      <li id={carga.bulkId} className="col-start-7 place-self-center self-start "> 
+                      <li id={carga.bulkId} className="col-start-7 place-self-start self-center text-[11px]"> 
                           {carga.bulkState.toUpperCase()}
                       </li>              
                     </ul>

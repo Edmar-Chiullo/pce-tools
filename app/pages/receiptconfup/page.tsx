@@ -44,11 +44,11 @@ export default function PegeResponse() {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            conf: '',    
-            tpallet: '',
-            tcarga: '',
+            conf: receipt.bulkReceiptOperator,    
+            tpallet: receipt.bulkQtPallet,
+            tcarga: receipt.bulkTipoCarga,
             items: [],
-            observation: 'Finalizado.'
+            observation: 'no value'
         },
     })
 
@@ -68,25 +68,25 @@ export default function PegeResponse() {
 
     const items = [
         {
-            id: "Finalizada",
+            id: "fim conferencia",
             label: "Finalizada com sussesso!",
         },
-        {
-            id: "avaria",
-            label: "Finalizada com avária",
-        },
-        {
-            id: "sobra",
-            label: "Finalizada com sobra",
-        },
-        {
-            id: "falta",
-            label: "Finalizada com falta",
-        },
-        {
-            id: "trocado",
-            label: "Finalizado com materiais trocados",
-        },
+        // {
+        //     id: "avaria",
+        //     label: "Finalizada com avária",
+        // },
+        // {
+        //     id: "sobra",
+        //     label: "Finalizada com sobra",
+        // },
+        // {
+        //     id: "falta",
+        //     label: "Finalizada com falta",
+        // },
+        // {
+        //     id: "trocado",
+        //     label: "Finalizado com materiais trocados",
+        // },
         {
             id: "divergencia",
             label: "Carga com divergência",
@@ -176,7 +176,7 @@ export default function PegeResponse() {
                                         return (
                                             <FormItem
                                                 key={item.id}
-                                                className="flex flex-row items-center gap-2"
+                                                className="flex flex-row items-center gap-2 mb-2"
                                             >
                                     <FormControl>
                                     <Checkbox
@@ -213,7 +213,7 @@ export default function PegeResponse() {
                                 <FormControl>
                                     <Textarea
                                     placeholder="Observações..."
-                                    className="resize-none"
+                                    className="resize-none h-42"
                                     {...field}
                                 />
                                 </FormControl>
@@ -225,7 +225,6 @@ export default function PegeResponse() {
                         )}
                         />
                     <Button type="submit">Finalizar</Button>
-                    <Button type="button" onClick={() => handlePrint(receipt)}>Imprimir</Button>
                 </form>
             </Form>
         </div>

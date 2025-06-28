@@ -12,6 +12,8 @@ import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@radix-ui/react-switch";
+
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -152,26 +154,30 @@ export default function ReceiptScreen() {
   function onSubmit(cargo: z.infer<typeof formSchema>) {
     try {      
       const evolution = new EvolutionApi()
-      const restult = evolution.sentText(cargo)
+      const restult = evolution.sentTextWelcome(cargo)
     } catch (error) {
       return `Erro ao tentar enviar messagem. Error: ${error}`
     }
 
-    const statusCarga = 'Entrada'
-    const descriptionCarga = 'Liberada pelo CPD'
+    const statusCarga = 'chegada carro'
+    const descriptionCarga = 'chegada do motorista no centro de distribuição.'
     
-    const carga = new ReceiptMello({carga:cargo, cpdOperator:user})
-    carga.alterBulkState(statusCarga)
-    carga.alterBulkStateCpdDescription(descriptionCarga)
-    
-    setBulkCpd(carga)    
-    form.reset({
-      motorista: "",
-      transportadora: "",
-      placa: "",
-      ticket: "",
-      telefone: ""
-    })
+    try {      
+      const carga = new ReceiptMello({carga:cargo, cpdOperator:user})
+      carga.alterBulkState(statusCarga)
+      carga.alterBulkStateCpdDescription(descriptionCarga)
+      
+      setBulkCpd(carga)    
+      form.reset({
+        motorista: "",
+        transportadora: "",
+        placa: "",
+        ticket: "",
+        telefone: ""
+      })
+    } catch (error) {
+      return `Erro ao realizar o cadastro da carga. Error: ${error}`
+    }
   }
 
   return (

@@ -102,7 +102,7 @@ export default function ReceiptScreen() {
           </div>
           <ScrollArea className="w-full h-full">
             {bulk.map(({ carga }, key) => (
-              carga.bulkState === 'recebendo'  && (                
+              carga.bulkState === 'carro estacionado'  && (                
                 <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId) ? 
                   'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'}`}>
                   <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">

@@ -18,7 +18,7 @@ export function carga({...data}) {
         bulkReceiptOperator: carga.bulkReceiptOperator,
         bulkCpdDate: carga.bulkCpdDate,
         bulkReceiptDate: carga.bulkReceiptDate,
-        bulkState: carga.bulkState === 'Entrada'? carga.bulkState: 'recebendo',
+        bulkState: dataForm.liberado ? 'liberar entrada' : 'chegada carro',
         bulkStateCpdDescription: carga.bulkStateCpdDescription,
         bulkStateReceiptDescription: carga.bulkStateReceiptDescription
     }
