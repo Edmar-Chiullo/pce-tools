@@ -3,13 +3,15 @@ import { useState, useEffect } from 'react'
 interface TimerProps {
   props: {
     date: string
-    onLimitReached?: () => void
-    limitSeconds?: number
+    onYellowLimitReached?: () => void
+    onRedLimitReached?: () => void
+    yellowLimitSeconds?: number
+    redLimitSeconds?: number
   }
 }
 
 export default function Timer({ props }: TimerProps) {
-  const { date, onLimitReached, limitSeconds = 12000000 } = props
+  const { date, onYellowLimitReached, onRedLimitReached, yellowLimitSeconds, redLimitSeconds }:any = props
   
   const [startTime, setStartTime] = useState<Date | null>(null)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
@@ -30,17 +32,16 @@ export default function Timer({ props }: TimerProps) {
       const interval = setInterval(() => {
         const now = new Date()
         const diff = Math.floor((now.getTime() - startTime.getTime()) / 1000)
+        
         setElapsedSeconds(diff)
-
-        if (diff >= limitSeconds && onLimitReached) {
-          onLimitReached()
-          clearInterval(interval)
-        }
+        if (diff >= yellowLimitSeconds && onYellowLimitReached && diff <= redLimitSeconds) onYellowLimitReached()
+        if (diff >= redLimitSeconds && onRedLimitReached) onRedLimitReached()
+      
       }, 1000)
 
       return () => clearInterval(interval)
     }
-  }, [startTime, limitSeconds, onLimitReached])
+  }, [startTime, yellowLimitSeconds, redLimitSeconds, onYellowLimitReached, onRedLimitReached])
 
   return <span>{formatTime(elapsedSeconds)}</span>
 }

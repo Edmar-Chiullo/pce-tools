@@ -3,6 +3,10 @@ import { Label } from "@radix-ui/react-label"
 export const box = [
     {
         label: 'box',
+        value: '01'
+    },
+    {
+        label: 'box',
         value: '02'
     },
     {

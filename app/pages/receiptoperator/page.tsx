@@ -59,7 +59,14 @@ export default function ReceiptScreen() {
   const { setReceipt } = useReceiptContext()
   const { receipt }:any = useReceiptContext()
   const { user } = useLoginContext() 
+  
   const router = useRouter()
+  
+  const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([])
+  const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([])
+  
+  const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
+  const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
 
   const handleTimeout = (bulkId: string) => {
     setTimeoutIds((prev) => [...prev, bulkId]);
@@ -168,9 +175,7 @@ export default function ReceiptScreen() {
             {
               bulk.map(({carga}, key) => {
                 if (carga.bulkState === 'carro estacionado' || carga.bulkState === 'inicio conferência') return (
-                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId)
-                      ? 'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'
-                  }`}>
+                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-amber-100`}>
                     <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
@@ -180,8 +185,10 @@ export default function ReceiptScreen() {
                       <li className="col-start-6 place-self-center">
                         <Timer props={{
                           date: carga.bulkReceiptDate,
-                          onLimitReached: () => handleTimeout(carga.bulkId),
-                          limitSeconds: 12000000
+                          onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
+                          onRedLimitReached: () => handleRedTimeout(carga.bulkId),
+                          yellowLimitSeconds: 2340, 
+                          redLimitSeconds: 2400 
                         }} />
                       </li>
                       <li id={carga.bulkId} className="col-start-7 place-self-start self-center text-[11px]"> 

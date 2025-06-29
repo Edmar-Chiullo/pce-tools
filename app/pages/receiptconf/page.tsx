@@ -30,14 +30,14 @@ export default function ReceiptScreen() {
   const [bulk, setBulk] = useState<any[]>([]);
   const { setReceipt } = useReceiptContext();
   const [ userName, setUserName ] = useState<string | null>('')
+  
+  const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
+  const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);
+  
+  const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
+  const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
+  
   const router = useRouter();
-
-  const [timeoutIds, setTimeoutIds] = useState<string[]>([]);
-
-// Chamada quando tempo limite for atingido
-  const handleTimeout = (bulkId: string) => {
-    setTimeoutIds((prev) => [...prev, bulkId]);
-  };
 
   useEffect(() => {
     const userLogin:any = localStorage.getItem('userName')
@@ -85,7 +85,14 @@ export default function ReceiptScreen() {
         <h1 className="text-4xl">Recebimento</h1>
       </div>
       <div className="flex justify-end items-center w-full h-6 pr-3">
-        <span onClick={() => router.push('/pages/finishcargas')} className="cursor-pointer">Cargas liberadas</span>
+        <Image 
+            onClick={() => router.push('/pages/finishcargas')}
+            className="cursor-pointer hover:scale-[1.10]"
+            src={'/proxima-pagina.png'}
+            width={20}
+            height={20}
+            alt="Proxima página."
+          />
       </div>
       <div className="flex justify-end gap-9 w-full h-[80%]">
         <div className="relative w-[82%] h-[100%] rounded-md p-1 bg-zinc-50">
@@ -103,8 +110,7 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-full">
             {bulk.map(({ carga }, key) => (
               carga.bulkState === 'carro estacionado'  && (                
-                <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId) ? 
-                  'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'}`}>
+                <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-amber-100`}>
                   <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                     <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                     <li className="col-start-2 place-self-center">{carga.bulkDoca?.toUpperCase()}</li>
@@ -112,10 +118,12 @@ export default function ReceiptScreen() {
                     <li className="col-start-4 place-self-center">{fullDatePrint(carga.bulkReceiptDate)}</li>
                     <li className="col-start-5 place-self-center">{hourPrint(carga.bulkReceiptDate)}</li>
                     <li className="col-start-6 place-self-center">
-                      <Timer props={{ 
-                        date: carga.bulkReceiptDate, 
-                        onLimitReached: () => handleTimeout(carga.bulkId), 
-                        limitSeconds: 1200000
+                      <Timer props={{
+                        date: carga.bulkReceiptDate,
+                        onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
+                        onRedLimitReached: () => handleRedTimeout(carga.bulkId),
+                        yellowLimitSeconds: 2340, 
+                        redLimitSeconds: 2400 
                       }} />
                     </li>
                     <li id={carga.bulkId} className="col-start-7 place-self-center self-start">

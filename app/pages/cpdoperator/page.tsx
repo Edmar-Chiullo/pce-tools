@@ -60,6 +60,13 @@ export default function ReceiptScreen() {
   const [ userName, setUserName ] = useState<string | null>('')
   const [timeoutIds, setTimeoutIds] = useState<string[]>([]);
 
+  const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
+  const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);
+
+  const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
+  const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
+
+
   const handleTimeout = (bulkId: string) => {
     setTimeoutIds((prev) => [...prev, bulkId]);
   };
@@ -296,14 +303,11 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-[100%]">
             {
               bulk.map(({carga}, key) => {
-                const color = carga.bulkState === 'recebendo' ? 'bg-amber-100' : 'bg-cyan-50'
-                const colorFinsh = carga.bulkState === 'Finalizada' ? 'bg-green-300' : ''
-                const colorFinishWithDiv = carga.bulkState === 'avaria' || carga.bulkState === 'sobra' || 
-                  carga.bulkState === 'falta' || carga.bulkState === 'trocado' || carga.bulkState === 'divergencia' ? 'bg-red-300' : ''
+                const color = carga.bulkState === 'carro estacionado' ? 'bg-amber-100 hover:bg-amber-200' : 'bg-cyan-50'
+                const colorFinsh = carga.bulkState === 'fim conferencia' ? 'bg-green-300 hover:bg-green-400' : ''
+                const colorFinishWithDiv = carga.bulkState === 'divergencia' ? 'bg-red-300 hover:bg-red-400' : ''
                 return (
-                    <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId)
-                        ? 'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'
-                    }`}>
+                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] cursor-pointer`}>
                     <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] ${color} ${colorFinsh} ${colorFinishWithDiv}`}>
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
                       <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
@@ -315,8 +319,10 @@ export default function ReceiptScreen() {
                       <li className="col-start-10 place-self-center">
                         <Timer props={{
                           date: carga.bulkCpdDate,
-                          onLimitReached: () => handleTimeout(carga.bulkId),
-                          limitSeconds: 1200000
+                          onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
+                          onRedLimitReached: () => handleRedTimeout(carga.bulkId),
+                          yellowLimitSeconds: 2340, 
+                          redLimitSeconds: 2400 
                         }} />
                       </li>
                       <li id={carga.bulkId} className="col-start-11 place-self-end self-start pr-5"> 

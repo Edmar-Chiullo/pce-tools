@@ -48,12 +48,11 @@ export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ userName, setUserName ] = useState<string | null>('')
-  const [timeoutIds, setTimeoutIds] = useState<string[]>([]);
+  const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
+  const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);
 
-
-  const handleTimeout = (bulkId: string) => {
-    setTimeoutIds((prev) => [...prev, bulkId]);
-  };
+  const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
+  const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
   
   const { receipt }:any = useReceiptContext()
   const router = useRouter()
@@ -154,10 +153,16 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-full">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkState === 'Finalizada') return (
-                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] ${timeoutIds.includes(carga.bulkId)
-                      ? 'bg-red-400 hover:bg-red-500' : 'bg-zinc-200 hover:bg-zinc-300'
-                  }`}>
+                if (carga.bulkState === 'fim conferencia') return (
+                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
+                    ${
+                       redTimeoutIds.includes(carga.bulkId)
+                      ? 'bg-red-400 hover:bg-red-500'
+                      : yellowTimeoutIds.includes(carga.bulkId)
+                      ? 'bg-yellow-400 hover:bg-yellow-500'
+                      : 'bg-zinc-200 hover:bg-zinc-300'
+                    }`                    
+                  }>
                     <ul className="grid grid-cols-8 gap-10 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
@@ -167,11 +172,13 @@ export default function ReceiptScreen() {
                       <li className="col-start-6 place-self-center">
                         <Timer props={{
                           date: carga.bulkConfDate,
-                          onLimitReached: () => handleTimeout(carga.bulkId),
-                          limitSeconds: 12000000
+                          onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
+                          onRedLimitReached: () => handleRedTimeout(carga.bulkId),
+                          yellowLimitSeconds: 2880, 
+                          redLimitSeconds: 3000 
                         }} />
                       </li>
-                      <li id={carga.bulkId} className="col-start-7 place-self-center self-start "> 
+                      <li id={carga.bulkId} className="col-start-7 place-self-center self-center text-[11px]"> 
                           {carga.bulkState.toUpperCase()}
                       </li>        
                       <li id={carga.bulkId} className="col-start-8 place-self-center self-start">
