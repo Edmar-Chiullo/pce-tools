@@ -76,11 +76,6 @@ export default function NavigationMenu() {
         }
     } 
 
-    function selectTitle(value: string) {
-        const title:any = document.querySelector('.titleApp')
-        title.innerText = value
-    }
-
     function createActivity({...activity}) {
         const task = new Activity({pre: activity.pre, 
                                     activityName:activity.activity,  
@@ -91,7 +86,6 @@ export default function NavigationMenu() {
 
     function navigation(value: any) {
         let content = value.target.innerText
-        const street = content
 
         if (content.slice(0, 2) === 'PP') content = 'PP'
 

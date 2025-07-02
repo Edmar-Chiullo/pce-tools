@@ -52,7 +52,6 @@ export default function ReceiptScreen() {
       if (snapshot.exists()) {
         const result = Object.values(snapshot.val());
         const carga = result[0];
-        // const carga = result[0]?.carga || result[0];
         setBulk((prev) => addUniqueById(prev, carga));
       }
     });

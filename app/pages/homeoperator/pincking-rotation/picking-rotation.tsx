@@ -10,12 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
 import { setActivityDb } from "@/app/firebase/fbmethod"
-import { Task, TaskEndProd } from "@/app/class/class-task";
 
 import { useActiviContext } from "@/app/context/acitivy-context";
-import { createTasks } from "@/utils/createTask";
 import { TaskPickingRotation } from "@/app/class/class-task";
-import { iniciarAtividade } from "@/utils/timer";
 
 const formSchema = z.object({
   loadAddress: z.string().min(9, {

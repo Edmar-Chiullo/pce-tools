@@ -26,8 +26,4 @@ export class TimerPrint {
     constructor(t:any) {
         this.timer = iniciarAtividade(t)
     }
-
-    // initTimer(t:Date | null) {
-    //     this.timer = iniciarAtividade(t)
-    // }
 }

@@ -153,7 +153,8 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-full">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkState === 'fim conferencia') return (
+                console.log(carga)
+                if (carga.bulkState === 'finalizada sucesso' || carga.bulkState === 'liberar canhoto') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
                     ${
                        redTimeoutIds.includes(carga.bulkId)
@@ -174,11 +175,11 @@ export default function ReceiptScreen() {
                           date: carga.bulkConfDate,
                           onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
                           onRedLimitReached: () => handleRedTimeout(carga.bulkId),
-                          yellowLimitSeconds: 2880, 
-                          redLimitSeconds: 3000 
+                          yellowLimitSeconds: 120, 
+                          redLimitSeconds: 180 
                         }} />
                       </li>
-                      <li id={carga.bulkId} className="col-start-7 place-self-center self-center text-[11px]"> 
+                      <li id={carga.bulkId} className="col-start-7 place-self-center self-center text-[9px]"> 
                           {carga.bulkState.toUpperCase()}
                       </li>        
                       <li id={carga.bulkId} className="col-start-8 place-self-center self-start">

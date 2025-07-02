@@ -9,7 +9,7 @@ export function handlePrint({
   bulkTipoCarga,
   bulkControl,
   bulkDoca
-  }:any) {
+}: any) {
     
   if (!bulkId) return;
 
@@ -21,26 +21,37 @@ export function handlePrint({
         <head>
           <title>Recibo de Carga</title>
           <style>
-            body { font-family: Arial; padding: 20px; font-size: 24px; width: 100%; }
+            body { font-family: Arial; padding: 20px; font-size: 32px; width: 100%; position: relative; }
             h1 { text-align: center; }
-            .box { display:flex; justify-content: flex-end; flex-direction: column; align-content: space-between; width: 100%;}
-            .item { margin-bottom: 10px; width: 100%;}
+            .box { display:flex; flex-direction: column; justify-content: space-between; width: 100%; }
+            .item { margin-bottom: 10px; width: 100%; text-align: start; font-size: 48px; }
             strong { display: inline-block; }
-            span { width: 100%; align-self: flex-end}
+            span { width: 100%; }
+            .background-img {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              z-index: -1;
+              opacity: 0.1;
+            }
           </style>
         </head>
         <body>
+          <img src="${window.location.origin}/imgem-logistica.png" class="background-img" />
           <h1>Dados da Carga</h1>
-            <div class="box">
-              <div class="item"><strong>Id:</strong> <span>${bulkId ?? '-'}</span></div>
-              <div class="item"><strong>Porta:</strong> <span>${bulkDoca ?? '-'}</span></div>
-              <div class="item"><strong>Agenda:</strong> <span>${bulkAgenda ?? '-'}</span></div>
-              <div class="item"><strong>Controle:</strong> <span>${bulkControl ?? '-'}</span></div>
-              <div class="item"><strong>Data:</strong> <span>${fullDatePrint(bulkConfDate) ?? '-'}</span></div>
-              <div class="item"><strong>Hora:</strong> <span>${hourPrint(bulkConfDate) ?? '-'}</span></div>
-              <div class="item"><strong>Tipo carga:</strong> <span>${bulkTipoCarga ?? '-'}</span></div>
-              <div class="item"><strong>Qt. Pallet:</strong> <span>${bulkQtPallet ?? '-'}</span></div>
-            </div>
+          <div class="box">
+            <div class="item"><strong>ID:</strong> <span>${bulkId ?? '-'}</span></div>
+            <div class="item"><strong>Porta:</strong> <span>${bulkDoca ?? '-'}</span></div>
+            <div class="item"><strong>Agenda:</strong> <span>${bulkAgenda ?? '-'}</span></div>
+            <div class="item"><strong>Controle:</strong> <span>${bulkControl ?? '-'}</span></div>
+            <div class="item"><strong>Data:</strong> <span>${fullDatePrint(bulkConfDate) ?? '-'}</span></div>
+            <div class="item"><strong>Hora:</strong> <span>${hourPrint(bulkConfDate) ?? '-'}</span></div>
+            <div class="item"><strong>Tipo carga:</strong> <span>${bulkTipoCarga ?? '-'}</span></div>
+            <div class="item"><strong>Qt. Pallet:</strong> <span>${bulkQtPallet ?? '-'}</span></div>
+          </div>
         </body>
       </html>
     `);
@@ -48,7 +59,5 @@ export function handlePrint({
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
-    // Opcional: fecha a aba após imprimir
-    // printWindow.close();
   }
 }

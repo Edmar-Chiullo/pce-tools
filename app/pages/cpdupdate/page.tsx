@@ -49,7 +49,6 @@ const formSchema = z.object({
 export default function PegeResponse() {
 
     const [ state, setState ] = useState<string | null>(null)
-    const [ permitionCargaState, setPermitinCargaState ] = useState<string | null>(null)
     
     const { receipt }:any = useReceiptContext()
 
@@ -69,7 +68,7 @@ export default function PegeResponse() {
         controle: receipt?.bulkControl,
         telefone: receipt?.bulkDriverPhoneNumber,
         textarea: receipt?.bulkStateReceiptDescription,
-        liberado: false
+        liberado: receipt?.bulkState != 'chegada carro' ? true : false
     },
     })
 
@@ -77,6 +76,25 @@ export default function PegeResponse() {
         if (cargo.textarea === 'no value') {
             const obj = carga({dataForm:cargo, carga:receipt })
             setBulkCpd(obj)  
+
+            if (cargo.telefone != receipt.bulkDriverPhoneNumber && cargo.telefone.length === 11) {
+                try {      
+                    const evolution = new EvolutionApi()
+                    const restult = evolution.sentTextWelcome(obj)
+                } catch (error) {
+                    return `Erro ao tentar enviar messagem. Error: ${error}`
+                }
+            } 
+
+            if (cargo.liberado) {
+                try {      
+                    const evolution = new EvolutionApi()
+                    const restult = evolution.sendTextConvocationDriver(cargo)
+                    console.log(restult)
+                } catch (error) {
+                    return `Erro ao tentar enviar messagem. Error: ${error}`
+                }
+            } 
 
             form.reset({
                 motorista: "",
@@ -90,12 +108,12 @@ export default function PegeResponse() {
         } else {
            try {      
                 const evolution = new EvolutionApi()
-                const restult = evolution.sentTextDiverCpd(cargo)
+                const restult = evolution.sentTextDiverCpdCanhoto(cargo)
             } catch (error) {
                 return `Erro ao tentar enviar messagem. Error: ${error}`
             }
 
-            // router.push('/pages/cpdoperator')
+            router.push('/pages/cpdoperator')
         }
     }
 

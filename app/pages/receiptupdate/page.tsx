@@ -1,9 +1,9 @@
 'use client'
 
-import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Controller, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
@@ -34,7 +34,7 @@ export default function PegeResponse() {
     })
 
     function onSubmit(cargo: z.infer<typeof formSchema>) {
-        const obj = carga({dataForm:cargo, carga:receipt, situacao:'recebendo', user:user})
+        const obj:any = carga({dataForm:cargo, carga:receipt, situacao:'recebendo', user:user})
         setBulkCpd(obj)  
         
         form.reset({

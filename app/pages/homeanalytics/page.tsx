@@ -4,32 +4,23 @@ import { useEffect, useState } from "react"
 import Image from "next/image";
 
 import { app } from "@/app/firebase/fbkey"
-import { getDatabase, ref, onValue, onChildAdded, onChildChanged } from "firebase/database";
+import { getDatabase, ref, onChildAdded, onChildChanged } from "firebase/database";
 
-import { dateDb, datePrint, datePrintInt, fullDate, fullDatePrint, hourPrint, validateDate } from "@/utils/date-generate"
+import { fullDate, fullDatePrint, hourPrint } from "@/utils/date-generate"
 import { exportFileXlsx } from "@/utils/ger-xlsx";
-import { getActivityTwo, getTaske, getTaskes } from "@/app/firebase/fbmethod";
+import { getActivityTwo, getTaskes } from "@/app/firebase/fbmethod";
 import { getElementId, getElementTask } from "@/utils/get-elementHtml";
 import { trackEndNull, trackEndProd, trackPickingRotation, trackFractional } from "@/utils/treatment-data-print";
-import UploadExcel from "@/app/pages/homeanalytics/import-file";
-import { tractDate } from "@/utils/trac-date";
-import handler from "@/app/pages/api/read-file";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { valDate } from "@/utils/valid-data-print";
-import { object } from "zod";
 import { Input } from "@/components/ui/input";
-import ResultQuery from "./query";
-import { Console } from "console";
 
 export default function Dashboard() {
 
     const [ tasks, setTasks ] = useState<any>([])
     const [ taskConcluid, setTaskConcluid ] = useState<any>()
-    const [ clock, setClock ] = useState<any>()
-    const [ inputFileController, setInputFileController ] = useState<string>('')
-    const [ component, setComponent ] = useState(false)
     const [ objQuery, setObjQuery ] = useState<any>(null)
     const [ statusObjQuery, setStatusObjQuery ] = useState<any>()
 
@@ -214,6 +205,7 @@ export default function Dashboard() {
 
         const result = tasks.filter((obj:any) => obj.activi.activityID === data.value.trim().toUpperCase())
         const { activi } = result[0]
+        
         activi.activityState ? setStatusObjQuery('Executando') : setStatusObjQuery('Finalizado') 
         setObjQuery(activi)
         data.value = ''

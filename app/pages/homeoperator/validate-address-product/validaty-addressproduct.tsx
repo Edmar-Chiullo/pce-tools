@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form"
@@ -10,10 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
 import { setActivityDb } from "@/app/firebase/fbmethod"
-import { Task, TaskEndProd } from "@/app/class/class-task";
+import { TaskEndProd } from "@/app/class/class-task";
 
 import { useActiviContext } from "@/app/context/acitivy-context"
-import { createTasks } from "@/utils/createTask";
 
 const formSchema = z.object({
   loadAddress: z.string().min(9, {
@@ -57,7 +56,6 @@ export default function ValidatyAddressProduct() {
   }
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    //const aplication = atividade.activityName
     const { loadAddress, loadProduct, loadQuant, loadValid }:any = data
     const initCharAddress = loadAddress.slice(0,2)
    
@@ -68,7 +66,7 @@ export default function ValidatyAddressProduct() {
       return
     } 
 
-    const initTask = new TaskEndProd(data)//createTasks({data:data, app:aplication})
+    const initTask = new TaskEndProd(data)
     setTask((tsk):any => [...tsk, initTask])
 
     form.reset({

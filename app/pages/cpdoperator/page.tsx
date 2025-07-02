@@ -12,7 +12,6 @@ import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Switch } from "@radix-ui/react-switch";
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,7 +20,7 @@ import { z } from "zod"
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 import { setBulkCpd } from "@/app/firebase/fbmethod";
 
-import { Receipt, ReceiptMello } from "@/app/class/class-task";
+import { ReceiptMello } from "@/app/class/class-task";
 import Timer from "@/components/ui/span";
 import Image from "next/image";
 
@@ -66,16 +65,13 @@ export default function ReceiptScreen() {
   const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
   const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
 
-
-  const handleTimeout = (bulkId: string) => {
-    setTimeoutIds((prev) => [...prev, bulkId]);
-  };
-
   const { setReceipt } = useReceiptContext()
   const { user } = useLoginContext()
   const router = useRouter()
 
   useEffect(() => {
+    form.setFocus('motorista')
+
     const userLogin:any = localStorage.getItem('userName')
     userLogin ? setUserName(userLogin) : router.push('/')
 
@@ -83,11 +79,6 @@ export default function ReceiptScreen() {
       const arr = Object.values(val)
       setBulk(arr)
     })
-
-    // const handleBeforeUnload = () => {
-    //   localStorage.removeItem(userLogin);
-    //   localStorage.removeItem('user');
-    // };
 
     const strDate = fullDate().replace(/\//g, "");
     const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
@@ -118,13 +109,6 @@ export default function ReceiptScreen() {
           });
         }
       });
-
-    // window.addEventListener('beforeunload', handleBeforeUnload);
-
-    // return () => {
-    //   window.removeEventListener('beforeunload', handleBeforeUnload);
-    // };
-
   }, [])
 
   useEffect(() => {
@@ -147,44 +131,52 @@ export default function ReceiptScreen() {
     const parent = value.target.parentElement
     const element = bulk.filter(({carga}) => carga.bulkId === parent.id)
     const { carga } = element[0]
-    
-    if (carga.bulkState === 'recebendo' || carga.bulkState === 'Finalizada') {
-      alert('Carga não pode ser editada.')
-      return
+
+    if (carga.bulkState != 'chegada carro' && carga.bulkState != 'liberar entrada') {
+        if (carga.bulkState === 'finalizada divergente' || carga.bulkState === 'finalizada sucesso') {
+          setReceipt(carga)
+          router.push('/pages/liberarcanhoto')
+        } else {
+          alert('Carga não pode ser editada.')
+          return
+        }          
+    } else {
+      setReceipt(carga)
+      router.push('/pages/cpdupdate')
     }
     
-    setReceipt(carga)
-
-    router.push('/pages/cpdupdate')
   }
 
   function onSubmit(cargo: z.infer<typeof formSchema>) {
-    try {      
-      const evolution = new EvolutionApi()
-      const restult = evolution.sentTextWelcome(cargo)
-    } catch (error) {
-      return `Erro ao tentar enviar messagem. Error: ${error}`
+    if (cargo.telefone.length < 11) {
+      alert('Número de telefone não cerresponde ao número válido.')
+      form.setFocus('telefone')
+      return
     }
 
     const statusCarga = 'chegada carro'
     const descriptionCarga = 'chegada do motorista no centro de distribuição.'
     
+    const carga = new ReceiptMello({carga:cargo, cpdOperator:user})
+    carga.alterBulkState(statusCarga)
+    carga.alterBulkStateCpdDescription(descriptionCarga)
+
     try {      
-      const carga = new ReceiptMello({carga:cargo, cpdOperator:user})
-      carga.alterBulkState(statusCarga)
-      carga.alterBulkStateCpdDescription(descriptionCarga)
-      
-      setBulkCpd(carga)    
-      form.reset({
-        motorista: "",
-        transportadora: "",
-        placa: "",
-        ticket: "",
-        telefone: ""
-      })
+      const evolution = new EvolutionApi()
+      const restult = evolution.sentTextWelcome(carga)
     } catch (error) {
-      return `Erro ao realizar o cadastro da carga. Error: ${error}`
+      return `Erro ao tentar enviar messagem. Error: ${error}`
     }
+
+    setBulkCpd(carga)    
+    form.reset({
+      motorista: "",
+      transportadora: "",
+      placa: "",
+      ticket: "",
+      controle: "",
+      telefone: ""
+    })
   }
 
   return (
@@ -296,19 +288,23 @@ export default function ReceiptScreen() {
               <li className="col-start-7 place-self-center">Telefone</li>
               <li className="col-start-8 place-self-center">Status</li>
               <li className="col-start-9 place-self-center">Data</li>
-              <li className="col-start-10 place-self-center">Timer</li>
+              <li className="col-start-10 place-self-center">Tempo</li>
               <li className="col-start-11 place-self-end mr-2">Editar</li>
             </ul>
           </div>
           <ScrollArea className="w-full h-[100%]">
             {
               bulk.map(({carga}, key) => {
-                const color = carga.bulkState === 'carro estacionado' ? 'bg-amber-100 hover:bg-amber-200' : 'bg-cyan-50'
-                const colorFinsh = carga.bulkState === 'fim conferencia' ? 'bg-green-300 hover:bg-green-400' : ''
-                const colorFinishWithDiv = carga.bulkState === 'divergencia' ? 'bg-red-300 hover:bg-red-400' : ''
                 return (
-                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] cursor-pointer`}>
-                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] ${color} ${colorFinsh} ${colorFinishWithDiv}`}>
+                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] cursor-pointer 
+                                            ${carga.bulkState === 'liberar canhoto' ? 'hidden' : 'none'}`}>
+                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] 
+                                    ${
+                                      carga.bulkState === 'carro estacionado' ? 'bg-amber-300 hover:bg-amber-400' :
+                                      carga.bulkState === 'finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 
+                                      carga.bulkState === 'finalizada divergente' ? 'bg-red-500 hover:bg-red-600' : 'bg-zinc-200 hover:bg-zinc-300'
+                                    }`
+                                  }>
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
                       <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
                       <li className="col-start-5 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form"
@@ -11,7 +11,6 @@ import { z } from "zod"
 
 import { acess } from "./aceess";
 import AppAuth from "./firebase/fbauth";
-import { db } from "./firebase/fbkey";
 import { getUser } from "./firebase/fbmethod";
 
 import { selectApp } from "@/utils/define-app";

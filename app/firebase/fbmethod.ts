@@ -3,7 +3,6 @@ import { db } from "./fbkey";
 import { ref, child, get, onValue, set } from "firebase/database";
 
 import { fullDate } from "@/utils/date-generate";
-import { ReceiptMello } from "../class/class-task";
 
 const re = ref(db)
 
@@ -68,10 +67,9 @@ export async function getActivity(activity:any) {
 }
 
 export async function getActivityTwo({...activity}:any) {
-  const strDate = fullDate()
+  const strDate = '30/05/2025'//fullDate()
   .replace('/','')
   .replace('/','')
-
   const result = get(child(re, `activity/${activity.task}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${activity.id}/`))
   .then((snapshot) => {
       return snapshot.exists() ? snapshot.val() : console.log("Usuário não encontrado!")

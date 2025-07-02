@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form"
@@ -10,11 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
 import { setActivityDb } from "@/app/firebase/fbmethod"
-import { Task, TaskEndProd, TaskFractionalQuarentine } from "@/app/class/class-task";
+import { TaskFractionalQuarentine } from "@/app/class/class-task";
 
 import { useActiviContext } from "@/app/context/acitivy-context";
-import { createTasks } from "@/utils/createTask";
-import { TaskPickingRotation } from "@/app/class/class-task";
 
 const formSchema = z.object({
   loadProduct: z.string().min(1, {
