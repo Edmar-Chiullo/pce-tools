@@ -278,7 +278,17 @@ export default function ReceiptScreen() {
               <Button type="submit" className="w-full h-8 cursor-pointer mt-3">Salvar</Button>
             </form>
         </Form>
-        <div className="relative self-end w-full h-[100%] rounded-md bg-zinc-50">
+        <div className="relative self-end w-full h-[95%] rounded-md bg-zinc-50">
+          <div className="relative flex w-full justify-end pr-1 bg-amber-300">
+            <Image 
+              onClick={() => router.push('/pages/cpdsearshcarga')}
+              className="absolute top-[-30px] cursor-pointer hover:scale-[1.10]"
+              src={'/proxima-pagina.png'}
+              width={20}
+              height={20}
+              alt="Proxima página."
+            />
+          </div>
           <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
             <ul className="grid grid-cols-11 gap-8 text-zinc-50">
               <li className="col-start-1 col-span-2">Motorista</li>
@@ -292,7 +302,7 @@ export default function ReceiptScreen() {
               <li className="col-start-11 place-self-end mr-2">Editar</li>
             </ul>
           </div>
-          <ScrollArea className="w-full h-[100%]">
+          <ScrollArea className="w-full h-[95%]">
             {
               bulk.map(({carga}, key) => {
                 return (
@@ -308,7 +318,7 @@ export default function ReceiptScreen() {
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
                       <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
                       <li className="col-start-5 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
-                      <li className="col-start-6 place-self-center">{carga.bulkControl.toUpperCase()}</li>
+                      <li className="col-start-6 place-self-center">{carga.bulkId.toUpperCase()}</li>
                       <li className="col-start-7 place-self-center">{carga.bulkDriverPhoneNumber.toUpperCase()}</li>
                       <li className="col-start-8 place-self-center">{fullDatePrint(carga.bulkCpdDate)}</li>
                       <li className="col-start-9 place-self-center">{hourPrint(carga.bulkCpdDate)}</li>

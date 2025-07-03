@@ -8,6 +8,10 @@ import Image from "next/image";
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 
+import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -15,32 +19,12 @@ import { z } from "zod"
 
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 
-import { useReceiptContext } from "@/app/context/carga-context";
-
-import Timer from "@/components/ui/span";
 import { getReceipt } from "@/app/firebase/fbmethod";
-import { handlePrint } from "@/utils/print";
-import { extraction } from "@/utils/extract-carga";
 
 const formSchema = z.object({
-  filial: z.string().min(2, {
+  pesquisar: z.string().min(2, {
     message: "Inserir com o nome do motorista.",
   }),
-  agenda: z.string().min(2, {
-    message: "Inserir o nome da transportadora",
-  }),
-  doca: z.string().min(2, {
-    message: "Inserir o número da placa.",
-  }),
-  controle: z.string().min(2, {
-    message: "Inserir o número do ticket.",
-  }),
-  tipo_carga: z.string().min(2, {
-    message: "Inserir o número do controle.",
-  }),  
-  qt_pallet: z.string().min(2, {
-    message: "Inserir o número de telefone.",
-  }), 
 })
 
 // Component Login....
@@ -49,17 +33,10 @@ export default function ReceiptScreen() {
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ userName, setUserName ] = useState<string | null>('')
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
-  const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);
+  const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);  
 
-  const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
-  const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
-  
-  const { receipt }:any = useReceiptContext()
   const router = useRouter()
   
-  function printar() {
-    console.log(receipt)
-  }
   useEffect(() => {
     // const userLogin:any = localStorage.getItem('userName')
     // userLogin ? setUserName(userLogin) : router.push('/')
@@ -68,7 +45,6 @@ export default function ReceiptScreen() {
     getReceipt().then((val) => {
       const arr = Object.values(val)
       setBulk(arr)
-    
     })
 
     const strDate = fullDate().replace(/\//g, "");
@@ -106,24 +82,27 @@ export default function ReceiptScreen() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      filial: "",
-      agenda: "",
-      doca: "",
-      controle: "",
-      tipo_carga: "",
-      qt_pallet: ""
+      pesquisar: "",
     },
   })
 
-  function open(value: any) {
-    const { carga } = extraction({value:value, bulk:bulk})
-    handlePrint(carga)
+  function onSubmit(value:z.infer<typeof formSchema>) {
+    const listaDeCarga = Object.values(bulk)
+    const result = listaDeCarga.filter(({carga}) => carga.bulkId === value.pesquisar.toUpperCase())
+    
+    const {carga} = result[0]
+    setBulk(result)
+
+    form.reset({
+      pesquisar: ''
+    })
+    
   }
 
   return (
     <div className="main flex flex-col p-3 w-full h-screen">
       <Image
-        onClick={() => router.push('/pages/receiptconf')}
+        onClick={() => router.push('/pages/cpdoperator')}
         className="cursor-pointer hover:scale-[1.10]"
         src={'/seta-esquerda.png'}
         width={20}
@@ -134,26 +113,53 @@ export default function ReceiptScreen() {
         <h5>{userName}</h5>
       </div>
       <div className="flex justify-center items-center w-full h-18">
-        <h1 className="text-4xl">Recebimento</h1>
+        <h1 className="text-4xl">Cargas liberadas</h1>
+      </div>
+      <div className="w-full">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 w-full pr-1">
+              <FormField
+                  control={form.control}
+                  name="pesquisar"
+                  render={({ field }) => (
+                  <FormItem>
+                      <FormLabel>Pesquisar</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Pesquisar" className="motorista h-8" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                      </FormDescription>
+                      <FormMessage />
+                  </FormItem>
+                  )}
+              />
+              <Button type="submit" className="mt-4">
+                <Image 
+                  src={'/lupa-de-pesquisa.png'}
+                  width={24}
+                  height={24}
+                  alt="Pesquisar tarefa"
+                /></Button>
+            </form>
+          </Form>
       </div>
       <div className="flex gap-9 w-full h-[80%]">
         <div className="relative w-full h-[100%] rounded-md p-1 bg-zinc-50">
           <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
-            <ul className="grid grid-cols-8 gap-8 text-zinc-50">
-              <li className="col-start-1 place-self-center">Controle</li>
-              <li className="col-start-2 place-self-center">Doca</li>
+            <ul className="grid grid-cols-7 gap-8 text-zinc-50">
+              <li className="col-start-1 place-self-center">Motorista</li>
+              <li className="col-start-2 place-self-center">Transportadora</li>
               <li className="col-start-3 place-self-center">Agenda</li>
-              <li className="col-start-4 place-self-center">Data</li>
-              <li className="col-start-5 place-self-center">Hora</li>
-              <li className="col-start-6 place-self-center">Tempo</li>
+              <li className="col-start-4 place-self-center">Controle</li>
+              <li className="col-start-5 place-self-center">Data</li>
+              <li className="col-start-6 place-self-center">Hora</li>
               <li className="col-start-7 place-self-center mr-2">Situação</li>
-              <li className="col-start-8 place-self-center mr-2">Imprimir</li>
             </ul>
           </div>
           <ScrollArea className="w-full h-full">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkState === 'finalizada sucesso' || carga.bulkState === 'liberar canhoto') return (
+                if (carga.bulkState === 'liberar canhoto') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
                     ${
                        redTimeoutIds.includes(carga.bulkId)
@@ -163,34 +169,16 @@ export default function ReceiptScreen() {
                       : 'bg-zinc-200 hover:bg-zinc-300'
                     }`                    
                   }>
-                    <ul className="grid grid-cols-8 gap-10 text-[15px] w-full">
-                      <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
-                      <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
+                    <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
+                      <li className="col-start-1 place-self-center">{carga.bulkDriver.toUpperCase()}</li>
+                      <li className="col-start-2 place-self-center">{carga.bulkCarrier.toUpperCase()}</li>
                       <li className="col-start-3 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
-                      <li className="col-start-4 place-self-center">{fullDatePrint(carga.bulkConfDate).toUpperCase()}</li>
-                      <li className="col-start-5 place-self-center">{hourPrint(carga.bulkConfDate).toUpperCase()}</li>
-                      <li className="col-start-6 place-self-center">
-                        <Timer props={{
-                          date: carga.bulkConfDate,
-                          onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
-                          onRedLimitReached: () => handleRedTimeout(carga.bulkId),
-                          yellowLimitSeconds: 120, 
-                          redLimitSeconds: 180 
-                        }} />
-                      </li>
-                      <li id={carga.bulkId} className="col-start-7 place-self-center self-center text-[9px]"> 
+                      <li className="col-start-4 place-self-center">{carga.bulkId}</li>
+                      <li className="col-start-5 place-self-center">{fullDatePrint(carga.bulkCpdDate).toUpperCase()}</li>
+                      <li className="col-start-6 place-self-center">{hourPrint(carga.bulkCpdDate).toUpperCase()}</li>
+                      <li id={carga.bulkId} className="col-start-7 place-self-center self-center"> 
                           {carga.bulkState.toUpperCase()}
                       </li>        
-                      <li id={carga.bulkId} className="col-start-8 place-self-center self-start">
-                        <Image
-                          onClick={(value) => open(value)}
-                          className="cursor-pointer hover:scale-[1.10] mr-4"
-                          src={'/impressora-com-papel.png'}
-                          width={20}
-                          height={20}
-                          alt="Proxima página."
-                        />
-                      </li>      
                     </ul>
                   </div>
                 )

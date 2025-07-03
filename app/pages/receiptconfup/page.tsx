@@ -43,15 +43,19 @@ export default function PegeResponse() {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            conf: receipt.bulkReceiptOperator,    
-            tpallet: receipt.bulkQtPallet,
-            tcarga: receipt.bulkTipoCarga,
+            conf: 'no value',    
+            tpallet: 'no value',
+            tcarga: 'no value',
             items: [],
             observation: 'no value'
         },
     })
 
     function onSubmit({conf, tpallet, tcarga, items, observation }: z.infer<typeof FormSchema>) {
+        if (conf === 'no value' && conf.length < 7) {
+            alert('Dado informado não correspode ao número de registro.')
+            return 
+        } 
         const obj = finishCarga({dataForm:receipt, label:items[0], text:observation, conf,  tpallet, tcarga})
         setBulkCpd(obj)
         setReceipt(obj)

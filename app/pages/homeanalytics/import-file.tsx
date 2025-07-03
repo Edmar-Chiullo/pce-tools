@@ -46,7 +46,6 @@ export default function UploadExcel() {
         })
 
         const data = await res.json()
-        console.log(data)
     }
 
     function onSubmit() {
