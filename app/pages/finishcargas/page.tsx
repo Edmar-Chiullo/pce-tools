@@ -8,6 +8,10 @@ import Image from "next/image";
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 
+import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -18,35 +22,26 @@ import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 import { useReceiptContext } from "@/app/context/carga-context";
 
 import Timer from "@/components/ui/span";
-import { getReceipt } from "@/app/firebase/fbmethod";
+import { getReceipt, getCargasLiberadas } from "@/app/firebase/fbmethod";
 import { handlePrint } from "@/utils/print";
 import { extraction } from "@/utils/extract-carga";
 
+import { exportFileXlsxRecebimento } from "@/utils/ger-xlsx";
+import { Red_Rose } from "next/font/google";
+import { carga } from "../cpdupdate/create-carga";
+
 const formSchema = z.object({
-  filial: z.string().min(2, {
-    message: "Inserir com o nome do motorista.",
+  pesquisar: z.string().min(2, {
+    message: "Inserir data a ser consultada.",
   }),
-  agenda: z.string().min(2, {
-    message: "Inserir o nome da transportadora",
-  }),
-  doca: z.string().min(2, {
-    message: "Inserir o número da placa.",
-  }),
-  controle: z.string().min(2, {
-    message: "Inserir o número do ticket.",
-  }),
-  tipo_carga: z.string().min(2, {
-    message: "Inserir o número do controle.",
-  }),  
-  qt_pallet: z.string().min(2, {
-    message: "Inserir o número de telefone.",
-  }), 
 })
 
 // Component Login....
 export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
+  const [ varSwap, setVarSwap ] = useState<any[]>([])
+
   const [ userName, setUserName ] = useState<string | null>('')
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
   const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);
@@ -54,12 +49,17 @@ export default function ReceiptScreen() {
   const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
   const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
   
-  const { receipt }:any = useReceiptContext()
   const router = useRouter()
+
+  const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        pesquisar: "",
+      },
+    })
   
-  function printar() {
-    console.log(receipt)
-  }
+
+  
   useEffect(() => {
     // const userLogin:any = localStorage.getItem('userName')
     // userLogin ? setUserName(userLogin) : router.push('/')
@@ -102,26 +102,39 @@ export default function ReceiptScreen() {
       });
 
   }, [])
-  
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      filial: "",
-      agenda: "",
-      doca: "",
-      controle: "",
-      tipo_carga: "",
-      qt_pallet: ""
-    },
-  })
 
   function open(value: any) {
     const { carga } = extraction({value:value, bulk:bulk})
     handlePrint(carga)
   }
 
+  function printXlsx() {
+    const cargas = varSwap.map(({carga}:any) => carga)
+    exportFileXlsxRecebimento(cargas)
+
+  }
+
+  function onSubmit(value:z.infer<typeof formSchema>) {
+    getCargasLiberadas().then((val) => {
+      const arr = Object.values(val)
+      const result:any = arr.filter(({carga}:any) => carga.bulkState === 'finalizada divergente' || 
+                                               carga.bulkState === 'finalizada sucesso' ||
+                                               carga.bulkState === 'liberar canhoto' && fullDatePrint(carga.bulkConfDate).slice(0, 2) === value.pesquisar.slice(0, 2))
+      
+      if (result[0] !== undefined) {
+        setVarSwap(bulk)
+        setBulk(result)
+      } 
+    })
+
+    form.reset({
+      pesquisar: ''
+    })    
+  }
+  
+
   return (
-    <div className="main flex flex-col p-3 w-full h-screen">
+    <div className="main flex flex-col p-3 w-full h-[95%]">
       <Image
         onClick={() => router.push('/pages/receiptconf')}
         className="cursor-pointer hover:scale-[1.10]"
@@ -134,8 +147,38 @@ export default function ReceiptScreen() {
         <h5>{userName}</h5>
       </div>
       <div className="flex justify-center items-center w-full h-18">
-        <h1 className="text-4xl">Recebimento</h1>
+        <h1 className="text-4xl">Cargas Finalizadas</h1>
       </div>
+            <div className="flex w-full">
+              <Button onClick={printXlsx} className="self-end w-24 h-6 mb-1 ml-1 rounded-[4px]">Imprimir</Button>
+              <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 w-full pr-1">
+                    <FormField
+                        control={form.control}
+                        name="pesquisar"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Pesquisar</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Pesquisar" className="motorista h-8" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <Button type="submit" className="mt-3 w-20 h-8">
+                      <Image 
+                        src={'/lupa-de-pesquisa.png'}
+                        width={24}
+                        height={24}
+                        alt="Pesquisar tarefa"
+                      /></Button>
+                  </form>
+                </Form>
+            </div>
+      
       <div className="flex gap-9 w-full h-[80%]">
         <div className="relative w-full h-[100%] rounded-md p-1 bg-zinc-50">
           <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">

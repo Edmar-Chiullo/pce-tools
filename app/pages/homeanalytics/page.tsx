@@ -257,8 +257,8 @@ export default function Dashboard() {
                     <div className="flex justify-between w-full h-9">
                         <h1 className="ml-2 self-end">Atividades em execução</h1>
                         <div className="flex gap-2">
-                            <Input type="text" placeholder="Insira o código" className="input-quary w-32 h-8"/>
-                            <Button className="w-16 h-8 cursor-pointer hover:scale-[1.04]" onClick={onSubmit}>
+                            <Input type="text" placeholder="Insira o código" className="input-quary h-8"/>
+                            <Button className="w-20 h-8 cursor-pointer hover:scale-[1.04]" onClick={onSubmit}>
                                 <Image 
                                     src={'/lupa-de-pesquisa.png'}
                                     width={24}

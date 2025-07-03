@@ -100,7 +100,7 @@ export default function ReceiptScreen() {
   }
 
   return (
-    <div className="main flex flex-col p-3 w-full h-screen">
+    <div className="main flex flex-col p-3 w-full h-[95%]">
       <Image
         onClick={() => router.push('/pages/cpdoperator')}
         className="cursor-pointer hover:scale-[1.10]"
@@ -133,7 +133,7 @@ export default function ReceiptScreen() {
                   </FormItem>
                   )}
               />
-              <Button type="submit" className="mt-4">
+              <Button type="submit" className="mt-3 w-20 h-8">
                 <Image 
                   src={'/lupa-de-pesquisa.png'}
                   width={24}
