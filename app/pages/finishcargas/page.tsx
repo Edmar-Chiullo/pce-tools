@@ -29,6 +29,7 @@ import { extraction } from "@/utils/extract-carga";
 import { exportFileXlsxRecebimento } from "@/utils/ger-xlsx";
 import { Red_Rose } from "next/font/google";
 import { carga } from "../cpdupdate/create-carga";
+import { cargaPrintXlsx } from "@/utils/treatment-data-print";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
@@ -50,15 +51,14 @@ export default function ReceiptScreen() {
   const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
   
   const router = useRouter()
+  const { setReceipt } = useReceiptContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
         pesquisar: "",
       },
-    })
-  
-
+  })
   
   useEffect(() => {
     // const userLogin:any = localStorage.getItem('userName')
@@ -109,8 +109,10 @@ export default function ReceiptScreen() {
   }
 
   function printXlsx() {
-    const cargas = varSwap.map(({carga}:any) => carga)
-    exportFileXlsxRecebimento(cargas)
+    const cargas = bulk.map(({carga}:any) => carga)
+    const dataPrint = cargaPrintXlsx(cargas) 
+    setBulk(varSwap)
+    exportFileXlsxRecebimento(dataPrint)
 
   }
 
@@ -131,8 +133,15 @@ export default function ReceiptScreen() {
       pesquisar: ''
     })    
   }
-  
 
+  function openCarga(e: any) {
+    const parent = e.target.closest("li");
+    const element = bulk.find(item => item.carga.bulkId === parent?.id);
+    if (element) {
+      setReceipt(element.carga);
+    }
+  }
+  
   return (
     <div className="main flex flex-col p-3 w-full h-[95%]">
       <Image
@@ -149,48 +158,49 @@ export default function ReceiptScreen() {
       <div className="flex justify-center items-center w-full h-18">
         <h1 className="text-4xl">Cargas Finalizadas</h1>
       </div>
-            <div className="flex w-full">
-              <Button onClick={printXlsx} className="self-end w-24 h-6 mb-1 ml-1 rounded-[4px]">Imprimir</Button>
-              <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 w-full pr-1">
-                    <FormField
-                        control={form.control}
-                        name="pesquisar"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Pesquisar</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Pesquisar" className="motorista h-8" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <Button type="submit" className="mt-3 w-20 h-8">
-                      <Image 
-                        src={'/lupa-de-pesquisa.png'}
-                        width={24}
-                        height={24}
-                        alt="Pesquisar tarefa"
-                      /></Button>
-                  </form>
-                </Form>
-            </div>
+      <div className="flex w-full">
+        <Button onClick={printXlsx} className="self-end w-24 h-6 mb-1 ml-1 rounded-[4px]">Imprimir</Button>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 w-full pr-1">
+              <FormField
+                  control={form.control}
+                  name="pesquisar"
+                  render={({ field }) => (
+                  <FormItem>
+                      <FormLabel>Pesquisar</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Pesquisar" className="motorista h-8" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                      </FormDescription>
+                      <FormMessage />
+                  </FormItem>
+                  )}
+              />
+              <Button type="submit" className="mt-3 w-20 h-8">
+                <Image 
+                  src={'/lupa-de-pesquisa.png'}
+                  width={24}
+                  height={24}
+                  alt="Pesquisar tarefa"
+                /></Button>
+            </form>
+          </Form>
+      </div>
       
       <div className="flex gap-9 w-full h-[80%]">
         <div className="relative w-full h-[100%] rounded-md p-1 bg-zinc-50">
           <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
-            <ul className="grid grid-cols-8 gap-8 text-zinc-50">
+            <ul className="grid grid-cols-9 gap-8 text-zinc-50">
               <li className="col-start-1 place-self-center">Controle</li>
               <li className="col-start-2 place-self-center">Doca</li>
               <li className="col-start-3 place-self-center">Agenda</li>
               <li className="col-start-4 place-self-center">Data</li>
               <li className="col-start-5 place-self-center">Hora</li>
               <li className="col-start-6 place-self-center">Tempo</li>
-              <li className="col-start-7 place-self-center mr-2">Situação</li>
-              <li className="col-start-8 place-self-center mr-2">Imprimir</li>
+              <li className="col-start-7 place-self-center">Situação</li>
+              <li className="col-start-8 place-self-end">Imprimir</li>
+              <li className="col-start-9 place-self-center">Editar</li>
             </ul>
           </div>
           <ScrollArea className="w-full h-full">
@@ -206,7 +216,7 @@ export default function ReceiptScreen() {
                       : 'bg-zinc-200 hover:bg-zinc-300'
                     }`                    
                   }>
-                    <ul className="grid grid-cols-8 gap-10 text-[15px] w-full">
+                    <ul className="grid grid-cols-9 gap-10 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
                       <li className="col-start-3 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
@@ -221,19 +231,29 @@ export default function ReceiptScreen() {
                           redLimitSeconds: 180 
                         }} />
                       </li>
-                      <li id={carga.bulkId} className="col-start-7 place-self-center self-center text-[9px]"> 
+                      <li id={carga.bulkId} className="col-start-7 w-48 place-self-start self-center"> 
                           {carga.bulkState.toUpperCase()}
                       </li>        
-                      <li id={carga.bulkId} className="col-start-8 place-self-center self-start">
+                      <li id={carga.bulkId} className="col-start-8 place-self-end self-start">
                         <Image
                           onClick={(value) => open(value)}
-                          className="cursor-pointer hover:scale-[1.10] mr-4"
+                          className="cursor-pointer hover:scale-[1.10] mr-5"
                           src={'/impressora-com-papel.png'}
-                          width={20}
-                          height={20}
-                          alt="Proxima página."
+                          width={22}
+                          height={22}
+                          alt="icon impressora."
                         />
                       </li>      
+                      <li id={carga.bulkId} className="col-start-9 place-self-center">
+                        <Image
+                          onClick={openCarga}
+                          className="cursor-pointer hover:scale-[1.10] mr-2"
+                          src={'/editar.png'}
+                          width={22}
+                          height={22}
+                          alt="icon editar."
+                        />
+                      </li>
                     </ul>
                   </div>
                 )

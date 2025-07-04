@@ -1,5 +1,35 @@
 import { fullDatePrint, hourPrint, validateDate } from "./date-generate"
 
+export function cargaPrintXlsx(cargaArray:any) {
+    console.log(cargaArray)
+    
+    const tract = cargaArray.map(({bulkId, 
+                                    bulkAgenda, 
+                                    bulkControl, 
+                                    bulkQtPallet, 
+                                    bulkTipoCarga,
+                                    bulkConfDate, 
+                                    bulkReceiptDate,
+                                    bulkReceiptConf,
+                                    bulkState,
+                                    bulkStateReceiptDescription,
+                                    }:any) => {
+                                        return {
+                                                'Cod. Carga':bulkId, 
+                                                'Agenda': bulkAgenda,
+                                                'Controle':bulkControl, 
+                                                'Qt. Pallet': bulkQtPallet,
+                                                'Tipo carga':bulkTipoCarga, 
+                                                'Data':fullDatePrint(bulkConfDate), 
+                                                'H. fim conferência':hourPrint(bulkConfDate), 
+                                                'Conferente':bulkReceiptConf, 
+                                                'Situação': bulkState,
+                                                'Desc. Situação': bulkStateReceiptDescription
+                                                }
+                                        })
+    
+     return tract
+}
 
 export function trackEndNull({...activiArray}:any) {
     const rerultTask = JSON.parse(activiArray[7])

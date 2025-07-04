@@ -40,7 +40,7 @@ export function handlePrint({
           </style>
         </head>
         <body>
-          <img src="${window.location.origin}/imgem-logistica.png" class="background-img" />
+          <img src="${window.location.origin}/img-estoque.jpg" class="background-img" />
           <h1>Dados da Carga</h1>
           <div class="box">
             <div class="item"><strong>ID:</strong> <span>${bulkId ?? '-'}</span></div>

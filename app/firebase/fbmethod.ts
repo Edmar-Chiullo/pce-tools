@@ -80,7 +80,7 @@ export async function getActivity(activity:any) {
 }
 
 export async function getActivityTwo({...activity}:any) {
-  const strDate = '30/05/2025'//fullDate()
+  const strDate = fullDate()
   .replace('/','')
   .replace('/','')
   const result = get(child(re, `activity/${activity.task}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${activity.id}/`))

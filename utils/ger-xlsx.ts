@@ -8,7 +8,7 @@ export async function exportFileXlsx(value:any) {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Planilha1');
 
     const register = ``
-    const pathRegister = "C:\\pce-tools"
+    const pathRegister = "atividadade_pce"
     const filePathRegister = path.join(pathRegister, `${register}.xlsx`)            
     XLSX.writeFile(workbook, filePathRegister)
 }
@@ -21,7 +21,7 @@ export async function exportFileXlsxRecebimento(value:any) {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Planilha1');
 
     const register = ``
-    const pathRegister = "C:\\pce-tools"
+    const pathRegister = "rel_recebimento"
     const filePathRegister = path.join(pathRegister, `${register}.xlsx`)            
     XLSX.writeFile(workbook, filePathRegister)
 }
