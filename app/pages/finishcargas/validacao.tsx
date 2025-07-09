@@ -14,8 +14,8 @@ export default function ValidacaoCargaRetirada(value:any) {
                 <h1>Confirmar retirada.</h1>
             </div>
             <div className="flex justify-around w-full">
-                <Button onClick={(element) => confirm(false)} className="w-32 drop-shadow-xl shadow-zinc-950 hover:scale-[1.01]">Sim</Button>
-                <Button onClick={(element) => confirm(false)} className="w-32 drop-shadow-xl shadow-zinc-950 hover:scale-[1.01]">Não</Button>
+                <Button onClick={(element) => confirm(element)} className="w-32 drop-shadow-xl shadow-zinc-950 hover:scale-[1.01]">Sim</Button>
+                <Button onClick={(element) => confirm(element)} className="w-32 drop-shadow-xl shadow-zinc-950 hover:scale-[1.01]">Não</Button>
             </div>
         </div>
     )

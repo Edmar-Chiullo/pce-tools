@@ -17,6 +17,8 @@ export function carga({...data}) {
         bulkQtPallet: carga.bulkQtPallet,
         bulkReceiptOperator: carga.bulkReceiptOperator,
         bulkCpdDate: carga.bulkCpdDate,
+        bulkStatusLeadTimeReceipt: carga.bulkStatusLeadTimeReceipt ? carga.bulkStatusLeadTimeReceipt : 'no value', 
+        bulkLeadTimeReceipt: carga.bulkLeadTimeReceipt ? carga.bulkLeadTimeReceipt : 'no value', 
         bulkReceiptDate: carga.bulkReceiptDate,
         bulkStateCpd: 'liberar canhoto',
         bulkStateConf: carga.bulkStateConf,

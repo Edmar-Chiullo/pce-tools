@@ -52,7 +52,7 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
 
   return (
     <>
-      <button onClick={handlePrint} className="bg-blue-500 text-white p-2 rounded-[6px] hover:scale-[1.01]">Imprimir</button>
+      <button onClick={handlePrint} className="bg-blue-500 text-white p-2 rounded-[6px] hover:scale-[1.01] cursor-pointer">Imprimir</button>
 
       <div ref={contentRef}>
         <ScrollArea>

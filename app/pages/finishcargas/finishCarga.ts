@@ -2,30 +2,30 @@ import { dateDb } from "@/utils/date-generate"
 
 
 export function finishCarga({...data}) {
-        const { dataForm, label, text, conf, tpallet, tcarga } = data
     const obj = {
-        bulkId: dataForm.bulkId,
-        bulkDriver: dataForm.bulkDriver,
-        bulkDriverPhoneNumber: dataForm.bulkDriverPhoneNumber,
-        bulkCarrier: dataForm.bulkCarrier,
-        bulkAgenda: dataForm.bulkAgenda,
-        bulkPlate: dataForm.bulkPlate,
-        bulkCpdOperator: dataForm.bulkCpdOperator, 
-        bulkDoca: dataForm.bulkDoca,
-        bulkTipoCarga: tcarga,
-        bulkControl: dataForm.bulkControl,
-        bulkQtPallet: tpallet,
-        bulkReceiptOperator: dataForm.bulkReceiptOperator,
-        bulkReceiptConf: conf,
-        bulkCpdDate: dataForm.bulkCpdDate,
-        bulkReceiptDate: dataForm.bulkReceiptDate,
-        bulkConfDate: dateDb(),
-        bulkStateConf: label,
-        bulkStateCpd: 'carga finalizada',
-        bulkStateReceipt: 'fim conferencia',
-
-        bulkStateCpdDescription: dataForm.bulkStateCpdDescription,
-        bulkStateReceiptDescription: text
+        bulkId: data.bulkId,
+        bulkDriver: data.bulkDriver,
+        bulkDriverPhoneNumber: data.bulkDriverPhoneNumber,
+        bulkCarrier: data.bulkCarrier,
+        bulkAgenda: data.bulkAgenda,
+        bulkPlate: data.bulkPlate,
+        bulkCpdOperator: data.bulkCpdOperator, 
+        bulkDoca: data.bulkDoca,
+        bulkTipoCarga: data.bulkTipoCarga,
+        bulkControl: data.bulkControl,
+        bulkQtPallet: data.bulkQtPallet,
+        bulkReceiptOperator: data.bulkReceiptOperator,
+        bulkReceiptConf: data.bulkReceiptConf,
+        bulkCpdDate: data.bulkCpdDate,
+        bulkReceiptDate: data.bulkReceiptDate,
+        bulkConfDate: data.bulkConfDate,
+        bulkStateConf: data.bulkStateConf,
+        bulkStateCpd: data.bulkStateCpd,
+        bulkStateReceipt: data.bulkStateReceipt,
+        bulkStatusLeadTimeReceipt: 'Carga retirada', 
+        bulkLeadTimeReceipt: dateDb(), 
+        bulkStateCpdDescription: data.bulkStateCpdDescription,
+        bulkStateReceiptDescription: data.bulkStateReceiptDescription
     }
     return obj
 }

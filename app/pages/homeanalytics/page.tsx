@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import { app } from "@/app/firebase/fbkey"
@@ -23,6 +24,8 @@ export default function Dashboard() {
     const [ taskConcluid, setTaskConcluid ] = useState<any>()
     const [ objQuery, setObjQuery ] = useState<any>(null)
     const [ statusObjQuery, setStatusObjQuery ] = useState<any>()
+
+    const router = useRouter()
 
     useEffect(() => {
         if (!taskConcluid) return
@@ -320,7 +323,8 @@ export default function Dashboard() {
                     </ScrollArea>
                 </div>
             </div>
-            <div className="self-start w-[40%] mt-10">
+            <div className="self-end place-items-end w-[40%] h-[450px] p-1">
+                <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] hover:cursor-pointer text-zinc-50" onClick={() => router.push('/pages/print-barcode')}>COD. BARRAS</h1>            
             </div>
         </div>
     )

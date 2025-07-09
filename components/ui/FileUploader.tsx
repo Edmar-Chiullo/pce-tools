@@ -24,5 +24,5 @@ export default function FileUploader({ onDataParsed }: Props) {
     reader.readAsBinaryString(file);
   };
 
-  return <input type="file" accept=".xlsx" onChange={handleFile} className='bg-zinc-900 hover:bg-zinc-950 hover:scale-[1.01] rounded-[6px] p-1 text-zinc-50' />;
+  return <input type="file" accept=".xlsx" onChange={handleFile} className='bg-zinc-900 hover:bg-zinc-950 hover:scale-[1.01] rounded-[6px] p-1 text-zinc-50 cursor-pointer' />;
 }

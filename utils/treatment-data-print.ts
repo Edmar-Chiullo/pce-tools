@@ -10,7 +10,9 @@ export function cargaPrintXlsx(cargaArray:any) {
                                     bulkConfDate, 
                                     bulkReceiptDate,
                                     bulkReceiptConf,
-                                    bulkState,
+                                    bulkLeadTimeReceipt,
+                                    bulkStateLeadTimeReceipt,
+                                    bulkStateConf,
                                     bulkStateReceiptDescription,
                                     }:any) => {
                                         return {
@@ -20,9 +22,10 @@ export function cargaPrintXlsx(cargaArray:any) {
                                                 'Qt. Pallet': bulkQtPallet,
                                                 'Tipo carga':bulkTipoCarga, 
                                                 'Data':fullDatePrint(bulkConfDate), 
-                                                'H. fim conferência':hourPrint(bulkConfDate), 
+                                                'H. fim conferência':hourPrint(bulkConfDate),
+                                                'Tempo de espera': bulkLeadTimeReceipt ? hourPrint(bulkLeadTimeReceipt) : 'Carga no recebimento.', 
                                                 'Conferente':bulkReceiptConf, 
-                                                'Situação': bulkState,
+                                                'Situação conferência': bulkStateConf,
                                                 'Desc. Situação': bulkStateReceiptDescription
                                                 }
                                         })

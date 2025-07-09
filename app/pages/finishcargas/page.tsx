@@ -22,7 +22,7 @@ import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 import { useReceiptContext } from "@/app/context/carga-context";
 
 import Timer from "@/components/ui/span";
-import { getReceipt, getCargasLiberadas } from "@/app/firebase/fbmethod";
+import { getReceipt, getCargasLiberadas, setBulkCpd } from "@/app/firebase/fbmethod";
 import { handlePrint } from "@/utils/print";
 import { extraction } from "@/utils/extract-carga";
 
@@ -32,6 +32,7 @@ import { carga } from "../cpdupdate/create-carga";
 import { cargaPrintXlsx } from "@/utils/treatment-data-print";
 
 import ValidacaoCargaRetirada from "./validacao";
+import { finishCarga } from "./finishCarga";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
@@ -47,15 +48,18 @@ export default function ReceiptScreen() {
   const [ stateSwap, setStateSwap ] = useState(false)
   const [ dataConfirm, setDataConfirm ] = useState(false)
 
+  const [ cargaLiberar, setCargaLiberar ] = useState<any>()
+
   const [ userName, setUserName ] = useState<string | null>('')
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
   const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);
+
+  const [ query, setQuery ] = useState(false)
 
   const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
   const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
   
   const router = useRouter()
-  const { receipt, setReceipt } = useReceiptContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
@@ -65,10 +69,6 @@ export default function ReceiptScreen() {
   })
   
   useEffect(() => {
-    // const userLogin:any = localStorage.getItem('userName')
-    // userLogin ? setUserName(userLogin) : router.push('/')
-
-
     getReceipt().then((val) => {
       const arr = Object.values(val)
       setBulk(arr)
@@ -121,7 +121,6 @@ export default function ReceiptScreen() {
     exportFileXlsxRecebimento(dataPrint)
 
     setStateSwap(false)
-
   }
 
   function onSubmit(value:z.infer<typeof formSchema>) {
@@ -142,16 +141,29 @@ export default function ReceiptScreen() {
     })    
   }
 
-  function openCarga(e: any) {
-    const parent = e.target.closest("li");
-    const element = bulk.find(item => item.carga.bulkId === parent?.id);
-    if (element) {
-      setReceipt(element.carga);
-    }
-  }
-
   function cargaPuxada(value:any) {
-      setDataConfirm(value)
+    const val = value.target.innerText
+
+    if (val === 'LIBERAR') {
+      setDataConfirm(true)
+      const parent = value.target.parentElement
+      const element = bulk.filter(({carga}) => carga.bulkId === parent.id)
+      const { carga } = element[0]
+      const c = finishCarga(carga)
+      setCargaLiberar(c)
+      console.log(val)
+
+      return
+    }
+   
+    if (val === 'Sim') {
+      setDataConfirm(false)
+      setBulkCpd(cargaLiberar)
+      return
+    } else {
+      setDataConfirm(false)
+    }
+
   }
   
   return (
@@ -219,7 +231,8 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-full">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkStateConf === 'finalizada sucesso' || carga.bulkStateCpd === 'liberar canhoto') return (
+                if ((carga.bulkStateConf === 'finalizada sucesso' || carga.bulkStateCpd === 'liberar canhoto') && 
+                    carga.bulkStatusLeadTimeReceipt === undefined || carga.bulkStatusLeadTimeReceipt === 'no value') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
                     ${
                        redTimeoutIds.includes(carga.bulkId)
@@ -248,7 +261,7 @@ export default function ReceiptScreen() {
                           {carga.bulkStateConf.toUpperCase()}
                       </li>        
                       <li id={carga.bulkId} className="col-start-8 place-self-end">
-                        <h1 onClick={() => cargaPuxada(true)} className="hover:scale-[1.01] hover:cursor-pointer bg-zinc-900 rounded-[4px] text-zinc-50 pl-2 pr-2">LIBERAR</h1>
+                        <h1 onClick={(element) => cargaPuxada(element)} className="hover:scale-[1.01] hover:cursor-pointer bg-zinc-900 rounded-[4px] text-zinc-50 pl-2 pr-2">LIBERAR</h1>
                       </li>      
                       <li id={carga.bulkId} className="col-start-9 place-self-center">
                         <Image
