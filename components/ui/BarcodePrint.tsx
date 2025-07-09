@@ -44,7 +44,7 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
           format: 'CODE128',
           displayValue: true,
           height: 150,
-          width: 5,
+          width: 4,
         })
       }
     })
@@ -75,7 +75,7 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
                 <h3 className='text-4xl'>{item.Descricao}</h3>
               </div>
               {/* Códigos de barras lado a lado */}
-              <div style={{ display: 'flex', gap: '40px', marginTop: '20px' }}>
+              <div style={{ display: 'flex', gap: '60px', marginTop: '20px' }}>
                 <div className='border-8 border-zinc-950 rounded-[6px] p-1'>
                   <p style={{ textAlign: 'center', fontSize: '32px' }}>Produto</p>
                   <svg id={`barcode-codigo-${i}`} />
