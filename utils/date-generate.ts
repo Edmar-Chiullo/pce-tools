@@ -33,7 +33,7 @@ export function formatDate(value: any): string {
     const dd = String(result.getDate()).padStart(2, '0');
     const mm = String(result.getMonth() + 1).padStart(2, '0');
     const yyyy = result.getFullYear();
-    return `${dd}${mm}${yyyy}`;
+    return `${dd}/${mm}/${yyyy}`;
   }
 
   const date = new Date(value);
@@ -41,7 +41,7 @@ export function formatDate(value: any): string {
     const dd = String(date.getDate()).padStart(2, '0');
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const yyyy = date.getFullYear();
-    return `${dd}${mm}${yyyy}`;
+    return `${dd}/${mm}/${yyyy}`;
   }
 
   return String(value);
