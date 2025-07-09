@@ -36,7 +36,10 @@ interface NotificationCarga {
     bulkControl: string | null
     bulkTipoCarga: string | null
     bulkQtPallet: number | null | string
-    bulkState: string | undefined | null
+    bulkStateCpd: string | undefined | null
+    bulkStateConf: string | undefined | null
+    bulkStateReceipt: string | undefined | null
+
 }
 
 interface NotificationCanhotoProps  {

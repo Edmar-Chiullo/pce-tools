@@ -18,13 +18,35 @@ export function fullDate() {
     return `${day}/${month}/${year}`
 }
 
-export function fullDatePrint(date:number) {
+export function fullDatePrint(date:number | string) {
     const day = addLeftZZero(datePrintInt(date).getDate())
     const month = addLeftZZero(datePrintInt(date).getMonth() + 1)
     const year = datePrintInt(date).getFullYear()
 
     return `${day}/${month}/${year}`
 }
+
+export function formatDate(value: any): string {
+  if (typeof value === 'number') {
+    const excelEpoch = new Date(1899, 11, 30); // Excel base date
+    const result = new Date(excelEpoch.getTime() + value * 86400000); // dias * ms por dia
+    const dd = String(result.getDate()).padStart(2, '0');
+    const mm = String(result.getMonth() + 1).padStart(2, '0');
+    const yyyy = result.getFullYear();
+    return `${dd}${mm}${yyyy}`;
+  }
+
+  const date = new Date(value);
+  if (!isNaN(date.getTime())) {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${dd}${mm}${yyyy}`;
+  }
+
+  return String(value);
+}
+
 
 export function hourPrint(date:number) {
     const hour = addLeftZZero(datePrintInt(date).getHours())
@@ -34,7 +56,7 @@ export function hourPrint(date:number) {
     return `${hour}:${minutes}:${seconds}`
 }
 
-export function datePrintInt(dt:number) {
+export function datePrintInt(dt:number | string) {
     const date = new Date(dt)    
     return date
 }

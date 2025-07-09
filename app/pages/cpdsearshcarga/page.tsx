@@ -159,7 +159,7 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-full">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkState === 'liberar canhoto') return (
+                if (carga.bulkStateCpd === 'liberar canhoto') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
                     ${
                        redTimeoutIds.includes(carga.bulkId)
@@ -177,7 +177,7 @@ export default function ReceiptScreen() {
                       <li className="col-start-5 place-self-center">{fullDatePrint(carga.bulkCpdDate).toUpperCase()}</li>
                       <li className="col-start-6 place-self-center">{hourPrint(carga.bulkCpdDate).toUpperCase()}</li>
                       <li id={carga.bulkId} className="col-start-7 place-self-center self-center"> 
-                          {carga.bulkState.toUpperCase()}
+                          {carga.bulkStateCpd.toUpperCase()}
                       </li>        
                     </ul>
                   </div>

@@ -92,7 +92,7 @@ export default function Combobox({ props }: any) {
                       <CommandEmpty>Controle não encontrado.</CommandEmpty>
                       <CommandGroup>
                         {carga
-                          .filter((item: any) => item.carga.bulkState === "liberar entrada")
+                          .filter((item: any) => item.carga.bulkStateCpd === "liberar entrada" && item.carga.bulkStateReceipt !== "carro estacionado")
                           .map((item: any) => (
                             <CommandItem
                               key={item.carga.bulkId}

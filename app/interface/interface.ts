@@ -75,7 +75,9 @@ export interface ReceiptMelloProps {
     bulkReceiptDate: number | null | string
     bulkQtPallet: number | null | string
     bulkTipoCarga: string | null
-    bulkState: string | undefined | null
+    bulkStateCpd: string | undefined | null
+    bulkStateConf: string | undefined | null
+    bulkStateReceipt: string | undefined | null
     bulkStateCpdDescription: string | undefined | null
     bulkStateReceiptDescription: string | undefined | null
 }
@@ -89,6 +91,8 @@ export interface ReceiptOperatorProps {
     bulkTipoCarga: string | null
     bulkQtPallet: string | null
     bulkDate: number | null
-    bulkState: string | undefined | null
+    bulkStateCpd: string | undefined | null
+    bulkStateConf: string | undefined | null
+    bulkStateReceipt: string | undefined | null
     bulkStateDescription: string | undefined | null
 }

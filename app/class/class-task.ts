@@ -25,7 +25,6 @@ export class TaskEndProd implements TaskEndProdProps {
     }
 }
 
-
 export class TaskPickingRotation implements TaskPickingRotation {
     address: string | null
     product: string | null
@@ -97,7 +96,9 @@ export class ReceiptOperator implements ReceiptOperatorProps {
     bulkTipoCarga: string | null
     bulkQtPallet: string | null
     bulkDate: number | null
-    bulkState: string | undefined | null
+    bulkStateCpd: string | undefined | null
+    bulkStateConf: string | undefined | null
+    bulkStateReceipt: string | undefined | null
     bulkStateDescription: string | undefined | null
 
 
@@ -110,12 +111,22 @@ export class ReceiptOperator implements ReceiptOperatorProps {
         this.bulkTipoCarga = data.tipo_carga
         this.bulkQtPallet = data.qt_pallet
         this.bulkDate = dateDb()
-        this.bulkState = undefined
+        this.bulkStateCpd = undefined
+        this.bulkStateConf = undefined
+        this.bulkStateReceipt = undefined
         this.bulkStateDescription = undefined
     }
 
-    alterBulkState(params:string) {
-        this.bulkState = params
+    alterBulkStateCpd(params:string) {
+        this.bulkStateCpd = params
+    }
+
+    alterBulkStateConf(params:string) {
+        this.bulkStateConf = params
+    }
+
+    alterBulkStateReceipt(params:string) {
+        this.bulkStateReceipt = params
     }
 
     alterBulkStateDescription(params:string) {
@@ -141,8 +152,9 @@ export class ReceiptMello implements ReceiptMelloProps {
     bulkControl: string | null
     bulkTipoCarga: string | null
     bulkQtPallet: number | null | string
-    bulkState: string | undefined | null
-
+    bulkStateCpd: string | undefined | null
+    bulkStateConf: string | undefined | null
+    bulkStateReceipt: string | undefined | null
 
     constructor ({...data}) {
         const { carga, cpdOperator } = data
@@ -163,13 +175,23 @@ export class ReceiptMello implements ReceiptMelloProps {
         this.bulkReceiptOperator = 'no value'
         this.bulkCpdDate = dateDb()
         this.bulkReceiptDate = 'no value'
-        this.bulkState = 'entrada'
+        this.bulkStateCpd = undefined
+        this.bulkStateConf = undefined
+        this.bulkStateReceipt = undefined
         this.bulkStateCpdDescription = 'no value'
         this.bulkStateReceiptDescription = 'no value'
     }
 
-    alterBulkState(params:string) {
-        this.bulkState = params
+    alterBulkStateCpd(params:string) {
+        this.bulkStateCpd = params
+    }
+
+    alterBulkStateConf(params:string) {
+        this.bulkStateConf = params
+    }
+
+    alterBulkStateReceipt(params:string) {
+        this.bulkStateReceipt = params
     }
 
     alterBulkStateCpdDescription(params:string) {

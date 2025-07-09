@@ -1,7 +1,6 @@
 import { fullDatePrint, hourPrint, validateDate } from "./date-generate"
 
 export function cargaPrintXlsx(cargaArray:any) {
-    console.log(cargaArray)
     
     const tract = cargaArray.map(({bulkId, 
                                     bulkAgenda, 

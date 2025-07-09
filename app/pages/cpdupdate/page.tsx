@@ -68,7 +68,7 @@ export default function PegeResponse() {
         controle: receipt?.bulkControl,
         telefone: receipt?.bulkDriverPhoneNumber,
         textarea: receipt?.bulkStateReceiptDescription,
-        liberado: receipt?.bulkState != 'chegada carro' ? true : false
+        liberado: receipt?.bulkStateCpd != 'chegada carro' ? true : false
     },
     })
 
@@ -139,7 +139,7 @@ export default function PegeResponse() {
                                 <FormItem>
                                     <FormLabel>Motorista</FormLabel>
                                     <FormControl>
-                                    <Input placeholder="Motorista" className="motorista w-[420px] h-10" {...field} />
+                                        <Input placeholder="Motorista" className="motorista w-[420px] h-10" {...field} />
                                     </FormControl>
                                     <FormDescription>
                                     </FormDescription>
@@ -154,7 +154,7 @@ export default function PegeResponse() {
                                 <FormItem>
                                     <FormLabel>Transportadora</FormLabel>
                                     <FormControl>
-                                    <Input placeholder="Transportadora" className="transportadora w-[420px] h-10" {...field} />
+                                        <Input placeholder="Transportadora" className="transportadora w-[420px] h-10" {...field} />
                                     </FormControl>
                                     <FormDescription></FormDescription>
                                     <FormMessage />
@@ -168,7 +168,7 @@ export default function PegeResponse() {
                                 <FormItem>
                                     <FormLabel>Placa</FormLabel>
                                     <FormControl>
-                                    <Input placeholder="Placa" className="placa w-[420px] h-10" {...field} />
+                                        <Input placeholder="Placa" className="placa w-[420px] h-10" {...field} />
                                     </FormControl>
                                     <FormDescription></FormDescription>
                                     <FormMessage />
@@ -182,7 +182,7 @@ export default function PegeResponse() {
                                 <FormItem>
                                     <FormLabel>Agenda</FormLabel>
                                     <FormControl>
-                                    <Input placeholder="Agenda" className="ticket w-[420px] h-10" {...field} />
+                                        <Input placeholder="Agenda" className="ticket w-[420px] h-10" {...field} />
                                     </FormControl>
                                     <FormDescription></FormDescription>
                                     <FormMessage />
@@ -196,7 +196,7 @@ export default function PegeResponse() {
                                 <FormItem>
                                     <FormLabel>Controle</FormLabel>
                                     <FormControl>
-                                    <Input placeholder="Controle" className="controle w-[420px] h-10" {...field} />
+                                        <Input placeholder="Controle" className="controle w-[420px] h-10" {...field} />
                                     </FormControl>
                                     <FormDescription></FormDescription>
                                     <FormMessage />
@@ -210,7 +210,7 @@ export default function PegeResponse() {
                                 <FormItem>
                                     <FormLabel>Telefone</FormLabel>
                                     <FormControl>
-                                    <Input placeholder="Telefone" className="telefone w-[420px] h-10" {...field} />
+                                        <Input placeholder="Telefone" className="telefone w-[420px] h-10" {...field} />
                                     </FormControl>
                                     <FormDescription></FormDescription>
                                     <FormMessage />
@@ -225,8 +225,8 @@ export default function PegeResponse() {
                                     <FormLabel>Liberar para descarga:</FormLabel>
                                     <FormControl>
                                         <Switch
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
                                         />
                                     </FormControl>
                                     </FormItem>

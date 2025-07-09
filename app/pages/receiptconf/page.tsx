@@ -108,7 +108,7 @@ export default function ReceiptScreen() {
           </div>
           <ScrollArea className="w-full h-full">
             {bulk.map(({ carga }, key) => (
-              carga.bulkState === 'carro estacionado'  && (                
+              carga.bulkStateReceipt === 'carro estacionado'  && (                
                 <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-amber-100`}>
                   <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                     <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>

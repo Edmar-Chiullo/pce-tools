@@ -31,6 +31,8 @@ import { Red_Rose } from "next/font/google";
 import { carga } from "../cpdupdate/create-carga";
 import { cargaPrintXlsx } from "@/utils/treatment-data-print";
 
+import ValidacaoCargaRetirada from "./validacao";
+
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
     message: "Inserir data a ser consultada.",
@@ -42,6 +44,8 @@ export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ varSwap, setVarSwap ] = useState<any[]>([])
+  const [ stateSwap, setStateSwap ] = useState(false)
+  const [ dataConfirm, setDataConfirm ] = useState(false)
 
   const [ userName, setUserName ] = useState<string | null>('')
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
@@ -51,7 +55,7 @@ export default function ReceiptScreen() {
   const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
   
   const router = useRouter()
-  const { setReceipt } = useReceiptContext();
+  const { receipt, setReceipt } = useReceiptContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
@@ -109,23 +113,27 @@ export default function ReceiptScreen() {
   }
 
   function printXlsx() {
-    const cargas = bulk.map(({carga}:any) => carga)
+    const result:any = bulk.filter(({carga}:any) => carga.bulkStateConf === 'finalizada divergente' || 
+                                               carga.bulkStateConf === 'finalizada sucesso')
+    const cargas = result.map(({carga}:any) => carga)
     const dataPrint = cargaPrintXlsx(cargas) 
-    setBulk(varSwap)
+    if (stateSwap) setBulk(varSwap)
     exportFileXlsxRecebimento(dataPrint)
+
+    setStateSwap(false)
 
   }
 
   function onSubmit(value:z.infer<typeof formSchema>) {
     getCargasLiberadas().then((val) => {
       const arr = Object.values(val)
-      const result:any = arr.filter(({carga}:any) => carga.bulkState === 'finalizada divergente' || 
-                                               carga.bulkState === 'finalizada sucesso' ||
-                                               carga.bulkState === 'liberar canhoto' && fullDatePrint(carga.bulkConfDate).slice(0, 2) === value.pesquisar.slice(0, 2))
+      const result:any = arr.filter(({carga}:any) => carga.bulkStateConf === 'finalizada divergente' || 
+                                               carga.bulkStateConf === 'finalizada sucesso' && fullDatePrint(carga.bulkConfDate).slice(0, 2) === value.pesquisar.slice(0, 2))
       
       if (result[0] !== undefined) {
         setVarSwap(bulk)
         setBulk(result)
+        setStateSwap(true)
       } 
     })
 
@@ -140,6 +148,10 @@ export default function ReceiptScreen() {
     if (element) {
       setReceipt(element.carga);
     }
+  }
+
+  function cargaPuxada(value:any) {
+      setDataConfirm(value)
   }
   
   return (
@@ -158,8 +170,9 @@ export default function ReceiptScreen() {
       <div className="flex justify-center items-center w-full h-18">
         <h1 className="text-4xl">Cargas Finalizadas</h1>
       </div>
-      <div className="flex w-full">
+      <div className="relative flex justify-center items-start w-full">
         <Button onClick={printXlsx} className="self-end w-24 h-6 mb-1 ml-1 rounded-[4px]">Imprimir</Button>
+        {dataConfirm && <ValidacaoCargaRetirada props={cargaPuxada} />}
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 w-full pr-1">
               <FormField
@@ -206,7 +219,7 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full h-full">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkState === 'finalizada sucesso' || carga.bulkState === 'liberar canhoto') return (
+                if (carga.bulkStateConf === 'finalizada sucesso' || carga.bulkStateCpd === 'liberar canhoto') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
                     ${
                        redTimeoutIds.includes(carga.bulkId)
@@ -231,10 +244,13 @@ export default function ReceiptScreen() {
                           redLimitSeconds: 180 
                         }} />
                       </li>
-                      <li id={carga.bulkId} className="col-start-7 w-48 place-self-start self-center"> 
-                          {carga.bulkState.toUpperCase()}
+                      <li id={carga.bulkId} className="col-start-7 w-48 place-self-start"> 
+                          {carga.bulkStateConf.toUpperCase()}
                       </li>        
-                      <li id={carga.bulkId} className="col-start-8 place-self-end self-start">
+                      <li id={carga.bulkId} className="col-start-8 place-self-end">
+                        <h1 onClick={() => cargaPuxada(true)} className="hover:scale-[1.01] hover:cursor-pointer bg-zinc-900 rounded-[4px] text-zinc-50 pl-2 pr-2">LIBERAR</h1>
+                      </li>      
+                      <li id={carga.bulkId} className="col-start-9 place-self-center">
                         <Image
                           onClick={(value) => open(value)}
                           className="cursor-pointer hover:scale-[1.10] mr-5"
@@ -242,16 +258,6 @@ export default function ReceiptScreen() {
                           width={22}
                           height={22}
                           alt="icon impressora."
-                        />
-                      </li>      
-                      <li id={carga.bulkId} className="col-start-9 place-self-center">
-                        <Image
-                          onClick={openCarga}
-                          className="cursor-pointer hover:scale-[1.10] mr-2"
-                          src={'/editar.png'}
-                          width={22}
-                          height={22}
-                          alt="icon editar."
                         />
                       </li>
                     </ul>

@@ -18,9 +18,12 @@ export function carga({...data}) {
         bulkReceiptOperator: carga.bulkReceiptOperator,
         bulkCpdDate: carga.bulkCpdDate,
         bulkReceiptDate: carga.bulkReceiptDate,
-        bulkState: 'liberar canhoto',
+        bulkStateCpd: 'liberar canhoto',
+        bulkStateConf: carga.bulkStateConf,
+        bulkStateReceipt: carga.bulkStateReceipt,
         bulkStateCpdDescription: dataForm.textarea,
         bulkStateReceiptDescription: carga.bulkStateReceiptDescription
     }
+
     return obj
 }

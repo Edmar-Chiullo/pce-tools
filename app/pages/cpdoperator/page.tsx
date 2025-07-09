@@ -132,8 +132,8 @@ export default function ReceiptScreen() {
     const element = bulk.filter(({carga}) => carga.bulkId === parent.id)
     const { carga } = element[0]
 
-    if (carga.bulkState != 'chegada carro' && carga.bulkState != 'liberar entrada') {
-        if (carga.bulkState === 'finalizada divergente' || carga.bulkState === 'finalizada sucesso') {
+    if (carga.bulkStateReceipt === 'fim conferencia') {
+        if (carga.bulkStateConf === 'finalizada divergente' || carga.bulkStateConf === 'finalizada sucesso') {
           setReceipt(carga)
           router.push('/pages/liberarcanhoto')
         } else {
@@ -148,6 +148,8 @@ export default function ReceiptScreen() {
   }
 
   function onSubmit(cargo: z.infer<typeof formSchema>) {
+    // const dt = new Date('2025-04-24').getTime()
+    // console.log(dt)
     if (cargo.telefone.length < 11) {
       alert('Número de telefone não cerresponde ao número válido.')
       form.setFocus('telefone')
@@ -158,7 +160,9 @@ export default function ReceiptScreen() {
     const descriptionCarga = 'chegada do motorista no centro de distribuição.'
     
     const carga = new ReceiptMello({carga:cargo, cpdOperator:user})
-    carga.alterBulkState(statusCarga)
+    carga.alterBulkStateCpd(statusCarga)
+    carga.alterBulkStateConf('no value')
+    carga.alterBulkStateReceipt('no value')
     carga.alterBulkStateCpdDescription(descriptionCarga)
 
     try {      
@@ -307,12 +311,12 @@ export default function ReceiptScreen() {
               bulk.map(({carga}, key) => {
                 return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] cursor-pointer 
-                                            ${carga.bulkState === 'liberar canhoto' ? 'hidden' : 'none'}`}>
+                                            ${carga.bulkStateCpd === 'liberar canhoto' ? 'hidden' : 'none'}`}>
                     <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] 
                                     ${
-                                      carga.bulkState === 'carro estacionado' ? 'bg-amber-300 hover:bg-amber-400' :
-                                      carga.bulkState === 'finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 
-                                      carga.bulkState === 'finalizada divergente' ? 'bg-red-500 hover:bg-red-600' : 'bg-zinc-200 hover:bg-zinc-300'
+                                      carga.bulkStateConf === 'inicio conferencia' ? 'bg-amber-300 hover:bg-amber-400' :
+                                      carga.bulkStateConf === 'finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 
+                                      carga.bulkStateConf === 'finalizada divergente' ? 'bg-red-500 hover:bg-red-600' : 'bg-zinc-200 hover:bg-zinc-300'
                                     }`
                                   }>
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
