@@ -18,6 +18,7 @@ export async function getUser({...user}) {
 }
 
 export async function getTaskes({...tasks}) {
+
   const result = get(child(re, `activity/${tasks.descricao}/${tasks.dateAno}/${tasks.dateMes}/`)).then((snapshot) => {
     return snapshot.exists() ? snapshot.val() : false
   }).catch((error) => {
@@ -27,8 +28,9 @@ export async function getTaskes({...tasks}) {
   return result
 }
 
-export async function getTaske({...tasks}) {
+export async function getTaske({...tasks}) {  
   const result = get(child(re, `activity/${tasks.descricao}/${tasks.dateAno}/${tasks.dateMes}/${tasks.id}/`)).then((snapshot) => {
+    
     return snapshot.exists() ? snapshot.val() : false
   }).catch((error) => {
       return error

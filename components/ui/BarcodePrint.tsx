@@ -44,7 +44,7 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
           format: 'CODE128',
           displayValue: true,
           height: 150,
-          width: 3,
+          width: 3  ,
         })
       }
     })

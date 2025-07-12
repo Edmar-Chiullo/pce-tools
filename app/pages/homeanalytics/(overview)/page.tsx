@@ -35,8 +35,9 @@ export default function Dashboard() {
         
     }, [taskConcluid])
 
-    useEffect(() => {
+    useEffect(() => {        
         const data:any = document.querySelector('.input-quary')
+        
         if (data) data.focus()
         const db = getDatabase(app)
         const tasksDescription = ['Aéreo vazio', 'Validação endereço x produto', 'Rotativo de picking', 'Quarentena fracionada']
