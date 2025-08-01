@@ -282,7 +282,7 @@ export default function Dashboard() {
                                     let hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50' 
                                     let status = activityState ? 'Executando' : 'Finalizado'
 
-                                    const print = valDate(activityInitDate)
+                                    const print = true ///valDate(activityInitDate)
                                     if (print) return  (
                                         <div key={activityID} className={`flex justify-between mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                                             <div className="flex flex-col gap-1">
