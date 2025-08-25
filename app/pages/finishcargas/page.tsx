@@ -253,8 +253,8 @@ export default function ReceiptScreen() {
                           date: carga.bulkConfDate,
                           onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
                           onRedLimitReached: () => handleRedTimeout(carga.bulkId),
-                          yellowLimitSeconds: 120, 
-                          redLimitSeconds: 180 
+                          yellowLimitSeconds: 1800, 
+                          redLimitSeconds: 3200 
                         }} />
                       </li>
                       <li id={carga.bulkId} className="col-start-7 w-48 place-self-start"> 

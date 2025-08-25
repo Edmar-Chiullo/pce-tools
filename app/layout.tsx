@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100%]`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}
       >
         <LoginContextProvider>  
             <ReceiptContextProvider>

@@ -12,7 +12,6 @@ interface TimerProps {
 
 export default function Timer({ props }: TimerProps) {
   const { date, onYellowLimitReached, onRedLimitReached, yellowLimitSeconds, redLimitSeconds }:any = props
-  
   const [startTime, setStartTime] = useState<Date | null>(null)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
 
@@ -43,5 +42,6 @@ export default function Timer({ props }: TimerProps) {
     }
   }, [startTime, yellowLimitSeconds, redLimitSeconds, onYellowLimitReached, onRedLimitReached])
 
+  console.log(elapsedSeconds)
   return <span>{formatTime(elapsedSeconds)}</span>
 }

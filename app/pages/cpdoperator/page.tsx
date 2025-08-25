@@ -314,7 +314,7 @@ export default function ReceiptScreen() {
                                             ${carga.bulkStateCpd === 'liberar canhoto' ? 'hidden' : 'none'}`}>
                     <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] 
                                     ${
-                                      carga.bulkStateConf === 'inicio conferencia' ? 'bg-amber-300 hover:bg-amber-400' :
+                                      carga.bulkStateReceipt === 'carro estacionado' ? 'bg-amber-300 hover:bg-amber-400' :
                                       carga.bulkStateConf === 'finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 
                                       carga.bulkStateConf === 'finalizada divergente' ? 'bg-red-500 hover:bg-red-600' : 'bg-zinc-200 hover:bg-zinc-300'
                                     }`

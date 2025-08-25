@@ -8,7 +8,7 @@ export class Activity implements ActivityProps {
     activityName: string | null
     activityState: boolean
     activityLocalWork: string | null
-    activityTasks: Object | null
+    activityTasks: object | null
     activityStreet: string | null
     activitySide: string | null
     activityInitDate: Date | null | number
@@ -28,7 +28,7 @@ export class Activity implements ActivityProps {
         this.activityFinisDate = null
     }
     
-    updateTask (task: Object | null):void {
+    updateTask (task: object | null):void {
         this.activityTasks = task 
     }
 

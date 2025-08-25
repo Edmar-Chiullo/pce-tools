@@ -1,6 +1,14 @@
 import { dateDb, generateId } from "@/utils/date-generate";
 import { TaskProps, TaskEndProdProps, TaskFractionalQuarentineProps, ReceiptProps, ReceiptOperatorProps, ReceiptMelloProps } from "../interface/interface";
 
+interface TaskPickingRotationProps {
+    address: string | null
+    product: string | null
+    quant: string | null
+    valid: string | null
+    date: number | null
+}
+
 export class Task implements TaskProps {
     address: string | null
     date: number | null

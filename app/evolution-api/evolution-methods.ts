@@ -80,7 +80,7 @@ export class EvolutionApi {
                 body: JSON.stringify(content)
             };
 
-            fetch('http://localhost:8080/message/sendText/myapiphone', options)
+            fetch('http://31.97.24.67:8080/message/sendText/pessoal', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
@@ -106,7 +106,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('http://localhost:8080/message/sendText/myapiphone', options)
+            fetch('http://31.97.24.67:8080/message/sendText/pessoal', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
@@ -132,7 +132,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('http://localhost:8080/message/sendText/myapiphone', options)
+            fetch('http://31.97.24.67:8080/message/sendText/pessoal', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
@@ -158,7 +158,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('http://localhost:8080/message/sendText/myapiphone', options)
+            fetch('http://31.97.24.67:8080/message/sendText/pessoal', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
