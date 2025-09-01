@@ -45,6 +45,10 @@ export default function HighNullRotation({ activity }: { activity: ActivityData 
         <button onClick={() => getActivity(activity)} className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
           Finalizar
         </button>
+        {errorMessage && (
+          <p className="flex text-red-500 mt-4">{errorMessage}</p>
+        )}
+
     </div>
   )
 }
