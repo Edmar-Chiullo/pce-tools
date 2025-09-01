@@ -7,8 +7,8 @@ import { fullDate } from "@/utils/date-generate";
 const re = ref(db)
 
 // Get data....
-export async function getUser({...user}) {
-    const result = get(child(re, `users/`)).then((snapshot) => {
+export async function getUser(user:string) {
+    const result = get(child(re, `users/${user}`)).then((snapshot) => {
       return snapshot.exists() ? snapshot.val() : "Usuário não encontrado!"
     }).catch((error) => {
         return error
@@ -100,10 +100,12 @@ export async function setActivityDb({...activity}:ActivityProps | undefined) {
   const strDate = fullDate()
   .replace('/','')
   .replace('/','')
+        console.log('setActivityDb')
+        console.log(activity)
 
-  set(ref(db,`activity/${activity.activityName}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${activity.activityID}`), {
-    activi: activity
-  });
+  // set(ref(db,`activity/${activity.activityName}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${activity.activityID}`), {
+  //   activi: activity
+  // });
 }
 
 

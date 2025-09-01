@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useEffect } from "react";
 
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
@@ -27,6 +27,8 @@ import Image from "next/image";
 import { useReceiptContext } from "@/app/context/carga-context";
 import { useLoginContext } from "@/app/context/user-context";
 import { EvolutionApi } from "@/app/evolution-api/evolution-methods";
+import Link from "next/link";
+import { ArrowBigRightIcon } from "lucide-react";
 
 const formSchema = z.object({
   motorista: z.string().min(2, {
@@ -52,6 +54,7 @@ const formSchema = z.object({
 // Component Login....
 
 export default function ReceiptScreen() {
+
 
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ callResponse, setCallResponse ] = useState<boolean>(false)
@@ -146,10 +149,7 @@ export default function ReceiptScreen() {
     }
     
   }
-
   function onSubmit(cargo: z.infer<typeof formSchema>) {
-    // const dt = new Date('2025-04-24').getTime()
-    // console.log(dt)
     if (cargo.telefone.length < 11) {
       alert('Número de telefone não cerresponde ao número válido.')
       form.setFocus('telefone')
@@ -184,16 +184,13 @@ export default function ReceiptScreen() {
   }
 
   return (
-    <div className="main flex flex-col p-3 w-full h-screen">
-      <div className="flex justify-end items-center w-full h-2">
-        <h5>{userName}</h5>
+    <div className="main flex flex-col p-2 w-full h-full bg-zinc-800 rounded-2xl">
+      <div className="flex justify-center items-center w-full p-4">
+        <h1 className="text-3xl text-zinc-50">Processamento de notas</h1>
       </div>
-      <div className="flex justify-center items-center w-full h-24">
-        <h1 className="text-4xl">Recebimento</h1>
-      </div>
-      <div className="flex items-center justify-between gap-9 w-full h-[80%]">
+      <div className="flex items-center justify-between gap-2 w-full h-full">
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="self-start flex flex-col gap-2 w-72">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="self-start flex flex-col w-72 h-full bg-zinc-100 p-4 rounded-2xl">
               <FormField
                   control={form.control}
                   name="motorista"
@@ -201,7 +198,7 @@ export default function ReceiptScreen() {
                   <FormItem>
                       <FormLabel>Motorista</FormLabel>
                       <FormControl>
-                      <Input placeholder="Motorista" className="motorista h-8" {...field} />
+                      <Input placeholder="Motorista" className="motorista h-8 bg-white" {...field} />
                       </FormControl>
                       <FormDescription>
                       </FormDescription>
@@ -216,7 +213,7 @@ export default function ReceiptScreen() {
                   <FormItem>
                       <FormLabel>Transportadora</FormLabel>
                       <FormControl>
-                      <Input placeholder="Transportadora" className="transportadora h-8" {...field} />
+                      <Input placeholder="Transportadora" className="transportadora h-8 bg-white" {...field} />
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
@@ -230,7 +227,7 @@ export default function ReceiptScreen() {
                   <FormItem>
                       <FormLabel>Placa</FormLabel>
                       <FormControl>
-                      <Input placeholder="Placa" className="placa h-8" {...field} />
+                      <Input placeholder="Placa" className="placa h-8 bg-white" {...field} />
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
@@ -244,7 +241,7 @@ export default function ReceiptScreen() {
                   <FormItem>
                       <FormLabel>Agenda</FormLabel>
                       <FormControl>
-                      <Input placeholder="Agenda" className="ticket h-8" {...field} />
+                      <Input placeholder="Agenda" className="ticket h-8 bg-white" {...field} />
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
@@ -258,7 +255,7 @@ export default function ReceiptScreen() {
                   <FormItem>
                       <FormLabel>Controle</FormLabel>
                       <FormControl>
-                      <Input placeholder="Controle" className="controle h-8" {...field} />
+                      <Input placeholder="Controle" className="controle h-8 bg-white" {...field} />
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
@@ -272,7 +269,7 @@ export default function ReceiptScreen() {
                   <FormItem>
                       <FormLabel>Telefone</FormLabel>
                       <FormControl>
-                      <Input placeholder="Telefone" className="telefone h-8" {...field} />
+                      <Input placeholder="Telefone" className="telefone h-8 bg-white" {...field} />
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
@@ -282,18 +279,15 @@ export default function ReceiptScreen() {
               <Button type="submit" className="w-full h-8 cursor-pointer mt-3">Salvar</Button>
             </form>
         </Form>
-        <div className="relative self-end w-full h-[95%] rounded-md bg-zinc-50">
-          <div className="relative flex w-full justify-end pr-1 bg-amber-300">
-            <Image 
-              onClick={() => router.push('/pages/cpdsearshcarga')}
-              className="absolute top-[-30px] cursor-pointer hover:scale-[1.10]"
-              src={'/proxima-pagina.png'}
-              width={20}
-              height={20}
-              alt="Proxima página."
-            />
+        <div className="relative self-end w-full h-full rounded-md bg-zinc-100">
+          <div className="relative flex w-full justify-end pr-1">
+            <div className="absolute top-[-35px] cursor-pointer hover:scale-[1.10]">
+              <Link href="/pages/home/cpd/canhotosliberados">
+                <ArrowBigRightIcon className="size-7 text-zinc-50"/>                 
+              </Link>
+            </div>
           </div>
-          <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
+          <div className="w-full bg-zinc-600 px-1 rounded-t-sm">
             <ul className="grid grid-cols-11 gap-8 text-zinc-50">
               <li className="col-start-1 col-span-2">Motorista</li>
               <li className="col-start-3 col-span-2">Transportadora</li>
@@ -306,7 +300,7 @@ export default function ReceiptScreen() {
               <li className="col-start-11 place-self-end mr-2">Editar</li>
             </ul>
           </div>
-          <ScrollArea className="w-full h-[95%]">
+          <ScrollArea className="w-full">
             {
               bulk.map(({carga}, key) => {
                 return (

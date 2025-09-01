@@ -8,27 +8,37 @@ export class Activity implements ActivityProps {
     activityName: string | null
     activityState: boolean
     activityLocalWork: string | null
-    activityTasks: object | null
+    activityTasks: string | null
     activityStreet: string | null
     activitySide: string | null
-    activityInitDate: Date | null | number
-    activityFinisDate: Date | null
+    activityInitDate: Date | null | number | string
+    activityFinisDate: Date | null | number | string
 
     constructor({ ...props }) {
-        this.activityID = generateId(props.pre)
-        this.activityUserID = props.userID
-        this.activtyUserName = props.userName
-        this.activityName = props.activityName
+        const name = JSON.parse(props.name)
+
+        this.activityID = 'no value'
+        this.activityUserID = props.id
+        this.activtyUserName = name.first
+        this.activityName = 'no value'
         this.activityState = true
-        this.activityLocalWork = null
-        this.activityTasks = null
-        this.activityStreet = null
-        this.activitySide = null
-        this.activityInitDate = null
-        this.activityFinisDate = null
+        this.activityLocalWork = 'no value'
+        this.activityTasks = 'no value'
+        this.activityStreet = 'no value'
+        this.activitySide = 'no value'
+        this.activityInitDate = 'no value'
+        this.activityFinisDate = 'no value'
+    }
+
+    updateId(prefixo:string) {
+        this.activityID = generateId(prefixo)
     }
     
-    updateTask (task: object | null):void {
+    updateName(name: string) {
+        this.activityName = name
+    }
+
+    updateTask (task: string | null):void {
         this.activityTasks = task 
     }
 

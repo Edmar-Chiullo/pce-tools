@@ -1,56 +1,197 @@
-import NextAuth from 'next-auth';
-import { authConfig } from './auth.config';
-import Credentials from 'next-auth/providers/credentials';
-import { z } from 'zod';
-import bcrypt from "bcryptjs";
+import NextAuth from "next-auth"
+import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
+
+import { getUser } from "./app/firebase/fbmethod";
 
 type UserProps = {
-  id?: string
-  name?: string | null
-  email?: string | null
-  password?: string | null
-  image?: string | null
-}
+  uid?: string;
+  userID?: string;
+  userName?: string | null;
+  usuario?: string | null;
+  userPassword?: string | null | number;
+  userPermission?: string | null;
+  userRegistrationDate?: string | null | number;
+  image?: string | null;
+  email?: string | null;
+};
 
-const users = [
-    { id: '1', email: 'user1@example.com', password: 'password1', image: 'https://i.pravatar.cc/150?img=1' },
-    { id: '2', email: 'user2@example.com', password: 'password2', image: 'https://i.pravatar.cc/150?img=2' },
-    { id: '3', email: 'user3@example.com', password: 'password3', image: 'https://i.pravatar.cc/150?img=3' },
-    { id: '4', email: 'ecschiullo@gmail.com', password: '123456', image: 'https://i.pravatar.cc/150?img=4' },
-];
-
-async function getUser(email: string): Promise<UserProps | undefined> {
+async function getUsers(usuario: string): Promise<UserProps | undefined> {
   try {
-    const user = users.find(user => user.email === email);
-    if (!user) return undefined;
-
-    return user;
+    return await getUser(usuario);
   } catch (error) {
-    throw new Error('Failed to fetch user.');
+    throw new Error("Failed to fetch user.");
   }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
-  ...authConfig,
-    providers: [
-        Credentials({
-            async authorize(credentials) {
-                const parsedCredentials = z
-                .object({ email: z.string().email(), password: z.string().min(6) })
-                .safeParse(credentials);
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        user: { label: "Usuario", type: "text" },
+        password: { label: "Senha", type: "password" },
+      },
+      async authorize(credentials) {
+        const parsedCredentials = z
+          .object({ usuario: z.string(), senha: z.string().min(3) })
+          .safeParse(credentials);
 
-                if (parsedCredentials.success) {
-                    const { email, password } = parsedCredentials.data;
-                    const user = await getUser(email);
-                    if (!user) return null;
-                    const passwordsMatch = password === user.password ? true : false;
-                    ///const passwordsMatch = await bcrypt.compare(password, user.password || '');
+        if (!parsedCredentials.success) return null;
 
-                    if (passwordsMatch) return user;
-                }
+        const { usuario, senha } = parsedCredentials.data;
+        const user = await getUsers(usuario);
 
-                return null;  
-            }
-        })
-    ],
+
+        if (!user || !user.email) return null;
+
+        const passwordsMatch = String(senha) === String(user.userPassword);
+        if (!passwordsMatch) return null;
+
+        return {
+          id: user.userID,
+          name: JSON.stringify({ first: user.userName, permission: user.userPermission }),
+          email: user.email,
+          role: user.userPermission,
+        };
+      },
+    }),
+  ],
+  
+  session: { strategy: "jwt" },
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.role = (user as any).role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        (session.user as any).role = token.role;
+      }
+      return session;
+    },
+  },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import NextAuth from "next-auth";
+// import { authConfig } from "./auth.config";
+// import Credentials from "next-auth/providers/credentials";
+
+// import { z } from "zod";
+// import { getUser } from "@/app/firebase/fbmethod";
+
+// type UserProps = {
+//   uid?: string;
+//   userID?: string;
+//   userName?: string | null;
+//   usuario?: string | null;
+//   userPassword?: string | null | number;
+//   userPermission?: string | null;
+//   userRegistrationDate?: string | null | number;
+//   image?: string | null;
+//   email?: string | null;
+// };
+
+// async function getUsers(usuario: string): Promise<UserProps | undefined> {
+//   try {
+//     return await getUser(usuario);
+//   } catch (error) {
+//     throw new Error("Failed to fetch user.");
+//   }
+// }
+
+// export const { handlers, auth, signIn, signOut } = NextAuth({
+//   secret: process.env.AUTH_SECRET,
+//   ...authConfig,
+//   providers: [
+//     Credentials({
+//       name: "Credenciais",
+//       credentials: {
+//         usuario: { label: "Usuário", type: "text" },
+//         senha: { label: "Senha", type: "password" },
+//       },
+
+//       async authorize(credentials) {
+//         const parsedCredentials = z
+//           .object({ usuario: z.string(), senha: z.string().min(3) })
+//           .safeParse(credentials);
+
+//         if (!parsedCredentials.success) return null;
+
+//         const { usuario, senha } = parsedCredentials.data;
+//         const user = await getUsers(usuario);
+
+
+//         if (!user || !user.email) return null;
+
+//         const passwordsMatch = String(senha) === String(user.userPassword);
+//         if (!passwordsMatch) return null;
+
+//         return {
+//           id: user.userID,
+//           name: user.userName,
+//           email: user.email,
+//           role: user.userPermission,
+//         };
+//       },
+//     }),
+//   ],
+
+//   session: { strategy: "jwt" },
+
+//   callbacks: {
+//     async jwt({ token, user }) {
+//       if (user) {
+//         token.id = user.id;
+//         token.name = user.name;
+//         token.email = user.email;
+//         token.role = (user as any).role;
+//       }
+//       return token;
+//     },
+//     async session({ session, token }) {
+//       if (session.user) {
+//         session.user.id = token.id as string;
+//         session.user.name = token.name as string;
+//         session.user.email = token.email as string;
+//         (session.user as any).role = token.role;
+//       }
+//       return session;
+//     },
+//   },
+// });

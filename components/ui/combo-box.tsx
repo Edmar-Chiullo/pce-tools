@@ -31,7 +31,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { box } from "@/app/pages/receiptoperator/box"
+import { box } from "@/app/pages/home/(desktop)/recebimento/box"
 
 const FormSchema = z.object({
   status: z.string({
@@ -63,7 +63,7 @@ export default function Combobox({ props }: any) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-1">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 h-full bg-zinc-100 p-2 rounded-md">
         {/* Combobox Status */}
         <FormField
           control={form.control}

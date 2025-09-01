@@ -1,0 +1,134 @@
+'use server'
+
+import { db } from "@/app/firebase/fbkey";
+import { ref, set, push, update } from "firebase/database";
+
+import { fullDate, dateDb } from "@/utils/date-generate";
+
+const re = ref(db)
+
+// Função auxiliar
+function validAddress(address:any) {
+    const prefix = [ 'PP', 'FR', 'TP', 'FB', 'BL', 'CF']
+    const result = prefix.filter((pr) => pr === address)
+    
+    return result[0]
+  }
+
+// Ações de gravação no banco de dados.
+type ActivityData = {
+    activityName: string | undefined;
+    activityID: string | undefined;
+    activityTasks: object | null | string | undefined;
+};
+
+// Função dedicada a somente iniciar/gravar a tarefa no banco.
+export async function setActivityDb(activity:any) {
+    const strDate = fullDate()
+    .replace('/','')
+    .replace('/','')
+    try {        
+        await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity?.activityName}/${activity?.activityID}`), {
+            activity: activity
+        });
+        return 'Confirmado sussesso!'
+    } catch (error) {
+        return 'Aldo deu errado!'
+    }
+}
+
+// Função auxiliar dedicada a lançar cada item da tarefa para o banco.
+export async function pushTaskActivity(formData:FormData) {
+    const strDate = fullDate()
+    .replace('/','')
+    .replace('/','')
+
+    const data = {
+        loadAddress: formData.get("loadAddress") ?? null,
+        activityID: formData.get("activityID") ?? null,
+        activityName: formData.get("activityName") ?? null,
+        loadProduct: formData.get("loadProduct") ?? null,
+        loadQuant: formData.get("loadQuant") ?? null,   
+        loadValid: formData.get("loadValid") ?? null,
+    }
+
+    if (data.activityID === 'AV') {
+        if (!data.activityID || !data.activityName || !data.loadAddress) {
+            return {
+                success: false,
+                message: 'Dados incompletos. Por favor, preencha todos os campos.'
+            };
+        }
+    }
+
+    if (data.activityID?.slice(0,2) === 'RP') {
+        if (!data.activityID || !data.activityName || !data.loadAddress || 
+            !data.loadProduct || !data.loadQuant || !data.loadValid) {
+            return {
+                success: false,
+                message: 'Dados incompletos. Por favor, preencha todos os campos.'
+            };
+        }
+    }
+
+
+    const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${data.activityName}/${data.activityID}/activity/activityTasks`;
+    try {  
+        await push(ref(db, path, ), {
+            activity: data
+        }); 
+    } catch(erro) {
+        return {
+            success: false,
+            message: 'Falha gravar o endereço!'
+        };  
+
+    }
+}
+
+// Função dedicada somente a finaização da atividade/tarefa.
+export async function finishActivity(activity:any) {
+    const strDate = fullDate()
+    .replace('/','')
+    .replace('/','')
+    
+    const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityName}/${activity.activityID}/activity/activityFinisDate`;
+    const pathState = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityName}/${activity.activityID}/activity/activityState`;
+    
+    try {          
+        const date = dateDb()
+        await update(ref(db), {
+            [path]: date,
+            [pathState]: false,
+        });
+    } catch(erro) {
+        return {
+            success: false,
+            message: 'Falha ao finalizar a atividade'
+        };  
+    }
+}   
+
+// Função auxiliar dedicada a lançar cada item da tarefa para o banco.
+export async function setTaskActivity(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    try {
+        await pushTaskActivity(formData)
+    } catch (error) {
+        return 'Confirmado com sussesso.'
+    }
+}
+
+// Função auxiliar dedicada somente a finaização da atividade/tarefa.
+export async function finishTask(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    try {
+        await finishActivity(formData)      
+    } catch (error) {
+        return 'Erro com sussesso.'
+    }
+}

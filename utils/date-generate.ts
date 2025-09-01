@@ -12,7 +12,7 @@ export function generateId(pre: string) {
 
 export function fullDate() {
     const day = addLeftZZero(datePrint().getDate())
-    const month = addLeftZZero(datePrint().getMonth())
+    const month = addLeftZZero(datePrint().getMonth() + 1)
     const year = datePrint().getFullYear()
 
     return `${day}/${month}/${year}`

@@ -14,11 +14,11 @@ export interface ActivityProps {
     activityName: string | null
     activityState: boolean | null
     activityLocalWork: string | null
-    activityTasks: Object | null
+    activityTasks: string | null
     activityStreet: string | null
     activitySide: string | null
-    activityInitDate: Date | null | number
-    activityFinisDate: Date | null
+    activityInitDate: Date | null | number | string
+    activityFinisDate: Date | null | number | string
 }
 
 export interface TaskProps {
