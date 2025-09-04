@@ -12,10 +12,8 @@ import { z } from "zod";
 import Link from "next/link";
 import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
-import { refFromURL } from "firebase/database";
 import Alert  from '@/components/ui/alertl'
-import { title } from "process";
-import { Description } from "@radix-ui/react-dialog";
+import { finishActivity } from "@/lib/firebase/server-database";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
@@ -26,7 +24,8 @@ const formSchema = z.object({
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
-    const [ btnConfirm, setBtnConfirm ] = useState(false)
+    const [ btnConfirm, setBtnPopUp ] = useState(false)
+    const [ task, setTask] = useState<ActivityProps>()
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -34,6 +33,16 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
       pesquisar: "",
     },
   });
+
+  const finishTask = () => {
+    const { activity }:any = task
+    finishActivity(activity)
+    setBtnPopUp(false)
+  }
+
+  const closePopUp = (status: boolean) => {
+    setBtnPopUp(status)
+  }
 
   const printXLSX = (activityId: string, activityName: string) => {
      const item = props.find((item:any) => item.activity.activityID === activityId);
@@ -44,7 +53,11 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
     }
 
     const result = importXLSX(item, activityName)
-    if (result === null) setBtnConfirm(true)
+    
+    if (result === null) {
+      setBtnPopUp(true)
+      setTask(item)
+    }
   } 
 
   const importXLSX = (item:ActivityProps, activityName: string) => {
@@ -90,7 +103,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
   return (
     <div className="relative flex justify-between w-full h-full">
         {
-          btnConfirm && <Alert props={{title: 'deu ruim', description: 'deu ruim'}}/>
+          btnConfirm && <Alert title="deu ruim" description="deu ruim" close={closePopUp} finish={finishTask}/>
         }
       <div className="flex flex-col justify-between gap-5 w-[64%] p-1">
         <div className="flex justify-end items-start w-full h-12">
