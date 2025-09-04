@@ -10,7 +10,7 @@ export default async function MobileHeader() {
     const image = session?.user?.image ?? "/user.png";
 
     return (
-        <div className="flex">
+        <div className="hidden md:flex">
             <div className='flex flex-col justify-end items-end w-full h-2 px-6'>
                 <div className="flex justify-end items-center gap-4 w-full">
                     <p className="text-sm">{user.first}</p>

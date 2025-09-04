@@ -31,10 +31,11 @@ export default function HighNullRotation({ activity }: { activity: ActivityData 
 
     window.location.reload()
   }
+
   return (
     <div className="absolute flex flex-col gap-4 items-center justify-start w-full h-full p-4">
       <h1 className="md:text-xl lg:text-2xl">Rotativo de aéreo</h1>
-        <form action={formAction} className="flex flex-col gap-10 w-full">
+        <form action={formAction} className="flex flex-col gap-6 w-full md:gap-10">
           <input type="text" placeholder="Leia o endereço" name="loadAddress" className="w-full border rounded-sm p-2"/>
           <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
           <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />

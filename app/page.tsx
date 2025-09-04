@@ -1,5 +1,10 @@
 import Link from "next/link"
+/**
+ * 
+ *             <h1 className="text-4xl font-bold">Welcome to the PCE Tools</h1>
+            <p className="text-lg">Your one-stop solution for all PCE-related tasks.</p>
 
+ */
 export default function Page() {
   return (
     <section className="flex items-center bg-gray-100">
@@ -9,8 +14,7 @@ export default function Page() {
             </Link>
         </div>
         <div className="flex flex-col justify-center w-full h-screen text-center">
-            <h1 className="text-4xl font-bold">Welcome to the PCE Tools</h1>
-            <p className="text-lg">Your one-stop solution for all PCE-related tasks.</p>
+            <h1 className="text-4xl font-bold">PCE Tools</h1>
         </div>
     </section>
   )

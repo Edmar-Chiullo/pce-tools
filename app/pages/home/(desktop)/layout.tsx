@@ -61,7 +61,7 @@ export default async function HomeLayout({
         <MenuToggle />
 
         <div className='flex w-full h-full'>
-          <div className='hidden md:block w-24 p-2'>
+          <div className='w-full md:block md:w-24 md:p-2'>
             <BarMenu user={user} />
           </div>
           <div className={`flex items-center w-full h-full pr-2`}>

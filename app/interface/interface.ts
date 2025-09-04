@@ -96,3 +96,8 @@ export interface ReceiptOperatorProps {
     bulkStateReceipt: string | undefined | null
     bulkStateDescription: string | undefined | null
 }
+
+export interface HourTaskProps {
+    data: FormData,
+    date: Date | Number
+}

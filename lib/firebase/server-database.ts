@@ -1,9 +1,11 @@
 'use server'
 
 import { db } from "@/app/firebase/fbkey";
-import { ref, set, push, update } from "firebase/database";
+import { ref, set, push, update, child, get } from "firebase/database";
 
 import { fullDate, dateDb } from "@/utils/date-generate";
+import { pushTaskActivity as pushFirebase } from "@/app/api/firebase/route";
+import { HourTaskProps } from "@/app/interface/interface";
 
 const re = ref(db)
 
@@ -38,18 +40,21 @@ export async function setActivityDb(activity:any) {
 }
 
 // Função auxiliar dedicada a lançar cada item da tarefa para o banco.
-export async function pushTaskActivity(formData:FormData) {
+export async function pushTaskActivity(value:HourTaskProps) {
     const strDate = fullDate()
     .replace('/','')
     .replace('/','')
 
+    const fmData = value.data
+
     const data = {
-        loadAddress: formData.get("loadAddress") ?? null,
-        activityID: formData.get("activityID") ?? null,
-        activityName: formData.get("activityName") ?? null,
-        loadProduct: formData.get("loadProduct") ?? null,
-        loadQuant: formData.get("loadQuant") ?? null,   
-        loadValid: formData.get("loadValid") ?? null,
+        loadAddress: fmData.get("loadAddress") ?? null,
+        activityID: fmData.get("activityID") ?? null,
+        activityName: fmData.get("activityName") ?? null,
+        loadProduct: fmData.get("loadProduct") ?? null,
+        loadQuant: fmData.get("loadQuant") ?? null,   
+        loadValid: fmData.get("loadValid") ?? null,
+        activityDate: value.date
     }
 
     if (data.activityID === 'AV') {
@@ -84,7 +89,7 @@ export async function pushTaskActivity(formData:FormData) {
         };  
 
     }
-}
+}    
 
 // Função dedicada somente a finaização da atividade/tarefa.
 export async function finishActivity(activity:any) {
@@ -114,8 +119,13 @@ export async function setTaskActivity(
     prevState: string | undefined,
     formData: FormData,
 ) {
+    const value = {
+        data: formData,
+        date: dateDb()
+    }
+    
     try {
-        await pushTaskActivity(formData)
+        await pushTaskActivity(value)
     } catch (error) {
         return 'Confirmado com sussesso.'
     }
@@ -131,4 +141,32 @@ export async function finishTask(
     } catch (error) {
         return 'Erro com sussesso.'
     }
+}
+
+
+//####################################################
+
+// Açoes de busca no banco.
+
+const strDate = fullDate().replace(/\//g, '');
+
+export async function getTaskes() {
+    const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/`)).then((snapshot) => {
+        return snapshot.exists() ? snapshot.val() : false
+    }).catch((error) => {
+        return error
+    })
+
+  return result
+}
+
+export async function getTask({...activity}:any) {
+  const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityName}/${activity.id}/`))
+  .then((snapshot) => {
+      return snapshot.exists() ? snapshot.val() : console.log("Usuário não encontrado!")
+  }).catch((error) => {
+      return error
+  })
+
+  return result
 }
