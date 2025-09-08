@@ -1,21 +1,24 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-
 import { db } from "@/app/firebase/fbkey";
 import { ref, onChildChanged, DataSnapshot, onChildAdded } from "firebase/database";
-
 import { fullDate } from "@/utils/date-generate"
-
 import ContainerTasks from "@/components/ui/contatiner-tasks";
 import { ActivityProps } from "@/app/interface/interface";
 
 export default function Dashboard() {
     const [lists, setLists] = useState<ActivityProps[]>([]);
+    const [ swap, setSwap ] = useState<any>() 
+    
+    useEffect(() => {
+        if (swap) {
+            const id = swap.activity.activityID;
+            const state = swap.activity.activityState;
+            setLists((t:any) => t.filter((task:any) => id !== task.activity.activityID))
+            setLists(prevLists => [...prevLists, swap]); 
+        }
+    }, [swap])
 
     useEffect(() => {
         const strDate = fullDate().replace(/\//g, '');
@@ -35,21 +38,16 @@ export default function Dashboard() {
         const unsubscribeChange = onChildChanged(dbRef, (snapshot: DataSnapshot) => {
             if (snapshot.exists()) {
                 const value = Object.values(snapshot.val())
-                let val:ActivityProps | any = []; 
         
-                for (const task of value) {
-                    const t:any = task
-                    val.push(task) 
-                }      
-                setLists(val)
+                const indexTask = value.length -1
+                const lestTask:any = value[indexTask]
+                setSwap(lestTask)
             }
         });
-
         return () => {
             unsubscribeAdd();
             unsubscribeChange();
         };
-
     }, []);
    
     return (
