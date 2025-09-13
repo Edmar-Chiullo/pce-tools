@@ -9,7 +9,7 @@ import { z } from "zod"
 
 import { setBulkCpd } from "@/app/firebase/fbmethod"
 import { useRouter } from "next/navigation"
-import { carga } from "../../../utils/create-carga"
+import { carga } from "@/utils/create-carga";
 
 import { useReceiptContext } from "@/app/context/carga-context"
 import { useLoginContext } from "@/app/context/user-context";

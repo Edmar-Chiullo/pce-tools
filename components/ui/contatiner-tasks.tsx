@@ -106,7 +106,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
           btnConfirm && <Alert title="deu ruim" description="deu ruim" close={closePopUp} finish={finishTask}/>
         }
       <div className="flex flex-col justify-between gap-5 w-[64%] p-1">
-        <div className="flex justify-end items-start w-full h-12">
+        <div className="flex justify-end items-start w-full h-12 px-28">
           <h1 className="text-3xl text-zinc-50">PCE TOOLS</h1>
         </div>
         <div className="box-activity flex w-[100%] flex-col justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
@@ -126,13 +126,13 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
               </form>
             </div>
           </div>
-          <ScrollArea className="flex flex-col h-[400px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
+          <ScrollArea className="flex flex-col h-[440px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
             {props && props.map(({ activity }:any, i) => {
               const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
               const color = activityState ? 'bg-orange-100' : 'bg-green-100';
               const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
               const status = activityState ? 'Executando' : 'Finalizado';
-
+              console.log(activity)
               return (
                 <div key={i} className={`flex justify-between w-full h-12 mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                   <div className="flex flex-col gap-1">
@@ -177,7 +177,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
           </ScrollArea>
         </div>
       </div>
-      <div className="self-end flex flex-col gap-1 w-[35%] h-[460px] bg-zinc-100 p-2 rounded-2xl">
+      <div className="self-end flex flex-col gap-1 w-[35%] h-[500px] bg-zinc-100 p-2 rounded-2xl">
         <div className="flex justify-start items-end w-full h-9">
           <h1 className="">Ferramentas</h1>
         </div>

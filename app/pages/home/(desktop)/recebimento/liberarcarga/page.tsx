@@ -18,21 +18,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
-
-import { useReceiptContext } from "@/app/context/carga-context";
-
 import Timer from "@/components/ui/span";
 import { getReceipt, getCargasLiberadas, setBulkCpd } from "@/app/firebase/fbmethod";
 import { handlePrint } from "@/utils/print";
 import { extraction } from "@/utils/extract-carga";
 
 import { exportFileXlsxRecebimento } from "@/utils/ger-xlsx";
-import { Red_Rose } from "next/font/google";
-import { carga } from "../cpdupdate/create-carga";
 import { cargaPrintXlsx } from "@/utils/treatment-data-print";
 
 import ValidacaoCargaRetirada from "./validacao";
 import { finishCarga } from "./finishCarga";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
@@ -167,9 +163,9 @@ export default function ReceiptScreen() {
   }
   
   return (
-    <div className="main flex flex-col p-3 w-full h-[95%]">
+    <div className="main flex flex-col gap-1 p-2 w-full h-[97%] bg-zinc-950 rounded-2xl text-zinc-50">
       <Image
-        onClick={() => router.push('/pages/receiptconf')}
+        onClick={() => router.push('/pages/home/recebimento/receiptconf')}
         className="cursor-pointer hover:scale-[1.10]"
         src={'/seta-esquerda.png'}
         width={20}
@@ -182,41 +178,25 @@ export default function ReceiptScreen() {
       <div className="flex justify-center items-center w-full h-18">
         <h1 className="text-4xl">Cargas Finalizadas</h1>
       </div>
-      <div className="relative flex justify-center items-start w-full">
-        <Button onClick={printXlsx} className="self-end w-24 h-6 mb-1 ml-1 rounded-[4px]">Imprimir</Button>
+      <div className="relative flex justify-between items-start w-full">
+        <button onClick={printXlsx} className="self-end w-24 h-6 mb-1 ml-1 rounded-[4px] bg-zinc-100 text-zinc-950">Imprimir</button>
         {dataConfirm && <ValidacaoCargaRetirada props={cargaPuxada} />}
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 w-full pr-1">
-              <FormField
-                  control={form.control}
-                  name="pesquisar"
-                  render={({ field }) => (
-                  <FormItem>
-                      <FormLabel>Pesquisar</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Pesquisar" className="motorista h-8" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                      </FormDescription>
-                      <FormMessage />
-                  </FormItem>
-                  )}
-              />
-              <Button type="submit" className="mt-3 w-20 h-8">
-                <Image 
-                  src={'/lupa-de-pesquisa.png'}
-                  width={24}
-                  height={24}
-                  alt="Pesquisar tarefa"
-                /></Button>
-            </form>
-          </Form>
+          <div className="flex justify-between gap-2 h-9 p-[1px] bg-zinc-50 rounded-sm">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 pr-1">           
+                  <input type="text" placeholder="Insira o código" className="input-quary rounded-sm h-8 p-1 text-zinc-950"/>
+                  <button type="submit" className="w-16 h-8 bg-zinc-950 hover:scale-[1.01] rounded-sm" >
+                      <MagnifyingGlassIcon className="size-6 text-zinc-100 m-auto"/>
+                  </button>
+                </form>
+              </Form>          
+          </div>
       </div>
       
-      <div className="flex gap-9 w-full h-[80%]">
-        <div className="relative w-full h-[100%] rounded-md p-1 bg-zinc-50">
-          <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
-            <ul className="grid grid-cols-9 gap-8 text-zinc-50">
+      <div className="flex gap-9 w-full h-full">
+        <div className="relative w-full h-[100%] rounded-md bg-zinc-100">
+          <div className="w-full bg-zinc-300 pl-1 pr-1 rounded-t-sm mb-[0.90px]">
+            <ul className="grid grid-cols-9 gap-8 text-zinc-950">
               <li className="col-start-1 place-self-center">Controle</li>
               <li className="col-start-2 place-self-center">Doca</li>
               <li className="col-start-3 place-self-center">Agenda</li>
@@ -233,7 +213,7 @@ export default function ReceiptScreen() {
               bulk.map(({carga}, key) => {
                 if ((carga.bulkStateConf === 'finalizada sucesso' || carga.bulkStateCpd === 'liberar canhoto') && 
                     carga.bulkStatusLeadTimeReceipt === undefined || carga.bulkStatusLeadTimeReceipt === 'no value') return (
-                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
+                  <div key={key} className={`flex items-center w-full h-7 rounded-[4px] mb-[1.50px] 
                     ${
                        redTimeoutIds.includes(carga.bulkId)
                       ? 'bg-red-400 hover:bg-red-500'
@@ -242,7 +222,7 @@ export default function ReceiptScreen() {
                       : 'bg-zinc-200 hover:bg-zinc-300'
                     }`                    
                   }>
-                    <ul className="grid grid-cols-9 gap-10 text-[15px] w-full">
+                    <ul className="grid grid-cols-9 gap-10 text-[15px] w-full mb-[0.90px] text-zinc-950">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
                       <li className="col-start-3 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>

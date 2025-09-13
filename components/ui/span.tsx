@@ -42,6 +42,5 @@ export default function Timer({ props }: TimerProps) {
     }
   }, [startTime, yellowLimitSeconds, redLimitSeconds, onYellowLimitReached, onRedLimitReached])
 
-  console.log(elapsedSeconds)
   return <span>{formatTime(elapsedSeconds)}</span>
 }

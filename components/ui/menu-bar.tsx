@@ -1,13 +1,16 @@
 'use client'
 import { usePathname } from "next/navigation"
+import { useSession } from 'next-auth/react';
 import Link from "next/link";
 import clsx from "clsx";
-import CloseSession from "../server-components/close-session";
 
-
-export default function BarMenu({ user }: { user: { first: string; permission: string } }) {
-  const { permission } = user;
+//
+export default function BarMenu() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  if (!session) return
+  const name = JSON.parse(String(session?.user?.name));
+
   return (
       <div className="flex flex-col justify-between items-end text-center w-full pt-20">
         <div className="self-start ml-2s w-full h-full">
@@ -29,7 +32,7 @@ export default function BarMenu({ user }: { user: { first: string; permission: s
                 </div>
               </Link>
             </div>
-            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': permission === "pce-operation" })}>
+            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': name.permission === "pce-operation" || name.permission === "pce-analytics"})}>
               <Link href="/pages/home/dashboard">
                 <div className={clsx("flex justify-center gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home/dashboard" })}>
                   {
@@ -46,7 +49,7 @@ export default function BarMenu({ user }: { user: { first: string; permission: s
                 </div>
               </Link>
             </div>
-            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': permission === "pce-operation" })}>
+            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': name.permission === "pce-operation" || name.permission === "pce-analytics" })}>
               <Link href="/pages/home/recebimento">
                 <div className={clsx("flex justify-center gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home/recebimento" })}>
                 {
@@ -65,7 +68,7 @@ export default function BarMenu({ user }: { user: { first: string; permission: s
               </div>
               </Link>
             </div>
-            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': permission === "pce-operation" })}>
+            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': name.permission === "pce-operation" || name.permission === "pce-analytics" })}>
               <Link href="/pages/home/cpd">
               <div className={clsx("flex justify-center gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home/cpd" })}>
                 {
@@ -86,7 +89,7 @@ export default function BarMenu({ user }: { user: { first: string; permission: s
               </div>
               </Link>
             </div>
-            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': permission === "pce-operation" })}>
+            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none disabled': name.permission === "pce-operation"})}>
               <Link href="/pages/home/pcetools">
                 <div className={clsx("flex justify-center gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home/pcetools" })}>
                   {

@@ -8,11 +8,8 @@ export default function FormLogin() {
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get('callbackUrl') || '/pages/home';
     
-    const [errorMessage, formAction, isPending] = useActionState(
-        authenticate,
-        undefined,
-    );
-    //
+    const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
+
     return (
         <section className="flex flex-col gap-10 justify-center items-center min-h-screen bg-gray-100">
             <h1 className="text-4xl">Entrar</h1>

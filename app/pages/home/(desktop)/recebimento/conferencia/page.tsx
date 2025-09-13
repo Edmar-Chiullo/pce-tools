@@ -12,6 +12,9 @@ import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 
 import { useReceiptContext } from "@/app/context/carga-context";
 import Timer from "@/components/ui/span";
+import { ArrowBigRightIcon, ArrowDownRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowLongRightIcon } from "@heroicons/react/24/solid";
 
 // Função utilitária para atualizar um item pelo bulkId
 function updateById(array: any[], updatedItem: any, key: string = 'bulkId') {
@@ -70,32 +73,23 @@ export default function ReceiptScreen() {
     const element = bulk.find(item => item.carga.bulkId === parent?.id);
     if (element) {
       setReceipt(element.carga);
-      router.push('/pages/receiptconfup');
+      router.push('/pages/home/recebimento/finalizarconferencia');
     }
   }
 
   return (
-    <div className="main flex flex-col p-3 h-screen">
-      <div className="flex justify-end items-center w-full h-2">
-        <h5>{userName}</h5>
-      </div>
-
+    <div className="main flex flex-col p-2 w-full h-full bg-zinc-800 rounded-2xl">
       <div className="flex justify-center items-center w-full h-12">
-        <h1 className="text-4xl">Recebimento</h1>
+        <h1 className="text-4xl text-zinc-50">Recebimento</h1>
       </div>
-      <div className="flex justify-end items-center w-full h-6 pr-3">
-        <Image 
-            onClick={() => router.push('/pages/finishcargas')}
-            className="cursor-pointer hover:scale-[1.10]"
-            src={'/proxima-pagina.png'}
-            width={20}
-            height={20}
-            alt="Proxima página."
-          />
+      <div className="flex justify-end items-center w-full h-6 ">
+        <Link href={'/pages/home/recebimento/cargasfinalizadas'}>
+          <ArrowBigRightIcon className="size-8 mb-2 text-zinc-50 hover:cursor-pointer"/>
+        </Link>
       </div>
-      <div className="flex justify-end gap-9 w-full h-[80%]">
-        <div className="relative w-[82%] h-[100%] rounded-md p-1 bg-zinc-50">
-          <div className="w-full bg-zinc-950 pl-1 pr-1 rounded-t-sm">
+      <div className="flex justify-end gap-9 w-full h-full">
+        <div className="relative w-full rounded-md bg-zinc-50">
+          <div className="w-full bg-zinc-600 pl-1 pr-1 rounded-t-sm">
             <ul className="grid grid-cols-7 gap-8 text-zinc-50">
               <li className="col-start-1 place-self-center">Controle</li>
               <li className="col-start-2 place-self-center">Doca</li>
@@ -106,10 +100,10 @@ export default function ReceiptScreen() {
               <li className="col-start-7 place-self-center mr-2">Editar</li>
             </ul>
           </div>
-          <ScrollArea className="w-full h-full">
+          <ScrollArea className="w-full">
             {bulk.map(({ carga }, key) => (
               carga.bulkStateReceipt === 'carro estacionado'  && (                
-                <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-amber-100`}>
+                <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-zinc-100`}>
                   <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                     <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                     <li className="col-start-2 place-self-center">{carga.bulkDoca?.toUpperCase()}</li>

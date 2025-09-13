@@ -3,10 +3,12 @@ export default async function HomePage() {
 
   return (
     <section className="flex w-full h-full">
-        <div className="flex flex-col justify-center text-center w-full h-full">
+        <div className="flex flex-col justify-center text-center gap-8 w-full h-full">
             <h1 className="text-4xl font-bold">PCE Tools</h1>
-            <h1 className="text-4xl font-bold">Welcome to the PCE Tools</h1>
-            <p className="text-lg">Your one-stop solution for all PCE-related tasks.</p>
+            <div>
+              <h1 className="text-4xl font-bold">Ferramentas PCE: Próximo nível para suas tarefas.</h1>
+              <p className="text-lg">Simplifique seu fluxo de trabalho e maximize sua produtividade.</p>
+            </div>
         </div>
     </section>
   )

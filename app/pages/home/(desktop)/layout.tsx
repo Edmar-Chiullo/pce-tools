@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import { SessionProvider } from 'next-auth/react';
 import { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
@@ -35,19 +36,29 @@ export default async function HomeLayout({
   
   return (
     <main className={`${geistSans.variable} ${geistMono.variable} flex w-full h-full bg-zinc-50`}>
-      <div className='relative w-full h-full px-2'>
-        <ViewUser />
-        <CloseSession />
-        <MenuToggle user={user}/>
-        <div className='flex w-full h-[95%] md:h-[91%]'>
-          <div className='hidden w-full md:block md:w-24 md:p-2'>
-            <BarMenu user={user} />
-          </div>
-          <div className={`flex justify-center items-center w-full pr-2`}>
-            {children}
+      <SessionProvider>
+        <div className='relative w-full h-full px-2'>
+          <Suspense>
+            <ViewUser />
+          </Suspense>
+          <Suspense>
+            <CloseSession />
+          </Suspense>
+          <Suspense>
+            <MenuToggle />
+          </Suspense>
+          <div className='flex w-full h-[95%] md:h-[91%]'>
+            <div className='hidden w-full md:block md:w-24 md:p-2'>
+            <Suspense>
+              <BarMenu />
+            </Suspense>
+            </div>
+            <div className={`flex justify-center items-center w-full pr-2`}>
+              {children}
+            </div>
           </div>
         </div>
-      </div>
+      </SessionProvider>
     </main>
   );
 }

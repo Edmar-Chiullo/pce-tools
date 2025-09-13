@@ -59,13 +59,13 @@ export default function LiberarCanhoto() {
         form.reset({
             textarea: '',
         })
-        router.push('/pages/cpdoperator')
+        router.push('/pages/home/cpd')
     }
 
     return (
-        <div className="w-full h-screen rounded-[4px] p-1">
+        <div className="w-full h-full rounded-2xl p-1 bg-zinc-200">
             <Image 
-                onClick={() => router.push('/pages/cpdoperator')}
+                onClick={() => router.push('/pages/home/cpd')}
                 className="ml-3 mt-2 cursor-pointer hover:scale-[1.10]"
                 src={'/seta-esquerda.png'}
                 width={20}
@@ -73,7 +73,7 @@ export default function LiberarCanhoto() {
                 alt="Proxima página."
             />
             <div className="flex items-end w-full h-16">
-                <ul className="flex items-center w-full gap-4 list-none ml-4 mr-4 bg-zinc-100 ">
+                <ul className="flex items-center w-full gap-4 list-none ml-4 mr-4 bg-zinc-100 px-2 rounded-[4px]">
                     <li><strong>Agenda:</strong> {receipt?.bulkControl}</li>
                     <li><strong>Motorista:</strong> {receipt?.bulkDriver}</li>
                     <li><strong>Transportadora:</strong> {receipt?.bulkCarrier}</li>
@@ -93,7 +93,7 @@ export default function LiberarCanhoto() {
                                     <FormItem className="w-full">
                                         <FormLabel>Descrição</FormLabel>
                                         <FormControl>
-                                            <Textarea placeholder="Descrição" className="text-area w-full h-48" {...field}/>
+                                            <Textarea placeholder="Descrição" className="text-area w-full h-48 bg-zinc-50" {...field}/>
                                         </FormControl>
                                         <FormDescription>
                                         </FormDescription>
@@ -101,7 +101,7 @@ export default function LiberarCanhoto() {
                                     </FormItem>
                                     )}
                                 />
-                                <Button type="submit" className="w-32">Enviar</Button>            
+                                <Button type="submit" className="w-32">Liberar</Button>            
                             </form>
                         </Form>
                     </div>

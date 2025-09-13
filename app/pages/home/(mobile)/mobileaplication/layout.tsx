@@ -24,7 +24,7 @@ export default async function RootLayout({
       <div className='relative w-full h-screen py-1 px-2'>
         <ViewUser />
         <CloseSession />
-        <MenuToggle user={user}/>
+        <MenuToggle />
         <div className='flex w-full h-full md:h-[80%]'>
           <div className={`flex flex-col justify-between items-center w-full h-full pr-2`}>
             {children}

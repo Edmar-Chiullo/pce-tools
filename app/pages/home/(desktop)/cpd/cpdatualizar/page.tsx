@@ -90,7 +90,6 @@ export default function PegeResponse() {
                 try {      
                     const evolution = new EvolutionApi()
                     const restult = evolution.sendTextConvocationDriver(cargo)
-                    console.log(restult)
                 } catch (error) {
                     return `Erro ao tentar enviar messagem. Error: ${error}`
                 }
@@ -104,7 +103,7 @@ export default function PegeResponse() {
                 telefone: ""
             })
     
-            router.push('/pages/cpdoperator')
+            router.push('/pages/home/cpd')
         } else {
            try {      
                 const evolution = new EvolutionApi()
@@ -113,14 +112,14 @@ export default function PegeResponse() {
                 return `Erro ao tentar enviar messagem. Error: ${error}`
             }
 
-            router.push('/pages/cpdoperator')
+            router.push('/pages/home/cpd')
         }
     }
 
     return (
     <div className="absolute top-0 left-0 z-10 w-full h-full bg-zinc-50 rounded-[4px] p-1">
         <Image 
-            onClick={() => router.push('/pages/cpdoperator')}
+            onClick={() => router.push('/pages/home/cpd')}
             className="ml-3 mt-2 cursor-pointer hover:scale-[1.10]"
             src={'/seta-esquerda.png'}
             width={20}

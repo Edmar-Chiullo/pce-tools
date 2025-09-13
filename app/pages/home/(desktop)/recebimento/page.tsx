@@ -3,21 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
-
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
-
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Combobox from "@/components/ui/combo-box";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
-
-import { useReceiptContext } from "@/app/context/carga-context";
 import { useLoginContext } from "@/app/context/user-context";
-
 import Timer from "@/components/ui/span";
 import { alterIdCarga } from "./alterIdCarga";
 import { setBulkCpd } from "@/app/firebase/fbmethod";
@@ -54,12 +48,7 @@ export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ userName, setUserName ] = useState<string | null>('')
-  const [timeoutIds, setTimeoutIds] = useState<string[]>([]);
-
-  const { setReceipt } = useReceiptContext()
-  const { receipt }:any = useReceiptContext()
   const { user } = useLoginContext() 
-  
   const router = useRouter()
   
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([])
@@ -68,10 +57,6 @@ export default function ReceiptScreen() {
   const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
   const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
 
-  const handleTimeout = (bulkId: string) => {
-    setTimeoutIds((prev) => [...prev, bulkId]);
-  };
-  
   useEffect(() => {
     const userLogin:any = localStorage.getItem('userName')
     userLogin ? setUserName(userLogin) : router.push('/')
@@ -148,6 +133,13 @@ export default function ReceiptScreen() {
       <div className="flex gap-2 w-full h-full">
         <Combobox props={{carga:bulk, lbCarga:lbCarga}}/>
         <div className="relative w-[85%] h-full rounded-md bg-zinc-50">
+          <Link href="/pages/home/recebimento/conferencia">
+            <div className="absolute top-[-34px] right-28 flex gap-1 p-1 cursor-pointer hover:scale-[1.10] rounded-sm hover:bg-zinc-100/30 transition ease-in-out duration-75">
+              <TimerResetIcon className=" size-4 text-zinc-50"/>
+              <span className="text-zinc-50 text-[12px]">Conferência</span>
+            </div>
+          </Link>
+
           <Link href="/pages/home/recebimento/cargasfinalizadas">
             <div className="absolute top-[-34px] right-4 flex gap-1 p-1 cursor-pointer hover:scale-[1.10] rounded-sm hover:bg-zinc-100/30 transition ease-in-out duration-75">
               <TimerResetIcon className=" size-4 text-zinc-50"/>
@@ -171,7 +163,7 @@ export default function ReceiptScreen() {
               bulk.map(({carga}, key) => {
                 if (carga.bulkStateReceipt === 'carro estacionado') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-amber-100`}>
-                    <ul className="grid grid-cols-8 gap-10 text-[15px] w-full">
+                    <ul className="grid grid-cols-8 gap-8 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                       <li className="col-start-2 place-self-center">{carga.bulkDoca.toUpperCase()}</li>
                       <li className="col-start-3 place-self-center">{formatString(carga.bulkPlate.toUpperCase())}</li>

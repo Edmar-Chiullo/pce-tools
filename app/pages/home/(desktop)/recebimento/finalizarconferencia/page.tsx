@@ -8,12 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Textarea } from "@/components/ui/textarea";
 import { z } from "zod"
 import { useForm } from "react-hook-form"
-
 import Image from "next/image";
-
 import { setBulkCpd } from "@/app/firebase/fbmethod"
 import { useRouter } from "next/navigation"
-
 import { useReceiptContext } from "@/app/context/carga-context"
 import { finishCarga } from "./finishCarga";
         
@@ -59,16 +56,13 @@ export default function PegeResponse() {
         const obj = finishCarga({dataForm:receipt, label:items[0], text:observation, conf,  tpallet, tcarga})
         setBulkCpd(obj)
         setReceipt(obj)
-
         form.reset({
             conf: '',
             tpallet: '',
             tcarga: ''
         })
-
-       router.push('/pages/receiptconf')
+       router.push('/pages/home/recebimento/conferencia')
     }
-
     const items = [
         {
             id: "finalizada sucesso",
@@ -81,10 +75,10 @@ export default function PegeResponse() {
     ] as const
     
     return (
-        <div className="w-full h-full bg-zinc-50 rounded-[4px] pt-1 p-6">
+        <div className="w-full h-full bg-zinc-100 rounded-2xl pt-1 p-6">
             <div className="flexitems-center justify-center w-full">
                 <Image 
-                    onClick={() => router.push('/pages/receiptconf')}
+                    onClick={() => router.push('/pages/home/recebimento/conferencia')}
                     className="cursor-pointer hover:scale-[1.10] mb-2"
                     src={'/seta-esquerda.png'}
                     width={20}

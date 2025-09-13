@@ -4,11 +4,9 @@ import { db } from "@/app/firebase/fbkey";
 import { ref, set, push, update, child, get } from "firebase/database";
 
 import { fullDate, dateDb } from "@/utils/date-generate";
-import { pushTaskActivity as pushFirebase } from "@/app/api/firebase/route";
 import { HourTaskProps } from "@/app/interface/interface";
 
 const re = ref(db)
-
 // Função auxiliar
 function validAddress(address:any) {
     const prefix = [ 'PP', 'FR', 'TP', 'FB', 'BL', 'CF']
@@ -16,13 +14,6 @@ function validAddress(address:any) {
     
     return result[0]
   }
-
-// Ações de gravação no banco de dados.
-type ActivityData = {
-    activityName: string | undefined;
-    activityID: string | undefined;
-    activityTasks: object | null | string | undefined;
-};
 
 // Função dedicada a somente iniciar/gravar a tarefa no banco.
 export async function setActivityDb(activity:any) {

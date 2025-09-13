@@ -96,7 +96,7 @@ export default function ReceiptScreen() {
   }
 
   return (
-    <div className="main flex flex-col justify-end p-2 w-full h-[84vh] rounded-2xl bg-zinc-800">
+    <div className="main flex flex-col justify-end p-2 w-full h-[97%] rounded-2xl bg-zinc-800">
       <div className="flex justify-center items-center w-full h-10">
         <h1 className="text-3xl text-zinc-50">Canhotos Liberados</h1>
       </div>
