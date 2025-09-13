@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from "react"
+import { useActionState, useEffect } from "react"
 import { setTaskActivity, finishActivity } from "@/lib/firebase/server-database"
 
 type ActivityData = {
@@ -19,24 +19,30 @@ type ActivityData = {
 
 export default function ValidatyAddressProduct({ activity }: { activity: ActivityData | any }) {
   
-    const [errorMessage, formAction, isPending] = useActionState(setTaskActivity, undefined)
+  const [errorMessage, formAction, isPending] = useActionState(setTaskActivity, undefined)
+  useEffect(() => {
+    const inputEnd:any = document.querySelector('.loadAddress')
+    inputEnd.focus()
+  }, [])
   
-    function getActivity(act: ActivityData) {
-      const atividadeData = {
-        activityID: activity.activityID,
-        activityName: activity.activityName,
-      }
-  
-      finishActivity(atividadeData)
-  
-      window.location.reload()
+
+  function getActivity(act: ActivityData) {
+    const atividadeData = {
+      activityID: activity.activityID,
+      activityName: activity.activityName,
     }
+
+    finishActivity(atividadeData)
+
+    window.location.reload()
+  }
 
   return (
     <div className="absolute flex flex-col gap-4 items-center justify-start w-full h-full p-4">
       <h1 className="md:text-xl lg:text-2xl">Produto x Endereço</h1>
+      <span className="self-end">{activity.activityID}</span>
       <form action={formAction} className="flex flex-col gap-6 w-full md:gap-10">
-        <input type="text" placeholder="Leia o endereço" name="loadAddress" className="w-full border rounded-sm p-2"/>
+        <input type="text" placeholder="Leia o endereço" name="loadAddress" className="loadAddress w-full border rounded-sm p-2"/>
         <input type="text" placeholder="Leia o produto" name="loadProduct" className="w-full border rounded-sm p-2"/>
         <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
         <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />
