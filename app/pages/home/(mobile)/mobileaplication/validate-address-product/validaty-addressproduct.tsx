@@ -30,8 +30,6 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
     inputEnd.focus()
   }, [isPending])
 
-  
-
   function getActivity(act: ActivityData) {
     const atividadeData = {
       activityID: activity.activityID,

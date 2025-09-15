@@ -171,7 +171,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
               </form>
             </div>
           </div>
-          <ScrollArea className="flex flex-col h-[440px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
+          <ScrollArea className="flex flex-col h-[71vh] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
             {props && props.map(({ activity }:any, i) => {
               const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
               const color = activityState ? 'bg-orange-100' : 'bg-green-100';
@@ -221,7 +221,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
           </ScrollArea>
         </div>
       </div>
-      <div className="self-end flex flex-col gap-1 w-[35%] h-[500px] bg-zinc-100 p-2 rounded-2xl">
+      <div className="self-end flex flex-col gap-1 w-[35%] h-[80vh] bg-zinc-100 p-2 rounded-2xl">
         <div className="flex justify-start items-end w-full h-9">
           <h1 className="">Ferramentas</h1>
         </div>
