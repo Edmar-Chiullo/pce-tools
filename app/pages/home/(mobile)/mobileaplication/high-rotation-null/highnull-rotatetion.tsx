@@ -23,6 +23,11 @@ export default function HighNullRotation({ activity }: { activity: ActivityData 
       const inputEnd:any = document.querySelector('.loadAddress')
       inputEnd.focus()
     }, [])
+
+    useEffect(() => {
+    const inputEnd:any = document.querySelector('.loadAddress')
+    inputEnd.focus()
+  }, [isPending])
   
 
   function getActivity(act: ActivityData) {
@@ -42,7 +47,7 @@ export default function HighNullRotation({ activity }: { activity: ActivityData 
       <h1 className="md:text-xl lg:text-2xl">Rotativo de aéreo</h1>
       <span className="self-end">{activity.activityID}</span>
       <form action={formAction} className="flex flex-col gap-6 w-full md:gap-10">
-        <input type="text" placeholder="Leia o endereço" name="loadAddress" className="loadAddress w-full border rounded-sm p-2"/>
+        <input type="text" placeholder="Leia o endereço" name="loadAddress" className="loadAddress w-full border rounded-sm p-2" required/>
         <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
         <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />
         <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">

@@ -24,6 +24,12 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
     const inputEnd:any = document.querySelector('.loadAddress')
     inputEnd.focus()
   }, [])
+
+  useEffect(() => {
+    const inputEnd:any = document.querySelector('.loadAddress')
+    inputEnd.focus()
+  }, [isPending])
+
   
 
   function getActivity(act: ActivityData) {

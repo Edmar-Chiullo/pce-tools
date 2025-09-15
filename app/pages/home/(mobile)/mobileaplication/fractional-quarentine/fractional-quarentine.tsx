@@ -20,21 +20,28 @@ type ActivityData = {
 export default function FractionalQuarentine({ activity }: { activity: ActivityData | any }) {
   
   const [errorMessage, formAction, isPending] = useActionState(setTaskActivity, undefined)
-    useEffect(() => {
-      const inputEnd:any = document.querySelector('.loadProduct')
-      inputEnd.focus()
-    }, [])
-  
-    function getActivity(act: ActivityData) {
-      const atividadeData = {
-        activityID: activity.activityID,
-        activityName: activity.activityName,
-      }
-  
-      finishActivity(atividadeData)
-  
-      window.location.reload()
+
+  useEffect(() => {
+    const inputEnd:any = document.querySelector('.loadProduct')
+    inputEnd.focus()
+    console.log(isPending)
+  }, [])
+
+  useEffect(() => {
+    const inputEnd:any = document.querySelector('.loadProduct')
+    inputEnd.focus()
+  }, [isPending])
+
+  function getActivity(act: ActivityData) {
+    const atividadeData = {
+      activityID: activity.activityID,
+      activityName: activity.activityName,
     }
+
+    finishActivity(atividadeData)
+
+    window.location.reload()
+  }
 
   return (
     <div className="absolute flex flex-col gap-4 items-center justify-start w-full h-full p-4">
@@ -44,6 +51,7 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
         <input type="text" placeholder="Leia o produto" name="loadProduct" className="loadProduct w-full border rounded-sm p-2" required/>
         <input type="text" placeholder="Informe a quantidade" name="loadQuant" className="w-full border rounded-sm p-2" required/>
         <input type="text" placeholder="Informe a validade" name="loadValid" className="w-full border rounded-sm p-2" required/>
+        <p className="text-2xl">{isPending}</p>
         <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
         <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />
         <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">

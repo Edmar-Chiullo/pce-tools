@@ -27,6 +27,12 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
     inputEnd.focus()
   }, [])
 
+  useEffect(() => {
+    const inputEnd:any = document.querySelector('.loadAddress')
+    inputEnd.focus()
+  }, [isPending])
+
+
   function getActivity(act: ActivityData) {
     const atividadeData = {
       activityID: activity.activityID,
