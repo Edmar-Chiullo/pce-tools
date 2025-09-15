@@ -42,8 +42,8 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
       <h1 className="md:text-xl lg:text-2xl">Produto x Endereço</h1>
       <span className="self-end">{activity.activityID}</span>
       <form action={formAction} className="flex flex-col gap-6 w-full md:gap-10">
-        <input type="text" placeholder="Leia o endereço" name="loadAddress" className="loadAddress w-full border rounded-sm p-2"/>
-        <input type="text" placeholder="Leia o produto" name="loadProduct" className="w-full border rounded-sm p-2"/>
+        <input type="text" placeholder="Leia o endereço" name="loadAddress" className="loadAddress w-full border rounded-sm p-2" required/>
+        <input type="text" placeholder="Leia o produto" name="loadProduct" className="w-full border rounded-sm p-2" required/>
         <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
         <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />
 

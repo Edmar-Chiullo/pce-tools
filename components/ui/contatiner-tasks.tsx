@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useActionState, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form";
@@ -13,24 +13,47 @@ import Link from "next/link";
 import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
 import Alert  from '@/components/ui/alertl'
-import { finishActivity } from "@/lib/firebase/server-database";
+import { finishActivity, getActivity } from "@/lib/firebase/server-database";
+import { getTaskes } from "@/lib/server-actions";
+import { Slice } from "lucide-react";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
     message: "Inserir data a ser consultada.",
   }),
+  date: z.string()
 });
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
+    const [errorMessage, formAction, isPending] = useActionState(getTaskes, undefined);
+
     const [ btnConfirm, setBtnPopUp ] = useState(false)
     const [ task, setTask] = useState<ActivityProps>()
+
+    // useEffect(() => {
+    //   const date = new Date()
+    //   const alt = date.toLocaleDateString('en-US').replace(/\//g, '-')
+    // }, [])
+
+  function formatDateTime() {
+    const date = new Date()
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    // const hours = String(date.getHours()).padStart(2, '0');
+    // const minutes = String(date.getMinutes()).padStart(2, '0');
+    // const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       pesquisar: "",
+      date: formatDateTime()
     },
   });
 
@@ -90,7 +113,12 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
     }
   };
 
-  const onSubmit = (data: FormSchemaType) => {
+  function addZero(data: number) {
+    const result = data <= 9 ? `0${data}`: data
+    return String(result)
+  }
+
+  const onSubmit = async (data: FormSchemaType) => {
     const initCharAddress = data.pesquisar.trim().toUpperCase().slice(0, 2);
     const isValid = validAddress(initCharAddress);
 
@@ -98,14 +126,24 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
       alert('Código inserido não é válido.');
       return;
     }
+
+    const date:any = data.date
+
+    if (date.length === 10) {
+      const year = date.slice(0,4)
+      const mouth = date.slice(5,7)
+      const mesano = `${mouth}${year}`
+      const result = await getActivity(mesano)
+    }
+
   };
 
   return (
     <div className="relative flex justify-between w-full h-full">
-        {
-          btnConfirm && <Alert title="Tarefa em execução" description="Deseja finalizar?" acao="Deseja finalizar?" close={closePopUp} finish={finishTask}/>
-        }
-      <div className="flex flex-col justify-between gap-5 w-[64%] p-1">
+      {
+        btnConfirm && <Alert title="Tarefa em execução" description="Deseja finalizar?" acao="Deseja finalizar?" close={closePopUp} finish={finishTask}/>
+      }
+      <div className="flex flex-col justify-between gap-5 w-[64%]">
         <div className="flex justify-end items-start w-full h-12 px-28">
           <h1 className="text-3xl text-zinc-50">PCE TOOLS</h1>
         </div>
@@ -115,11 +153,18 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
             <div className="flex justify-between items-center gap-2 h-9 p-[1px] bg-zinc-50 rounded-sm">
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-1 pr-1">
                 <input
+                  type="date"
+                  placeholder="Insira o código"
+                  {...form.register("date")}
+                  className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
+                />
+                <input
                   type="text"
                   placeholder="Insira o código"
                   {...form.register("pesquisar")}
                   className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
                 />
+
                 <button type="submit" className="w-16 h-8 bg-zinc-950 hover:scale-[1.01] rounded-sm">
                   <MagnifyingGlassIcon className="size-6 text-zinc-100 m-auto" />
                 </button>

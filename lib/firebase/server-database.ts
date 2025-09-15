@@ -161,3 +161,14 @@ export async function getTask({...activity}:any) {
 
   return result
 }
+
+export async function getActivity(mouth: string) {
+  const result = get(child(re, `${strDate.slice(4,8)}/${mouth}`))
+  .then((snapshot) => {
+      return snapshot.exists() ? snapshot.val() : null
+  }).catch((error) => {
+      return error
+  })
+
+  return result
+}

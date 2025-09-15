@@ -41,9 +41,9 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
       <h1 className="md:text-xl lg:text-2xl">Quarentena Fracionada</h1>
       <span className="self-end">{activity.activityID}</span>
       <form action={formAction} className="flex flex-col gap-6 w-full md:gap-10">
-        <input type="text" placeholder="Leia o produto" name="loadProduct" className="loadProduct w-full border rounded-sm p-2"/>
-        <input type="text" placeholder="Informe a quantidade" name="loadQuant" className="w-full border rounded-sm p-2"/>
-        <input type="text" placeholder="Informe a validade" name="loadValid" className="w-full border rounded-sm p-2"/>
+        <input type="text" placeholder="Leia o produto" name="loadProduct" className="loadProduct w-full border rounded-sm p-2" required/>
+        <input type="text" placeholder="Informe a quantidade" name="loadQuant" className="w-full border rounded-sm p-2" required/>
+        <input type="text" placeholder="Informe a validade" name="loadValid" className="w-full border rounded-sm p-2" required/>
         <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
         <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />
         <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
