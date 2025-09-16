@@ -22,7 +22,8 @@ export default function Dashboard() {
 
     useEffect(() => {
         const strDate = fullDate().replace(/\//g, '');
-        const dbPath = `${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/${strDate.slice(0, 2)}/`;
+        const dbPath = `${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/${strDate.slice(0,2)}/`;
+        console.log(dbPath)
         const dbRef = ref(db, dbPath);
 
         const unsubscribeAdd = onChildAdded(dbRef, (snapshot: DataSnapshot) => {
@@ -38,7 +39,6 @@ export default function Dashboard() {
         const unsubscribeChange = onChildChanged(dbRef, (snapshot: DataSnapshot) => {
             if (snapshot.exists()) {
                 const value = Object.values(snapshot.val())
-        
                 const indexTask = value.length -1
                 const lestTask:any = value[indexTask]
                 setSwap(lestTask)

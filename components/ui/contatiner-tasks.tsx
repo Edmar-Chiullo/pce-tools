@@ -27,15 +27,11 @@ const formSchema = z.object({
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
-    const [errorMessage, formAction, isPending] = useActionState(getTaskes, undefined);
+  const [errorMessage, formAction, isPending] = useActionState(getTaskes, undefined);
 
-    const [ btnConfirm, setBtnPopUp ] = useState(false)
-    const [ task, setTask] = useState<ActivityProps>()
-
-    // useEffect(() => {
-    //   const date = new Date()
-    //   const alt = date.toLocaleDateString('en-US').replace(/\//g, '-')
-    // }, [])
+  const [ btnConfirm, setBtnPopUp ] = useState(false)
+  const [ task, setTask] = useState<ActivityProps>()
+  const [ taskSwap, setTaskSwap ] = useState<ActivityProps[]>()
 
   function formatDateTime() {
     const date = new Date()
@@ -134,6 +130,9 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
       const mouth = date.slice(5,7)
       const mesano = `${mouth}${year}`
       const result = await getActivity(mesano)
+
+      setTaskSwap(props)
+
     }
 
   };
@@ -177,7 +176,6 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
               const color = activityState ? 'bg-orange-100' : 'bg-green-100';
               const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
               const status = activityState ? 'Executando' : 'Finalizado';
-              console.log(activity)
               return (
                 <div key={i} className={`flex justify-between w-full h-12 mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                   <div className="flex flex-col gap-1">
