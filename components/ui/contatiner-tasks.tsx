@@ -153,7 +153,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-1 pr-1">
                 <input
                   type="date"
-                  placeholder="Insira o código"
+                  placeholder="Insira a data"
                   {...form.register("date")}
                   className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
                 />
