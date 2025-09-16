@@ -177,6 +177,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
               const color = activityState ? 'bg-orange-100' : 'bg-green-100';
               const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
               const status = activityState ? 'Executando' : 'Finalizado';
+              console.log(activity)
               return (
                 <div key={i} className={`flex justify-between w-full h-12 mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                   <div className="flex flex-col gap-1">
