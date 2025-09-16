@@ -23,7 +23,6 @@ export default function Dashboard() {
     useEffect(() => {
         const strDate = fullDate().replace(/\//g, '');
         const dbPath = `${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/${strDate.slice(0,2)}/`;
-        console.log(dbPath)
         const dbRef = ref(db, dbPath);
 
         const unsubscribeAdd = onChildAdded(dbRef, (snapshot: DataSnapshot) => {
