@@ -137,7 +137,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
       </div>
       <div className="flex w-full h-full gap-3">
         <div className="flex flex-col justify-between gap-5 w-[64%] h-full">
-          <div className="box-activity flex w-[100%] h-full flex-col justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
+          <div className="box-activity flex w-[100%] h-[93%] flex-col justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
             <div className="flex justify-between w-full h-9">
               <h1 className="ml-2 self-end">Atividades em execução</h1>
               <div className="flex justify-between items-center gap-2 h-9 p-[1px] bg-zinc-50 rounded-sm">
@@ -161,7 +161,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
                 </form>
               </div>
             </div>
-            <ScrollArea className="flex flex-col h-full border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
+            <ScrollArea className="flex flex-col h-[90%] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
               {props && props.map(({ activity }:any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
@@ -216,7 +216,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
             </ScrollArea>
           </div>
         </div>
-        <div className="self-end flex flex-col gap-1 w-[35%] h-full bg-zinc-100 p-2 rounded-2xl">
+        <div className="flex flex-col gap-1 w-[35%] h-[93%] bg-zinc-100 p-2 rounded-2xl">
           <div className="flex justify-start items-end w-full h-9">
             <h1 className="">Ferramentas</h1>
           </div>
