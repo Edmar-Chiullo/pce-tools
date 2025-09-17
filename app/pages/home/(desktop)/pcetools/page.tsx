@@ -51,7 +51,7 @@ export default function Dashboard() {
     }, []);
    
     return (
-        <div className="flex w-full h-full items-end p-2 rounded-2xl bg-zinc-800">
+        <div className="flex w-full h-[96%] items-end p-2 rounded-2xl bg-zinc-800">
             <ContainerTasks props={lists}/>
         </div>
     )

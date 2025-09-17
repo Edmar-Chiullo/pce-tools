@@ -3,7 +3,6 @@
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
 import { getActivity } from './firebase/server-database';
-import { forbidden } from 'next/navigation';
  
 export async function authenticate(
   prevState: string | undefined,
@@ -26,16 +25,16 @@ export async function authenticate(
   }
 }
 
-
-export async function getTaskes(
-  prevState: string | undefined,
-  formData: FormData
-) {
-  try {
-    const mouth:any = formData.get('pesquisar')?.slice(5,7)
-    const result = await getActivity(mouth)
-    return result
-  } catch (error) {
-    return `Erro ao buscar a tarefa ${error}`
-  }
-}
+// export async function getTaskes(
+//   prevState: string | undefined,
+//   formData: FormData
+// ) {
+//   try {
+//     const mouth:any = formData.get('pesquisar')?.slice(5,7)
+//     console.log(mouth)
+//     const result = await getActivity(mouth, '16')
+//     return result
+//   } catch (error) {
+//     return `Erro ao buscar a tarefa ${error}`
+//   }
+// }

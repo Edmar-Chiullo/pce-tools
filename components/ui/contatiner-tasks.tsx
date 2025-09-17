@@ -14,7 +14,7 @@ import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
 import Alert  from '@/components/ui/alertl'
 import { finishActivity, getActivity } from "@/lib/firebase/server-database";
-import { getTaskes } from "@/lib/server-actions";
+//import { getTaskes } from "@/lib/server-actions";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
@@ -26,7 +26,7 @@ const formSchema = z.object({
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
-  const [errorMessage, formAction, isPending] = useActionState(getTaskes, undefined);
+  //const [errorMessage, formAction, isPending] = useActionState(getTaskes, undefined);
 
   const [ btnConfirm, setBtnPopUp ] = useState(false)
   const [ task, setTask] = useState<ActivityProps>()
@@ -119,25 +119,28 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
     const date:any = data.date
 
     if (date.length === 10) {
+      const dia = date.slice(8,10)
       const year = date.slice(0,4)
       const mouth = date.slice(5,7)
       const mesano = `${mouth}${year}`
-      const result = await getActivity(mesano)
+      const result = await getActivity(mesano, dia)
+      const arr = Object.values(result)
+      //arr.forEach((el) => console.log(el))
     }
 
   };
 
   return (
-    <div className="relative flex flex-col  justify-between w-full h-full">
+    <div className="relative flex flex-col gap-3 w-full h-full">
       {
         btnConfirm && <Alert title="Tarefa em execução" description="Deseja finalizar?" acao="Deseja finalizar?" close={closePopUp} finish={finishTask}/>
       }
-      <div className="flex justify-center items-start w-full h-12 px-28">
+      <div className="flex justify-center items-start w-full px-28">
         <h1 className="text-3xl text-zinc-50">PCE TOOLS</h1>
       </div>
-      <div className="flex w-full h-full gap-3">
-        <div className="flex flex-col justify-between gap-5 w-[64%] h-full">
-          <div className="box-activity flex w-[100%] h-[93%] flex-col justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
+      <div className="flex items-start w-full min-h-[96%] h-[96%] gap-3">
+        <div className="flex flex-col justify-start gap-5 w-[64%] h-full">
+          <div className="box-activity flex w-[100%] h-[94%] flex-col justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
             <div className="flex justify-between w-full h-9">
               <h1 className="ml-2 self-end">Atividades em execução</h1>
               <div className="flex justify-between items-center gap-2 h-9 p-[1px] bg-zinc-50 rounded-sm">
@@ -216,7 +219,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
             </ScrollArea>
           </div>
         </div>
-        <div className="flex flex-col gap-1 w-[35%] h-[93%] bg-zinc-100 p-2 rounded-2xl">
+        <div className="flex flex-col gap-1 w-[35%] h-[94%] bg-zinc-100 p-2 rounded-2xl">
           <div className="flex justify-start items-end w-full h-9">
             <h1 className="">Ferramentas</h1>
           </div>
