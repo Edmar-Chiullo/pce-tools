@@ -22,10 +22,10 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app)
 
-// if (typeof window !== "undefined" && location.hostname === "localhost") {
-//   connectDatabaseEmulator(db, "localhost", 9000);
-// }
+if (typeof window !== "undefined" && location.hostname === "localhost") {
+  connectDatabaseEmulator(db, "localhost", 9000);
+}
 
-// if (process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_USE_EMULATOR === "true") {
-//   connectDatabaseEmulator(db, "localhost", 9000);
-// }
+if (process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_USE_EMULATOR === "true") {
+  connectDatabaseEmulator(db, "localhost", 9000);
+}

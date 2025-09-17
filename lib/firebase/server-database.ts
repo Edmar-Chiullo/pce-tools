@@ -102,7 +102,7 @@ export async function finishActivity(activity:any) {
 }
 
 // Função auxiliar dedicada a lançar cada item da tarefa para o banco.
-const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF"]
+const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF", "KK"]
 const validSides = ["A", "B"]
 
 const taskSchema = z.object({
@@ -147,12 +147,16 @@ export async function setTaskActivity(
   // Converte FormData em objeto
   const values = Object.fromEntries(formData)
 
-  // Validação Zod
-  const parsed = taskSchema.safeParse(values)
-  if (!parsed.success) {
-    // Retorna mensagem de erro para o cliente
-    return `Erro de validação: ${parsed.error.issues[0].message}`
-  }
+
+    const prefix = values.activityID.slice(0,2)
+    if (prefix === 'RP') {
+        // Validação Zod
+        const parsed = taskSchema.safeParse(values)
+        if (!parsed.success) {
+          // Retorna mensagem de erro para o cliente
+          return `Erro de validação: ${parsed.error.issues[0].message}`
+        }        
+    }
 
   const value = {
     data: formData,
