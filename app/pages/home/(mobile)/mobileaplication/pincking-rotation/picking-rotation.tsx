@@ -62,7 +62,7 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
       )
     }, "Endereço inválido (ex: PP010010A)")
   
-    const productSchema = z.string().regex(/^\d{4,13}$/, "Produto inválido (4 ou 13 dígitos)")
+    const productSchema = z.string().regex(/^\d{4,14}$/, "Produto inválido (4 ou 14 dígitos)")
     const validSchema = z.string().regex(/^\d{8}$/, "Validade inválida (ex: 16092025)")
 
   function getActivity(act: ActivityData) {
