@@ -26,7 +26,7 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
   const [validError, setValidError] = useState<string | null>(null)
 
   const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF"]
-  const validSides = ["A", "B"]
+  const validSides = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
   // Schemas Zod
   const addressSchema = z.string().refine((val) => {
@@ -39,14 +39,14 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
 
     return (
       validSectors.includes(sector) &&
-      street >= 1 && street <= 52 &&
-      block >= 1 && block <= 260 &&
+      street >= 0 && street <= 52 &&
+      block >= 0 && block <= 260 &&
       floor >= 0 && floor <= 5 &&
       validSides.includes(side)
     )
   }, "Endereço inválido (ex: PP010010A)")
 
-  const productSchema = z.string().regex(/^\d{4,13}$/, "Produto inválido (4 ou 13 dígitos)")
+  const productSchema = z.string().regex(/^\d{4,14}$/, "Produto inválido (4 ou 14 dígitos)")
   const quantSchema = z.preprocess(val => Number(val), z.number().min(0).max(1000000, "Quantidade inválida"))
   const validSchema = z.string().regex(/^\d{8}$/, "Validade inválida (ex: 16092025)")
 

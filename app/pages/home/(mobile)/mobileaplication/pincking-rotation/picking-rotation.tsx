@@ -55,8 +55,8 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
   
       return (
         validSectors.includes(sector) &&
-        street >= 1 && street <= 52 &&
-        block >= 1 && block <= 260 &&
+        street >= 0 && street <= 52 &&
+        block >= 0 && block <= 260 &&
         floor >= 0 && floor <= 5 &&
         validSides.includes(side)
       )
