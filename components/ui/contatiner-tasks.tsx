@@ -175,7 +175,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
                 const novaData = new Date();
                 const dataAtual = novaData.toLocaleString('pt-BR').slice(0, 10)
 
-              if (dataAtual === fullDate) return (
+              return (
                   <div key={i} className={`flex justify-between w-full h-12 mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                     <div className="flex flex-col gap-1">
                       <div className="flex gap-4 font-light text-[14px]">
