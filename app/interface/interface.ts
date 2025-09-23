@@ -101,3 +101,7 @@ export interface HourTaskProps {
     data: FormData,
     date: Date | Number
 }
+
+interface TaskData {
+    
+}

@@ -317,3 +317,30 @@
                         //     .catch(error => {
                         //         console.error("Erro ao buscar dados iniciais:", error);
                         //     });
+
+
+    /**
+     * 
+     *  <div className="absolute flex flex-col gap-4 items-center justify-start w-full h-full p-4">
+      <h1 className="md:text-xl lg:text-2xl">Quarentena Fracionada</h1>
+      <span className="self-end">{activity.activityID}</span>
+      <form action={formAction} className="flex flex-col gap-6 w-full md:gap-10">
+        <input type="text" onBlur={handleProductChange} placeholder="Leia o produto" name="loadProduct" className="loadProduct w-full border rounded-sm p-2" required/>
+        {productError && <p className="text-red-500 text-sm">{productError}</p>}
+        <input type="text" placeholder="Informe a quantidade" name="loadQuant" className="w-full border rounded-sm p-2" required/>
+        <input type="text" onChange={handleValidChange} onFocus={handleValidFocus} placeholder="Informe a validade" name="loadValid" className="loadValid w-full border rounded-sm p-2" required/>
+        {validError && <p className="text-red-500 text-sm">{validError}</p>}
+        <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
+        <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />
+        <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm" disabled={statusBtn}>
+          {isPending ? "Confirmando..." : "Confirmar"}
+        </button>
+      </form>
+      <button onClick={() => getActivity(activity)} className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm" disabled={statusBtn}>
+        Finalizar
+      </button>
+       {errorMessage && (
+          <p className="flex text-red-500 mt-4">{errorMessage}</p>
+        )}
+    </div>
+     */

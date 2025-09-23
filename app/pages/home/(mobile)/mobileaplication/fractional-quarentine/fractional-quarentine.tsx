@@ -1,64 +1,54 @@
 'use client'
 
-import { useActionState, useEffect, useState } from "react"
-import { setTaskActivity, finishActivity } from "@/lib/firebase/server-database"
+import { useEffect, useRef  } from "react"
+import { setTaskActivity, finishActivity, pushTaskActivity } from "@/lib/firebase/server-database"
 import z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { dateDb } from "@/utils/date-generate"
+import { formFrctionalQuaren } from "@/utils/form-schemas"
+import { ActivityData } from "@/app/type/type"
 
-type ActivityData = {
-  activityFinisDate?: string
-  activityID?: string
-  activityInitDate?: string
-  activityLocalWork?: string
-  activityName?: string
-  activitySide?: string
-  activityState?: string
-  activityStreet?: string
-  activityTasks?: string
-  activityUserID?: string
-  activtyUserName?: string
-}
+
+
+const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF"]
+const validSides = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+
+
+// const formSchema = z.string().refine((val) => {
+//   if (val.length !== 9) return false
+//   const sector = val.slice(0, 2)
+//   const street = Number(val.slice(2, 4))
+//   const block = Number(val.slice(4, 7))
+//   const floor = Number(val.slice(7, 8))
+//   const side = val.slice(8, 9)
+
+//   return (
+//     validSectors.includes(sector) &&
+//     street >= 0 && street <= 52 &&
+//     block >= 0 && block <= 260 &&
+//     floor >= 0 && floor <= 5 &&
+//     validSides.includes(side)
+//   )
+// }, "Endereço inválido (ex: PP010010A)")
 
 export default function FractionalQuarentine({ activity }: { activity: ActivityData | any }) {
-  
-  const [errorMessage, formAction, isPending] = useActionState(setTaskActivity, undefined)
-  const [productError, setProductError] = useState<string | null>(null)
-  const [statusBtn, setStatuBtn] = useState<boolean>(false)
-  const [validError, setValidError] = useState<string | null>(null)
-
-  const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF"]
-  const validSides = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-
-  // Schemas Zod
-  const addressSchema = z.string().refine((val) => {
-    if (val.length !== 9) return false
-    const sector = val.slice(0, 2)
-    const street = Number(val.slice(2, 4))
-    const block = Number(val.slice(4, 7))
-    const floor = Number(val.slice(7, 8))
-    const side = val.slice(8, 9)
-
-    return (
-      validSectors.includes(sector) &&
-      street >= 0 && street <= 52 &&
-      block >= 0 && block <= 260 &&
-      floor >= 0 && floor <= 5 &&
-      validSides.includes(side)
-    )
-  }, "Endereço inválido (ex: PP010010A)")
-
-  const productSchema = z.string().regex(/^\d{4,14}$/, "Produto inválido (4 ou 14 dígitos)")
-  const quantSchema = z.preprocess(val => Number(val), z.number().min(0).max(1000000, "Quantidade inválida"))
-  const validSchema = z.string().regex(/^\d{8}$/, "Validade inválida (ex: 16092025)")
+  const inputAddress = useRef(null); 
+  const  { reset, register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formFrctionalQuaren>>({
+    resolver: zodResolver(formFrctionalQuaren),
+    defaultValues: {
+      activityID: activity?.activityID,
+      activityName: activity?.activityName,
+      loadProduct: "",
+      loadQuant: "",
+      loadValid: ""
+    },
+  })
 
   useEffect(() => {
     const inputEnd:any = document.querySelector('.loadProduct')
     inputEnd.focus()
   }, [])
-
-  useEffect(() => {
-    const inputEnd:any = document.querySelector('.loadProduct')
-    inputEnd.focus()
-  }, [isPending])
 
   function getActivity(act: ActivityData) {
     const atividadeData = {
@@ -71,50 +61,61 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
     window.location.reload()
   }
 
-  const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const result = productSchema.safeParse(e.target.value)
-    const inputEnd:any = document.querySelector('.loadProduct')
-    if (!result.success) inputEnd.focus()
-    setProductError(result.success ? null : result.error.issues[0].message)
-  }
+  async function onSubmit(values: z.infer<typeof formFrctionalQuaren>) {
 
-  const handleValidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const result = validSchema.safeParse(e.target.value)
-    const inputEnd:any = document.querySelector('.loadValid')
-    if (!result.success) inputEnd.focus()
-    if (result.success) setStatuBtn(false)
-    setValidError(result.success ? null : result.error.issues[0].message)
-  }
+    reset({
+      loadProduct: '',
+      loadQuant:  '',
+      loadValid: '',
+      activityID: activity?.activityID,
+      activityName: activity?.activityName,
+    })
 
-  const handleValidFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const result = validSchema.safeParse(e.target.value)
-    const inputEnd:any = document.querySelector('.loadValid')
-    setStatuBtn(true)
-    setValidError(result.success ? null : result.error.issues[0].message)
+     const data = {
+        activityID: values.activityID,
+        activityName: values.activityName,
+        loadProduct: values.loadProduct,
+        loadQuant: values.loadQuant,
+        loadValid: values.loadValid,
+        activityDate: dateDb()
+    }
+    
+    const result = await pushTaskActivity(data)
   }
 
   return (
-    <div className="absolute flex flex-col gap-4 items-center justify-start w-full h-full p-4">
+    <div className="absolute flex flex-col gap-4 items-center justify-start w-full h-full py-6 px-4">
       <h1 className="md:text-xl lg:text-2xl">Quarentena Fracionada</h1>
       <span className="self-end">{activity.activityID}</span>
-      <form action={formAction} className="flex flex-col gap-6 w-full md:gap-10">
-        <input type="text" onBlur={handleProductChange} placeholder="Leia o produto" name="loadProduct" className="loadProduct w-full border rounded-sm p-2" required/>
-        {productError && <p className="text-red-500 text-sm">{productError}</p>}
-        <input type="text" placeholder="Informe a quantidade" name="loadQuant" className="w-full border rounded-sm p-2" required/>
-        <input type="text" onChange={handleValidChange} onFocus={handleValidFocus} placeholder="Informe a validade" name="loadValid" className="loadValid w-full border rounded-sm p-2" required/>
-        {validError && <p className="text-red-500 text-sm">{validError}</p>}
-        <input type="hidden" name="activityID" defaultValue={activity?.activityID ?? ""} />
-        <input type="hidden" name="activityName" defaultValue={activity?.activityName ?? ""} />
-        <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm" disabled={statusBtn}>
-          {isPending ? "Confirmando..." : "Confirmar"}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full md:gap-4">
+          <div>
+            <label htmlFor="">Produto</label>
+            <input type="text" placeholder="Leia o produto" {...register("loadProduct", { required: true })} className="loadProduct w-full border rounded-sm p-2"/>
+            {errors.loadProduct && <span className="text-red-500 text-sm">{errors.loadProduct.message}</span>}
+          </div>
+         
+          <div>
+            <label htmlFor="">Quantidade</label>
+            <input type="text" placeholder="Informe a quantidade" {...register("loadQuant", { required: true })} className="w-full border rounded-sm p-2" />
+            {errors.loadQuant && <span className="text-red-500 text-sm">{errors.loadQuant.message}</span>}
+          </div>
+
+          <div>
+            <label htmlFor="">Validade</label>
+            <input type="text" placeholder="Informe a validade" {...register("loadValid", { required: true })} className="loadValid w-full border rounded-sm p-2" />
+            {errors.loadValid && <span className="text-red-500 text-sm">{errors.loadValid.message}</span>}
+          </div>
+         
+          <input type="hidden" name="activityID"  />
+          <input type="hidden" name="activityName" />
+         
+          <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
+            Confirmar
+          </button>
+        </form>
+        <button onClick={() => getActivity(activity)} className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
+          Finalizar
         </button>
-      </form>
-      <button onClick={() => getActivity(activity)} className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm" disabled={statusBtn}>
-        Finalizar
-      </button>
-       {errorMessage && (
-          <p className="flex text-red-500 mt-4">{errorMessage}</p>
-        )}
     </div>
   );
 }
