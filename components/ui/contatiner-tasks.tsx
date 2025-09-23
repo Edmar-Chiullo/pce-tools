@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useActionState } from "react";
+import { useState, useActionState, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,6 @@ import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
 import Alert  from '@/components/ui/alertl'
 import { finishActivity, getActivity } from "@/lib/firebase/server-database";
-//import { getTaskes } from "@/lib/server-actions";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
@@ -30,6 +29,15 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
 
   const [ btnConfirm, setBtnPopUp ] = useState(false)
   const [ task, setTask] = useState<ActivityProps>()
+  const [ taskActivity, setTaskActivity] = useState<ActivityProps[]>([])
+
+  useEffect(() => {
+    console.log(taskActivity)
+  }, [taskActivity])
+
+  useEffect(() => {
+    setTaskActivity(props)
+  }, [])
 
   function formatDateTime() {
     const date = new Date()
@@ -123,8 +131,18 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
       const mouth = date.slice(5,7)
       const mesano = `${mouth}${year}`
       const result = await getActivity(mesano, dia)
-      const arr = Object.values(result)
-      //arr.forEach((el) => console.log(el))
+      if (result) {
+        const arr = Object.values(result)
+        for (const values of arr) {
+          const tasks = Object.values(values as [])
+          for (const task of tasks) {
+            const { activity } = task
+            setTaskActivity(prevLists => [...prevLists, activity]) 
+          }
+        }
+      } else {
+        alert("Não há dados a serem mostrados.")
+      }
     }
 
   };
@@ -164,7 +182,8 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
               </div>
             </div>
             <ScrollArea className="flex flex-col h-[90%] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
-              {props && props.map(({ activity }:any, i) => {
+              {taskActivity && taskActivity.map((activity :any, i) => {
+                console.log(activity)
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
                 const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
