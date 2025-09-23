@@ -57,10 +57,10 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
   }
 
   return (
-    <div className="absolute flex flex-col gap-4 items-center justify-start w-full h-full py-6 px-4">
+    <div className="absolute top-10 flex gap-2 flex-col w-full h-auto px-4">
       <h1 className="md:text-xl lg:text-2xl">Produto x Endereço</h1>
       <span className="self-end">{activity.activityID}</span>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full md:gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 h-auto md:gap-4">
        <div>
         <label htmlFor="">Endereço</label>
         <input type="text" placeholder="Leia o endereço" {...register("loadAddress", { required: true })} className="loadAddress w-full border rounded-sm p-2" />

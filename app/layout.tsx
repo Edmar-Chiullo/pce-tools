@@ -29,11 +29,11 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 w-screen h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-50 w-screen h-full`}
       >
         <LoginContextProvider>  
             <ReceiptContextProvider>
-              <div className="w-full h-full">
+              <div className="w-full h-full py-1">
                 {children}
               </div>
             </ReceiptContextProvider>        

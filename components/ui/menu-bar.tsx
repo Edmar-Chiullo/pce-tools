@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react';
 import Link from "next/link";
 import clsx from "clsx";
 
-//
 export default function BarMenu() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
@@ -12,12 +11,12 @@ export default function BarMenu() {
   const name = JSON.parse(String(session?.user?.name));
 
   return (
-      <div className="flex flex-col justify-between items-end text-center w-full pt-20">
-        <div className="self-start ml-2s w-full h-full">
+      <div className="flex flex-col justify-between items-end text-center w-full h-screen md:h-screen  py-10 md:pt-20">
+        <div className="self-start ml-2s w-full h-screen">
           <ul className="flex flex-col gap-1 text-left text-zinc-700">
             <div className={''}>
               <Link href="/pages/home">
-                <div className={clsx("flex justify-center gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home" })}>
+                <div className={clsx("flex justify-center gap-1 md:gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home" })}>
                   {pathname === "/pages/home" ? (
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-10 md:size-6">
                         <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />

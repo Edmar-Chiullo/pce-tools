@@ -30,14 +30,11 @@ export default async function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const session = await auth();
-  const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
   
   return (
-    <main className={`${geistSans.variable} ${geistMono.variable} flex w-full h-full bg-zinc-50`}>
+    <main className={`${geistSans.variable} ${geistMono.variable} flex w-full bg-zinc-50`}>
       <SessionProvider>
-        <div className='relative w-full h-full px-2'>
+        <div className='relative w-full px-2'>
           <Suspense>
             <ViewUser />
           </Suspense>
@@ -47,13 +44,13 @@ export default async function HomeLayout({
           <Suspense>
             <MenuToggle />
           </Suspense>
-          <div className='flex w-full h-[95%] md:h-[91%]'>
+          <div className='flex w-full'>
             <div className='hidden w-full md:block md:w-24 md:p-2'>
             <Suspense>
               <BarMenu />
             </Suspense>
             </div>
-            <div className={`flex justify-center items-center w-full pr-2`}>
+            <div className={`flex justify-center items-center w-full`}>
               {children}
             </div>
           </div>

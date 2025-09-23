@@ -14,15 +14,13 @@ export default function MenuToggle() {
   }
 
   return (
-    <>
-      <div className='flex w-full md:hidden'>
+      <div className='flex bg-amber-200 w-full md:hidden'>
         <IconMenuToggle props={openClose} />
         {
-          openCloseMenu && <div className={`absolute z-40 bottom-0 left-0 flex-col bg-zinc-50 w-full h-screen`}>
+          openCloseMenu && <div className={`absolute z-40 bottom-0 left-0 top-0 flex-col bg-zinc-50 w-full h-screen`}>
             <BarMenu />
           </div>
         }
       </div>
-    </>
   );
 }

@@ -7,7 +7,7 @@ export default async function ViewUser() {
     const image = session?.user?.image ?? "/user.png";
     
     return (
-        <div className="flex items-end mt-1 gap-4 w-full md:justify-end md:mt-0">
+        <div className="flex items-end gap-4 w-full md:justify-end md:mt-0 py-2">
             <p className=" text-sm">{user.first}</p>
             <Image 
                 className="order-first self-start rounded-full md:order-none" 
