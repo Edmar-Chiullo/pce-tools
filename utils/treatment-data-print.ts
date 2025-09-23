@@ -147,8 +147,6 @@ export function trackFractional(activity: Activity | any) {
   const { activityLocalWork, activtyUserName } = activity.activity;
   
   return tasks.map((task:any) => (
-    console.log(validateDate(task.activity.loadValid)),
-    
     {
     'Centro': activityLocalWork,
     'Pallet': task.activity.activityID,
