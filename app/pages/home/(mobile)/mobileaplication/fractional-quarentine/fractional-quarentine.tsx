@@ -11,7 +11,7 @@ import { ActivityData } from "@/app/type/type"
 
 export default function FractionalQuarentine({ activity }: { activity: ActivityData | any }) {
   const inputAddress = useRef(null); 
-  const  { reset, register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formFrctionalQuaren>>({
+  const  { reset, register, handleSubmit, setFocus, formState: { errors } } = useForm<z.infer<typeof formFrctionalQuaren>>({
     resolver: zodResolver(formFrctionalQuaren),
     defaultValues: {
       activityID: activity?.activityID,
@@ -58,6 +58,7 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
     }
     
     const result = await pushTaskActivity(data)
+    setFocus("loadProduct")
   }
 
   return (

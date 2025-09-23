@@ -11,18 +11,17 @@ import { formValAddressProduct } from "@/utils/form-schemas"
 
 export default function ValidatyAddressProduct({ activity }: { activity: ActivityData | any }) {
   
-  const [errorMessage, formAction, isPending] = useActionState(setTaskActivity, undefined)
-  const  { reset, register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formValAddressProduct>>({
+  const  { reset, register, handleSubmit, setFocus, formState: { errors } } = useForm<z.infer<typeof formValAddressProduct>>({
     resolver: zodResolver(formValAddressProduct),
     defaultValues: {
       activityID: activity?.activityID,
       activityName: activity?.activityName,
       loadAddress: ""
     },
-  })  
+  }) 
+
   useEffect(() => {
-    const inputEnd:any = document.querySelector('.loadAddress')
-    inputEnd.focus()
+    setFocus("loadAddress")
   }, [])
 
   function getActivity(act: ActivityData) {
@@ -51,11 +50,10 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
         loadAddress: values.loadAddress,
         loadProduct: values.loadProduct,  
         activityDate: dateDb()
-    }
+    }    
 
-    console.log(data)
-    
     const result = await pushTaskActivity(data)
+    setFocus("loadAddress")
   }
 
   return (

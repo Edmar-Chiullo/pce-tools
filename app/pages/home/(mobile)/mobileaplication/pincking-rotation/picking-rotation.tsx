@@ -5,29 +5,15 @@ import { useActionState, useState } from "react"
 import { useEffect } from "react"
 import { setTaskActivity, finishActivity, pushTaskActivity } from "@/lib/firebase/server-database"
 import z from "zod"
-import { useRouter } from "next/navigation"
 import { dateDb } from "@/utils/date-generate"
 import { formPickingRotation } from "@/utils/form-schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
-type ActivityData = {
-  activityFinisDate?: string
-  activityID?: string
-  activityInitDate?: string
-  activityLocalWork?: string
-  activityName?: string
-  activitySide?: string
-  activityState?: string
-  activityStreet?: string
-  activityTasks?: string
-  activityUserID?: string
-  activtyUserName?: string
-}
+import { ActivityData } from "@/app/type/type"
 
 export default function PickingRotation({ activity }: { activity: ActivityData | any }) {
 
-  const  { reset, register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formPickingRotation>>({
+  const  { reset, register, handleSubmit, setFocus, formState: { errors } } = useForm<z.infer<typeof formPickingRotation>>({
     resolver: zodResolver(formPickingRotation),
     defaultValues: {
       activityID: activity?.activityID,
@@ -39,11 +25,8 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
     },
   })  
 
-  const router = useRouter()
-
   useEffect(() => {
-    const inputEnd:any = document.querySelector('.loadAddress')
-    inputEnd.focus()
+    setFocus("loadAddress")
   }, [])
 
   function getActivity(act: ActivityData) {
@@ -79,6 +62,8 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
     }
     
     const result = await pushTaskActivity(data)
+    setFocus("loadAddress")
+
   }
 
   return (

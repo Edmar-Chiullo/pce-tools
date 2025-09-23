@@ -182,8 +182,7 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
               </div>
             </div>
             <ScrollArea className="flex flex-col h-[90%] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
-              {taskActivity && taskActivity.map((activity :any, i) => {
-                console.log(activity)
+              {props && props.map(({activity} :any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
                 const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
