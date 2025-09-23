@@ -68,7 +68,6 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
       console.error(`Atividade com ID ${activityId} não encontrada.`);
       return;
     }
-
     const result = importXLSX(item, activityName)
     
     if (result === null) {

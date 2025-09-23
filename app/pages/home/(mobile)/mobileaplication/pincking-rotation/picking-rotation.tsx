@@ -72,6 +72,9 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
         activityID: values.activityID,
         activityName: values.activityName,
         loadAddress: values.loadAddress,
+        loadProduct: values.loadProduct,
+        loadQuant: values.loadQuant,
+        loadValid: values.loadValid,
         activityDate: dateDb()
     }
     

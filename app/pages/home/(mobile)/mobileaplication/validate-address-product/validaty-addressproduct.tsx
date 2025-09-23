@@ -49,8 +49,11 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
         activityID: values.activityID,
         activityName: values.activityName,
         loadAddress: values.loadAddress,
+        loadProduct: values.loadProduct,  
         activityDate: dateDb()
     }
+
+    console.log(data)
     
     const result = await pushTaskActivity(data)
   }

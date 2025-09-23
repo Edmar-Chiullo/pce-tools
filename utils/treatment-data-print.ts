@@ -1,5 +1,5 @@
 import { ActivityProps } from "react";
-import { fullDatePrint, hourPrint } from "./date-generate";
+import { fullDatePrint, hourPrint, validateDate } from "./date-generate";
 
 // Definições de tipos para garantir a segurança do código
 interface Carga {
@@ -141,21 +141,26 @@ export function trackEndProd(activity: Activity | any) {
 export function trackFractional(activity: Activity | any) {
   const tasks = processActivityTasks(activity, false);
 
+  
   if (!tasks) return null;
-
+  
   const { activityLocalWork, activtyUserName } = activity.activity;
-
-  return tasks.map((task:any) => ({
+  
+  return tasks.map((task:any) => (
+    console.log(validateDate(task.activity.loadValid)),
+    
+    {
     'Centro': activityLocalWork,
     'Pallet': task.activity.activityID,
     'Produto': task.activity.loadProduct,
     'Quantidade': task.activity.loadQuant,
-    'Validade': task.activity.loadValid,
+    'Validade': validateDate(task.activity.loadValid),
     'Operador': activtyUserName,
     'Data': fullDatePrint(task.activity.activityDate),
     'Hora': hourPrint(task.activity.activityDate),
     'Atividade': task.activity.activityName,
-  }));
+  }
+));
 }
 
 /**
@@ -176,7 +181,7 @@ export function trackPickingRotation(activity: Activity | any) {
     'Endereço': task.activity.loadAddress,
     'Produto': task.activity.loadProduct,
     'Quantidade': task.activity.loadQuant,
-    'Validade': task.activity.loadValid,
+    'Validade': validateDate(task.activity.loadValid),
     'Operador': activtyUserName,
     'Data': fullDatePrint(task.activity.activityDate),
     'Hora': hourPrint(task.activity.activityDate),
