@@ -162,7 +162,7 @@ export default function ContainerTasks({ props, listSwap }: { props: ActivityPro
       <div className="flex justify-center items-start w-full px-28">
         <h1 className="text-3xl text-zinc-50">PCE TOOLS</h1>
       </div>
-      <div className="flex items-start w-full gap-3">
+      <div className="flex items-end w-full gap-3">
         <div className="flex justify-start w-[70%] h-full">
           <div className="flex flex-col w-full justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
             <div className="flex justify-between w-full h-9">
@@ -181,7 +181,7 @@ export default function ContainerTasks({ props, listSwap }: { props: ActivityPro
                 </form>
               </div>
             </div>
-            <ScrollArea className="flex fle lg:h-[430px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
+            <ScrollArea className="flex fle lg:h-[436px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
               {props && props.map(({activity}:any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';

@@ -2,7 +2,7 @@ import { signOut } from "@/auth"
 
 export default function CloseSession() {
     return (
-        <div className='hidden md:flex flex-col justify-end items-end w-full px-2'>
+        <div className='hidden md:flex flex-col justify-starts items-end w-full px-2'>
           <form
             action={async () => {
                 "use server"

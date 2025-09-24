@@ -11,7 +11,7 @@ import { ActivityData } from "@/app/type/type"
 
 export default function HighNullRotation({ activity }: { activity: ActivityData | any }) {
 
-  const  { reset, register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formHighAddressNull>>({
+  const  { reset, register, handleSubmit, setFocus, formState: { errors } } = useForm<z.infer<typeof formHighAddressNull>>({
     resolver: zodResolver(formHighAddressNull),
     defaultValues: {
       activityID: activity?.activityID,
@@ -54,6 +54,8 @@ export default function HighNullRotation({ activity }: { activity: ActivityData 
     }
     
     const result = await pushTaskActivity(data)
+    setFocus("loadAddress")
+
   }
   
   return (
