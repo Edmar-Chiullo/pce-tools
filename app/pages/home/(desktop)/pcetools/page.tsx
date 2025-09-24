@@ -55,7 +55,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="flex w-full p-2 rounded-2xl bg-zinc-800">
+        <div className="flex w-full h-full p-2 rounded-2xl bg-zinc-800">
             <ContainerTasks props={lists} listSwap={listSwap}/>
         </div>
     )

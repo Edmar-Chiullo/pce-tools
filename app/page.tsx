@@ -1,10 +1,5 @@
 import Link from "next/link"
-/**
- * 
- *             <h1 className="text-4xl font-bold">Welcome to the PCE Tools</h1>
-            <p className="text-lg">Your one-stop solution for all PCE-related tasks.</p>
 
- */
 export default function Page() {
   return (
     <section className="flex items-center w-full h-full gap-1 bg-gray-50 p-2 ">

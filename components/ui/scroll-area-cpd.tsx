@@ -85,8 +85,8 @@ export default function ScrollCpd() {
     
 
     return (
-        <div>
-             <ScrollArea className="w-full">
+        <div className="h-full">
+             <ScrollArea className="w-full" >
             {
               bulk.map(({carga}, key) => {
                 return (

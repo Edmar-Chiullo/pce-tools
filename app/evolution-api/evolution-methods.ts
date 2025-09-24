@@ -49,16 +49,21 @@ interface NotificationCanhotoProps  {
 }
 
 function welcomeText({...value}:any) {
-    const text = `Olá, ${value.motorista}. 
-Seja bem vindo ao centro de distribuição do grupo Muffato. 
-O número do seu controle será: ${value.id}. Quero informar que apartir de deste momento as informarções refernte a sua carga será enviada atravez deste canal.
-Obs: este canal é somente para nós passarmos o status de sua carga. Não envie mensagem atravez dele pois não serão respondidas.`
+    const text = `Olá, ${value.motorista}.
+Bem-vindo ao Centro de Distribuição do Grupo Muffato.
+
+O número do seu controle é ${value.id}.
+A partir deste momento, todas as informações sobre a sua carga serão enviadas por este canal.
+
+Atenção: este canal é usado apenas para envio de status da carga.
+Não envie mensagens, pois não serão respondidas.`
     // const text = "Olá, "+""+value.bulkDriver.trim()+"!"+" Seja bem vindo ao centro de distribuição do grupo Muffato. A partir deste momento todos os processos sobre sua carga será informado por meio deste canal. Fique atento as notficações. O número de seu controle é: " + value.bulkId
     return text
 }
 
 function senText(name:string) {
-    const text = name.trim()+"!"+" analisamos suas notas estão ok. Favor comparecer no recebimento com o caminhão."
+    const text = `${name.trim()}, informamos que suas notas foram analisadas e estão corretas.     
+Solicitamos que compareça ao setor de recebimento com o caminhão.`
     return text
 }
 

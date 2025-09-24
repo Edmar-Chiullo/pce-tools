@@ -11,12 +11,12 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
-import { useLoginContext } from "@/app/context/user-context";
 import Timer from "@/components/ui/span";
 import { alterIdCarga } from "./alterIdCarga";
 import { setBulkCpd } from "@/app/firebase/fbmethod";
 import { getReceipt } from "@/app/firebase/fbmethod";
 import { formatString } from "@/utils/strSeparator";
+import { useSession } from "next-auth/react";
 
 import { TimerResetIcon } from "lucide-react";
 
@@ -48,8 +48,12 @@ export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ userName, setUserName ] = useState<string | null>('')
-  const { user } = useLoginContext() 
+  const [ user, setUser ] = useState<string | null>('')
   const router = useRouter()
+
+  const {data}:any  = useSession()
+  const name = data?.user?.name
+  // console.log(JSON.parse(name))
   
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([])
   const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([])
@@ -121,13 +125,13 @@ export default function ReceiptScreen() {
   function lbCarga(id:string) {
     const { status, box }:any = id
     const i = open(status)
-    const obj = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:user})
+    const obj = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:'uder'})
     setBulkCpd(obj) 
   }
 
   return (
     <div className="main flex flex-col p-2 w-full h-full rounded-2xl bg-zinc-800">
-      <div className="flex justify-center items-end w-full p-4">
+      <div className="flex justify-center items-end w-full p-2">
         <h1 className="text-3xl text-zinc-50">Recebimento cargas</h1>
       </div>
       <div className="flex gap-2 w-full h-full">

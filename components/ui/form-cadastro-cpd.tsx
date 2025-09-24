@@ -70,6 +70,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         try {      
             const evolution = new EvolutionApi()
             const result = evolution.sentTextWelcome(carga)
+            console.log(result)
         } catch (error) {
             return `Erro ao tentar enviar messagem. Error: ${error}`
         }

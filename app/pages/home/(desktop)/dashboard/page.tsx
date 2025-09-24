@@ -2,8 +2,8 @@
 
 export default function Page() {
     return (
-        <section className="flex items-center w-full h-[calc(100vh-60px)] rounded-l-2xl">
-            <h1>Dashboard</h1>
+        <section className="flex w-full h-full p-2 rounded-2xl bg-zinc-800">
+            <h1 className="text-zinc-50">Dashboard</h1>
         </section>
     )
 }

@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useRef  } from "react"
-import { setTaskActivity, finishActivity, pushTaskActivity } from "@/lib/firebase/server-database"
+import { finishActivity, pushTaskActivity } from "@/lib/firebase/server-database"
 import z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,11 +20,6 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
     },
   })
 
-  useEffect(() => {
-    const inputEnd:any = document.querySelector('.loadProduct')
-    inputEnd.focus()
-  }, [])
-
   function getActivity(act: ActivityData) {
     const atividadeData = {
       activityID: activity.activityID,
@@ -34,7 +28,6 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
     }
 
     finishActivity(atividadeData)
-
     window.location.reload()
   }
 

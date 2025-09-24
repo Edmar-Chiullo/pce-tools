@@ -32,7 +32,7 @@ export default async function HomeLayout({
 }>) {
   
   return (
-    <main className={`${geistSans.variable} ${geistMono.variable} flex`}>
+    <main className={`${geistSans.variable} ${geistMono.variable} flex h-full`}>
       <SessionProvider>
         <div className='relative w-full px-2'>
           <Suspense>
@@ -44,13 +44,13 @@ export default async function HomeLayout({
           <Suspense>
             <MenuToggle />
           </Suspense>
-          <div className='flex w-full'>
+          <div className='flex w-full h-[86vh]'>
             <div className='hidden w-full md:block md:w-24 md:p-2'>
             <Suspense>
               <BarMenu />
             </Suspense>
             </div>
-            <div className={`flex justify-center items-center w-full h-[80vh]`}>
+            <div className={`flex justify-center items-center w-full h-full`}>
               {children}
             </div>
           </div>
