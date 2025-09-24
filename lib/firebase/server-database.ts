@@ -3,7 +3,7 @@
 import { db } from "@/app/firebase/fbkey";
 import { ref, set, push, update, child, get } from "firebase/database";
 
-import { fullDate, dateDb } from "@/utils/date-generate";
+import { fullDate, dateDb, fullDatePrint } from "@/utils/date-generate";
 
 const re = ref(db)
 
@@ -48,13 +48,12 @@ export async function pushTaskActivity(values:any) {
 
 // Função dedicada somente a finaização da atividade/tarefa.
 export async function finishActivity(activity:any) {
-    const strDate = fullDate()
+    const strDate = fullDatePrint(activity.activityInitDate)
     .replace('/','')
     .replace('/','')
 
     const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityName}/${activity.activityID}/activity/activityFinisDate`;
     const pathState = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityName}/${activity.activityID}/activity/activityState`;
-
     try {
         const date = dateDb()
         await update(ref(db), {

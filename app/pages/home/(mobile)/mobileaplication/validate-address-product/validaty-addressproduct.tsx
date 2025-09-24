@@ -1,7 +1,7 @@
 'use client'
 
-import { useActionState, useEffect } from "react"
-import { setTaskActivity, finishActivity, pushTaskActivity } from "@/lib/firebase/server-database"
+import { useEffect } from "react"
+import { finishActivity, pushTaskActivity } from "@/lib/firebase/server-database"
 import { ActivityData } from "@/app/type/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -28,6 +28,7 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
     const atividadeData = {
       activityID: activity.activityID,
       activityName: activity.activityName,
+      activityInitDate: activity.activityInitDate
     }
 
     finishActivity(atividadeData)
@@ -75,7 +76,7 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
         <input type="hidden" {...register("activityID", { required: true })} />
         <input type="hidden" {...register("activityName", { required: true })} />
 
-        <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
+        <button type="submit" className="w-full h-10 mt-8 bg-zinc-950 text-zinc-50 rounded-sm">
           Confirmar
         </button>
       </form>

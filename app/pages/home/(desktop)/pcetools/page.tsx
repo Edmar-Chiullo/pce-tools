@@ -50,9 +50,13 @@ export default function Dashboard() {
         };
     }, []);
    
+    function listSwap(list: ActivityProps[]): void {
+        setLists(list)
+    }
+
     return (
-        <div className="flex w-full h-[96%] items-end p-2 rounded-2xl bg-zinc-800">
-            <ContainerTasks props={lists}/>
+        <div className="flex w-full p-2 rounded-2xl bg-zinc-800">
+            <ContainerTasks props={lists} listSwap={listSwap}/>
         </div>
     )
 }

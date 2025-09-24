@@ -15,10 +15,7 @@ export default async function appOperator() {
     const user = (session?.user as User)
 
     return (
-        <div className="relative flex flex-col gap-4 justify-center w-full h-full">
-            <div className="h-14">
-                <h1 className="text-center"><strong>OPERAÇÕES PCE</strong></h1>
-            </div>
+        <div className="relative flex flex-col gap-4 w-full h-full">
             <NavigationMenu  user={user} />
         </div>
     )

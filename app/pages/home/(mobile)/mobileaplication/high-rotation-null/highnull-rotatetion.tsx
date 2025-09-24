@@ -30,6 +30,7 @@ export default function HighNullRotation({ activity }: { activity: ActivityData 
     const atividadeData = {
       activityID: activity.activityID,
       activityName: activity.activityName,
+      activityInitDate: activity.activityInitDate
     }
 
     finishActivity(atividadeData)

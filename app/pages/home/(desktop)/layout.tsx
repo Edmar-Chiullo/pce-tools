@@ -32,7 +32,7 @@ export default async function HomeLayout({
 }>) {
   
   return (
-    <main className={`${geistSans.variable} ${geistMono.variable} flex w-full bg-zinc-50`}>
+    <main className={`${geistSans.variable} ${geistMono.variable} flex`}>
       <SessionProvider>
         <div className='relative w-full px-2'>
           <Suspense>
@@ -50,7 +50,7 @@ export default async function HomeLayout({
               <BarMenu />
             </Suspense>
             </div>
-            <div className={`flex justify-center items-center w-full`}>
+            <div className={`flex justify-center items-center w-full h-[80vh]`}>
               {children}
             </div>
           </div>

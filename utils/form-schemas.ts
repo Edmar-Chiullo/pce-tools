@@ -7,11 +7,27 @@ const chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", 
 export const formHighAddressNull = z.object({
   activityID: z.string(),
   activityName: z.string(),
-  loadAddress: z.string().min(1, {
-    message: "Inserir o endereço.",
-  }).max(9, {
-    message: "Endereço invalido (ex: PP010010A)."}
-  )
+  loadAddress: z.string()
+  .min(1, {
+    message: "Inserir endereço.",
+  }).max(14, {
+      message: "Endereço inválido.",
+  })
+  .refine((val) => {
+    const sector = val.slice(0, 2)
+    const street = Number(val.slice(2, 4))
+    const block = Number(val.slice(4, 7))
+    const floor = Number(val.slice(7, 8))
+    const side = val.slice(8, 9)
+
+    return (
+      validSectors.includes(sector) &&
+      street >= 0 && street <= 52 &&
+      block >= 0 && block <= 260 &&
+      floor >= 0 && floor <= 5 &&
+      validSides.includes(side)
+    )
+  }, "Endereço inválido (ex: PP010010A)"),  
 })
 
 export const formValAddressProduct = z.object({

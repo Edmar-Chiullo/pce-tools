@@ -26,6 +26,7 @@ export default function NavigationMenu({ user }: { user: User }) {
 
   const [step, setStep] = useState<Step>("center")
   const [subtitle, setSubtitle] = useState("Selecione a operação")
+  const [title, setTitle] = useState(true)
   const [activity, setActivity] = useState<ActivityProps>()
   const [currentForm, setCurrentForm] = useState<ReactNode | null>(null)
 
@@ -49,6 +50,7 @@ export default function NavigationMenu({ user }: { user: User }) {
   } as const
 
   function navigation(e: React.MouseEvent<HTMLButtonElement>) {
+    setTitle(false)
     let content = e.currentTarget.innerText
     if (content.startsWith("PP")) content = "PP"
 
@@ -91,19 +93,25 @@ export default function NavigationMenu({ user }: { user: User }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 justify-center items-center w-full h-[80vh] px-4">
-      <div className="flex justify-start w-full">
+    <div className="flex flex-col gap-2 justify-center items-center w-full py-10 px-4">
+      {
+        title &&
+        <div className="flex items-center justify-center h-20">
+          <h1><strong>OPERAÇÕES PCE</strong></h1>
+        </div>
+      }
+      <div className="flex justify-start w-full p-1">
         <h1>{subtitle}</h1>
       </div>
-
+      
       {step === "center" && (
-        <div className="flex flex-col gap-2 w-full h-full">
+        <div className="flex flex-col gap-2 w-full">
           <button onClick={navigation} className="bg-zinc-950 text-zinc-50 h-10 rounded-md">Centro 1046</button>
         </div>
       )}
 
       {step === "operation" && (
-        <div className="flex flex-col gap-2 w-full h-full">
+        <div className="flex flex-col gap-2 w-full">
           {Object.keys(operations).map(op => (
             <button key={op} onClick={navigation} className="bg-zinc-950 text-zinc-50 h-10 rounded-md">{op}</button>
           ))}

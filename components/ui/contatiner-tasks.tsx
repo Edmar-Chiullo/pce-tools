@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useActionState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form";
@@ -16,24 +16,18 @@ import Alert  from '@/components/ui/alertl'
 import { finishActivity, getActivity } from "@/lib/firebase/server-database";
 
 const formSchema = z.object({
-  pesquisar: z.string().min(2, {
-    message: "Inserir data a ser consultada.",
-  }),
+  // pesquisar: z.string().min(2, {
+  //   message: "Inserir data a ser consultada.",
+  // }),
   date: z.string()
 });
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
-export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
-  //const [errorMessage, formAction, isPending] = useActionState(getTaskes, undefined);
-
+export default function ContainerTasks({ props, listSwap }: { props: ActivityProps[], listSwap: ( listSwap: ActivityProps[]) => void}) {
   const [ btnConfirm, setBtnPopUp ] = useState(false)
   const [ task, setTask] = useState<ActivityProps>()
   const [ taskActivity, setTaskActivity] = useState<ActivityProps[]>([])
-
-  useEffect(() => {
-    console.log(taskActivity)
-  }, [taskActivity])
 
   useEffect(() => {
     setTaskActivity(props)
@@ -54,13 +48,14 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      pesquisar: "",
+      // pesquisar: "",
       date: formatDateTime()
     },
   });
 
   const finishTask = () => {
     const { activity }:any = task
+
     finishActivity(activity)
     setBtnPopUp(false)
   }
@@ -70,22 +65,22 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
   }
 
   const printXLSX = (activityId: string, activityName: string) => {
-     const item = props.find((item:any) => item.activity.activityID === activityId);
+    const item = props.find((item:any) => item.activity.activityID === activityId);
+    const { activity }:any = item
 
+    if (activity.activityState) {
+      setBtnPopUp(true)
+      setTask(item)
+      return
+    }
     if (!item) {
       console.error(`Atividade com ID ${activityId} não encontrada.`);
       return;
     }
     const result = importXLSX(item, activityName)
-    
-    if (result === null) {
-      setBtnPopUp(true)
-      setTask(item)
-    }
   } 
 
   const importXLSX = (item:ActivityProps, activityName: string) => {
-   
     let track;
     switch (activityName) {
       case 'Aéreo vazio':
@@ -115,14 +110,14 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
   };
 
   const onSubmit = async (data: FormSchemaType) => {
-    const initCharAddress = data.pesquisar.trim().toUpperCase().slice(0, 2);
-    const isValid = validAddress(initCharAddress);
+    // const initCharAddress = data.pesquisar.trim().toUpperCase().slice(0, 2);
+    // const isValid = validAddress(initCharAddress);
 
-    if (!isValid) {
-      alert('Código inserido não é válido.');
-      return;
-    }
-
+    // if (!isValid) {
+    //   alert('Código inserido não é válido.');
+    //   return;
+    // }
+    
     const date:any = data.date
 
     if (date.length === 10) {
@@ -131,67 +126,68 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
       const mouth = date.slice(5,7)
       const mesano = `${mouth}${year}`
       const result = await getActivity(mesano, dia)
+     
       if (result) {
         const arr = Object.values(result)
+        const arrList:ActivityProps[] = []
         for (const values of arr) {
           const tasks = Object.values(values as [])
           for (const task of tasks) {
-            const { activity } = task
-            setTaskActivity(prevLists => [...prevLists, activity]) 
+            arrList.push(task)
           }
         }
+
+        listSwap(arrList)
       } else {
         alert("Não há dados a serem mostrados.")
       }
     }
-
   };
 
+  /***
+ *<input
+    type="text"
+    placeholder="Insira o código"
+    {...form.register("pesquisar")}
+    className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
+  />
+
+   */
+
   return (
-    <div className="relative flex flex-col gap-3 w-full h-full">
+    <div className="relative flex flex-col gap-3 w-full">
       {
         btnConfirm && <Alert title="Tarefa em execução" description="Deseja finalizar?" acao="Deseja finalizar?" close={closePopUp} finish={finishTask}/>
       }
       <div className="flex justify-center items-start w-full px-28">
         <h1 className="text-3xl text-zinc-50">PCE TOOLS</h1>
       </div>
-      <div className="flex items-start w-full min-h-[96%] h-[96%] gap-3">
-        <div className="flex flex-col justify-start gap-5 w-[64%] h-full">
-          <div className="box-activity flex w-[100%] h-[94%] flex-col justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
+      <div className="flex items-start w-full gap-3">
+        <div className="flex justify-start w-[70%] h-full">
+          <div className="flex flex-col w-full justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
             <div className="flex justify-between w-full h-9">
               <h1 className="ml-2 self-end">Atividades em execução</h1>
               <div className="flex justify-between items-center gap-2 h-9 p-[1px] bg-zinc-50 rounded-sm">
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-1 pr-1">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-between items-center w-56 gap-2 pr-1">
                   <input
                     type="date"
                     placeholder="Insira a data"
                     {...form.register("date")}
                     className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
                   />
-                  <input
-                    type="text"
-                    placeholder="Insira o código"
-                    {...form.register("pesquisar")}
-                    className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
-                  />
-
                   <button type="submit" className="w-16 h-8 bg-zinc-950 hover:scale-[1.01] rounded-sm">
                     <MagnifyingGlassIcon className="size-6 text-zinc-100 m-auto" />
                   </button>
                 </form>
               </div>
             </div>
-            <ScrollArea className="flex flex-col h-[90%] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
-              {props && props.map(({activity} :any, i) => {
+            <ScrollArea className="flex fle lg:h-[430px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
+              {props && props.map(({activity}:any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
                 const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
                 const status = activityState ? 'Executando' : 'Finalizado';
                 
-                const fullDate = fullDatePrint(activityInitDate)
-                const novaData = new Date();
-                const dataAtual = novaData.toLocaleString('pt-BR').slice(0, 10)
-
               return (
                   <div key={i} className={`flex justify-between w-full h-12 mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                     <div className="flex flex-col gap-1">
@@ -236,11 +232,11 @@ export default function ContainerTasks({ props }: { props: ActivityProps[] }) {
             </ScrollArea>
           </div>
         </div>
-        <div className="flex flex-col gap-1 w-[35%] h-[94%] bg-zinc-100 p-2 rounded-2xl">
+        <div className="flex flex-col gap-1 w-[35%] h-full bg-zinc-100 p-2 rounded-2xl">
           <div className="flex justify-start items-end w-full h-9">
             <h1 className="">Ferramentas</h1>
           </div>
-          <div className="flex flex-col gap-1 w-full h-[89%] bg-zinc-500/10 rounded-md p-1">
+          <div className="flex flex-col gap-1 w-full h-full bg-zinc-500/10 rounded-md p-1">
             <Link href={'/pages/home/pcetools/print-barcode'}>
               <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] hover:cursor-pointer text-zinc-50">COD. BARRAS</h1>
             </Link>

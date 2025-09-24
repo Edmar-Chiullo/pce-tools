@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <LoginContextProvider>  
             <ReceiptContextProvider>
-              <div className="w-full h-full py-1">
+              <div className="w-full h-screen py-1">
                 {children}
               </div>
             </ReceiptContextProvider>        
