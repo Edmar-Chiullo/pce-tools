@@ -2,6 +2,7 @@ import { generateId } from "@/utils/date-generate";
 import { ActivityProps } from "../interface/interface";
 
 export class Activity implements ActivityProps {
+    activityUserCenter: string
     activityID: string
     activityUserID: string
     activtyUserName: string
@@ -16,7 +17,7 @@ export class Activity implements ActivityProps {
 
     constructor({ ...props }) {
         const name = JSON.parse(props.name)
-
+        this.activityUserCenter = name.center
         this.activityID = 'no value'
         this.activityUserID = props.id
         this.activtyUserName = name.first

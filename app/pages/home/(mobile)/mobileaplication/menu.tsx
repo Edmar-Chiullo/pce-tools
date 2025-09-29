@@ -23,7 +23,6 @@ type Step = "center" | "operation" | "street" | "side" | "confirm" | "running"
 
 export default function NavigationMenu({ user }: { user: User }) {
   const atividade = useMemo(() => new Activity(user), [user])
-
   const [step, setStep] = useState<Step>("center")
   const [subtitle, setSubtitle] = useState("Selecione a operação")
   const [title, setTitle] = useState(true)
@@ -78,6 +77,7 @@ export default function NavigationMenu({ user }: { user: User }) {
     setCurrentForm(form)
 
     const atividadeData = {
+        activityUserCenter: activity.activityUserCenter,
         activityID: atividade.activityID,
         activityName: atividade.activityName,
         activityLocalWork: atividade.activityLocalWork,

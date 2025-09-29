@@ -31,6 +31,7 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
 
   function getActivity(act: ActivityData) {
     const atividadeData = {
+      activityUserCenter: activity.activityUserCenter,
       activityID: activity.activityID,
       activityName: activity.activityName,
       activityInitDate: activity.activityInitDate
@@ -53,6 +54,7 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
     })
 
       const data = {
+        activityUserCenter: activity.activityUserCenter,
         activityID: values.activityID,
         activityName: values.activityName,
         loadAddress: values.loadAddress,

@@ -24,14 +24,9 @@ const formSchema = z.object({
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
-export default function ContainerTasks({ props, listSwap }: { props: ActivityProps[], listSwap: ( listSwap: ActivityProps[]) => void}) {
+export default function ContainerTasks({ activities, listSwap }: { activities: ActivityProps[], listSwap: ( listSwap: ActivityProps[]) => void}) {
   const [ btnConfirm, setBtnPopUp ] = useState(false)
   const [ task, setTask] = useState<ActivityProps>()
-  const [ taskActivity, setTaskActivity] = useState<ActivityProps[]>([])
-
-  useEffect(() => {
-    setTaskActivity(props)
-  }, [])
 
   function formatDateTime() {
     const date = new Date()
@@ -65,7 +60,7 @@ export default function ContainerTasks({ props, listSwap }: { props: ActivityPro
   }
 
   const printXLSX = (activityId: string, activityName: string) => {
-    const item = props.find((item:any) => item.activity.activityID === activityId);
+    const item = activities.find((item:any) => item.activity.activityID === activityId);
     const { activity }:any = item
 
     if (activity.activityState) {
@@ -110,13 +105,6 @@ export default function ContainerTasks({ props, listSwap }: { props: ActivityPro
   };
 
   const onSubmit = async (data: FormSchemaType) => {
-    // const initCharAddress = data.pesquisar.trim().toUpperCase().slice(0, 2);
-    // const isValid = validAddress(initCharAddress);
-
-    // if (!isValid) {
-    //   alert('Código inserido não é válido.');
-    //   return;
-    // }
     
     const date:any = data.date
 
@@ -143,16 +131,6 @@ export default function ContainerTasks({ props, listSwap }: { props: ActivityPro
       }
     }
   };
-
-  /***
- *<input
-    type="text"
-    placeholder="Insira o código"
-    {...form.register("pesquisar")}
-    className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
-  />
-
-   */
 
   return (
     <div className="relative flex flex-col w-full h-full">
@@ -184,7 +162,7 @@ export default function ContainerTasks({ props, listSwap }: { props: ActivityPro
             <div>
 
             <ScrollArea className="flex lg:h-[420px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
-              {props && props.map(({activity}:any, i) => {
+              {activities && activities.map(({activity}:any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
                 const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
@@ -205,10 +183,6 @@ export default function ContainerTasks({ props, listSwap }: { props: ActivityPro
                         <div className="flex gap-1">
                           <span>Hora:</span>
                           <span>{hourPrint(activityInitDate)}</span>
-                        </div>
-                        <div className="flex gap-6">
-                          <span>{activityLocalWork}</span>
-                          <span></span>
                         </div>
                       </div>
                       <div className="nameOperator flex gap-6">

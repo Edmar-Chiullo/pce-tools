@@ -8,6 +8,7 @@ export interface UserProps {
 }
 
 export interface ActivityProps {
+    activityUserCenter: string
     activityID: string
     activityUserID: string
     activtyUserName: string

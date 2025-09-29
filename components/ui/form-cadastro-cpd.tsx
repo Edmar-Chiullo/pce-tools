@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { EvolutionApi } from "@/app/evolution-api/evolution-methods"
 import { ReceiptMello } from "@/app/class/class-task"
-import { setBulkCpd } from "@/app/firebase/fbmethod"
+import { setBulkCpd } from '@/app/firebase/fbmethod'
 
 
 const formSchema = z.object({
@@ -67,15 +67,16 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         carga.alterBulkStateConf('no value')
         carga.alterBulkStateReceipt('no value')
         carga.alterBulkStateCpdDescription(descriptionCarga)
+        
         try {      
             const evolution = new EvolutionApi()
             const result = evolution.sentTextWelcome(carga)
-            console.log(result)
         } catch (error) {
             return `Erro ao tentar enviar messagem. Error: ${error}`
         }
 
-        setBulkCpd(carga)    
+        setBulkCpd(carga)
+
         form.reset({
             motorista: "",
             transportadora: "",

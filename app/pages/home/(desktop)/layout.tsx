@@ -30,21 +30,22 @@ export default async function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   return (
-    <main className={`${geistSans.variable} ${geistMono.variable} flex h-full`}>
+    <main className={`${geistSans.variable} ${geistMono.variable} flex h-full px-1`}>
       <SessionProvider>
         <div className='relative w-full px-2'>
-          <Suspense>
-            <ViewUser />
-          </Suspense>
-          <Suspense>
-            <CloseSession />
-          </Suspense>
+          <div className='flex items-center  lg:flex-col w-72'>
+            <Suspense>
+              <ViewUser />
+            </Suspense>
+            <Suspense>
+              <CloseSession />
+            </Suspense>
+          </div>
           <Suspense>
             <MenuToggle />
           </Suspense>
-          <div className='flex w-full h-[86vh]'>
+          <div className='flex w-full h-[90vh] lg:h-[86vh]'>
             <div className='hidden w-full md:block md:w-24 md:p-2'>
             <Suspense>
               <BarMenu />

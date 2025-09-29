@@ -13,7 +13,7 @@ import { z } from "zod"
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 import Timer from "@/components/ui/span";
 import { alterIdCarga } from "./alterIdCarga";
-import { setBulkCpd } from "@/app/firebase/fbmethod";
+import { setBulkCpd, setBulkReceipt } from "@/app/firebase/fbmethod";
 import { getReceipt } from "@/app/firebase/fbmethod";
 import { formatString } from "@/utils/strSeparator";
 import { useSession } from "next-auth/react";
@@ -53,7 +53,7 @@ export default function ReceiptScreen() {
 
   const {data}:any  = useSession()
   const name = data?.user?.name
-  // console.log(JSON.parse(name))
+  const ne = JSON.parse(name)
   
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([])
   const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([])
@@ -125,7 +125,8 @@ export default function ReceiptScreen() {
   function lbCarga(id:string) {
     const { status, box }:any = id
     const i = open(status)
-    const obj = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:'uder'})
+    const obj:any = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:ne.first})
+    // setBulkCpd(obj)
     setBulkCpd(obj) 
   }
 

@@ -26,6 +26,7 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
 
   function getActivity(act: ActivityData) {
     const atividadeData = {
+      activityUserCenter: activity.activityUserCenter,
       activityID: activity.activityID,
       activityName: activity.activityName,
       activityInitDate: activity.activityInitDate
@@ -46,6 +47,7 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
     })
 
       const data = {
+        activityUserCenter: activity.activityUserCenter,
         activityID: values.activityID,
         activityName: values.activityName,
         loadAddress: values.loadAddress,

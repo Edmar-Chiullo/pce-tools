@@ -15,7 +15,7 @@ export function alterIdCarga({...data}) {
         bulkTipoCarga: dataForm.carga.bulkTipoCarga,
         bulkControl: dataForm.carga.bulkControl,
         bulkQtPallet: dataForm.carga.bulkQtPallet,
-        bulkReceiptOperator: user.userName,
+        bulkReceiptOperator: user,
         bulkReceiptConf: dataForm.carga.bulkReceiptConf,
         bulkCpdDate: dataForm.carga.bulkCpdDate,
         bulkReceiptDate: dateDb(),

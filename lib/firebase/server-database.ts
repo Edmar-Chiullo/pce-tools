@@ -4,6 +4,8 @@ import { db } from "@/app/firebase/fbkey";
 import { ref, set, push, update, child, get } from "firebase/database";
 
 import { fullDate, dateDb, fullDatePrint } from "@/utils/date-generate";
+import { ReceiptMelloProps } from "@/app/interface/interface";
+import { auth } from "@/auth";
 
 const re = ref(db)
 
@@ -13,7 +15,7 @@ export async function setActivityDb(activity:any) {
     .replace('/','')
     .replace('/','')
     try {
-        await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity?.activityName}/${activity?.activityID}`), {
+        await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity?.activityName}/${activity?.activityID}`), {
             activity: activity
         });
         return 'Confirmado sussesso!'
@@ -28,7 +30,7 @@ export async function pushTaskActivity(values:any) {
     .replace('/','')
     .replace('/','')
 
-    const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${values.activityName}/${values.activityID}/activity/activityTasks`;
+    const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${values.activityUserCenter}/${values.activityName}/${values.activityID}/activity/activityTasks`;
     try {
         await push(ref(db, path, ), {
             activity: values
@@ -52,8 +54,8 @@ export async function finishActivity(activity:any) {
     .replace('/','')
     .replace('/','')
 
-    const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityName}/${activity.activityID}/activity/activityFinisDate`;
-    const pathState = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityName}/${activity.activityID}/activity/activityState`;
+    const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity.activityName}/${activity.activityID}/activity/activityFinisDate`;
+    const pathState = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity.activityName}/${activity.activityID}/activity/activityState`;
     try {
         const date = dateDb()
         await update(ref(db), {
@@ -67,6 +69,19 @@ export async function finishActivity(activity:any) {
         };
     }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+export async function setBulkCpd({...carga}:ReceiptMelloProps | undefined) {
+  const strDate = fullDate()
+  .replace('/','')
+  .replace('/','')
+
+  set(ref(db,`activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${carga.bulkId}`), {
+    carga
+  });
+}
+
 
 export async function setTaskActivity(
   prevState: string | undefined,
@@ -139,12 +154,15 @@ export async function getTask({...activity}:any) {
 }
 
 export async function getActivity(mesano: string, dia: string) {
-  const result = get(child(re, `${strDate.slice(4,8)}/${mesano}/${dia}`))
-  .then((snapshot) => {
-      return snapshot.exists() ? snapshot.val() : null
-  }).catch((error) => {
-      return error
-  })
+    const session = await auth();
+    const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
+    
+    const result = get(child(re, `${strDate.slice(4,8)}/${mesano}/${dia}/${user.center}`))
+    .then((snapshot) => {
+        return snapshot.exists() ? snapshot.val() : null
+    }).catch((error) => {
+        return error
+    })
 
   return result
 }

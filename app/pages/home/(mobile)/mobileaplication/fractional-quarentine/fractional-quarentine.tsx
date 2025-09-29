@@ -22,6 +22,7 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
 
   function getActivity(act: ActivityData) {
     const atividadeData = {
+      activityUserCenter: activity.activityUserCenter,
       activityID: activity.activityID,
       activityName: activity.activityName,
       activityInitDate: activity.activityInitDate
@@ -42,6 +43,7 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
     })
 
      const data = {
+        activityUserCenter: activity.activityUserCenter,
         activityID: values.activityID,
         activityName: values.activityName,
         loadProduct: values.loadProduct,

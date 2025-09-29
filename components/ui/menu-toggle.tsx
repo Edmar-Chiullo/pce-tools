@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from "react";
 import BarMenu from "./menu-bar";
 import IconMenuToggle from "./icon-menu-toggle";

@@ -100,8 +100,6 @@ export async function setActivityDb({...activity}:ActivityProps | undefined) {
   const strDate = fullDate()
   .replace('/','')
   .replace('/','')
-        console.log('setActivityDb')
-        console.log(activity)
 
   // set(ref(db,`activity/${activity.activityName}/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${activity.activityID}`), {
   //   activi: activity
@@ -132,7 +130,6 @@ export async function upBulkCpd({...carga}:ReceiptProps | undefined) {
 
 
 export async function setBulkReceipt({...carga}:ReceiptOperatorProps | undefined) {
-  console.log(carga)
   const strDate = fullDate()
   .replace('/','')
   .replace('/','')
