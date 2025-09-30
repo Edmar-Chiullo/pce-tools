@@ -4,10 +4,23 @@ import { db } from "@/app/firebase/fbkey";
 import { ref, set, push, update, child, get } from "firebase/database";
 
 import { fullDate, dateDb, fullDatePrint } from "@/utils/date-generate";
-import { ReceiptMelloProps } from "@/app/interface/interface";
+import { ReceiptMelloProps, UserProps } from "@/app/interface/interface";
 import { auth } from "@/auth";
 
 const re = ref(db)
+
+// Função dedicada a somente iniciar/gravar a tarefa no banco.
+export async function setUsers(user:UserProps) {
+      const path = `users/${user.userID?.slice(0,8)}`;
+    try {
+        await update(ref(db), {
+            [path]: user,
+        });
+        return 'Usuário criado com sucesso!'
+    } catch(erro) {
+        return 'Aldo deu errado!'
+    }
+}
 
 // Função dedicada a somente iniciar/gravar a tarefa no banco.
 export async function setActivityDb(activity:any) {

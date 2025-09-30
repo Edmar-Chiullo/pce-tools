@@ -1,10 +1,13 @@
 
 export interface UserProps {
+    email: string
+    uid: string | null
     userID: string | null
     userName: string | null
     userPermission: string | null
+    userPassword: string | null | number
     userLocalWork: string | null
-    userRegistrationDate: Date | null
+    userRegistrationDate: Date | null |number
 }
 
 export interface ActivityProps {

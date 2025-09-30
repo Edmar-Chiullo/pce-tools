@@ -9,7 +9,7 @@ export default function ValidacaoCargaRetirada(value:any) {
     }
 
     return (
-        <div className="absolute flex flex-col justify-around p-5 z-10 w-96 h-42 bg-zinc-100 rounded-2xl border-2 drop-shadow-xl shadow-zinc-300">
+        <div className="absolute top-[100%] left-[35%] flex flex-col justify-around p-5 z-10 w-96 h-42 bg-zinc-100/90 rounded-2xl border-2 drop-shadow-xl shadow-zinc-300">
             <div className="title w-full text-center text-3xl">
                 <h1>Confirmar retirada.</h1>
             </div>

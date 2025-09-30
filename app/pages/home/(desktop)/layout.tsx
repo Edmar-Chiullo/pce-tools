@@ -34,7 +34,7 @@ export default async function HomeLayout({
     <main className={`${geistSans.variable} ${geistMono.variable} flex h-full px-1`}>
       <SessionProvider>
         <div className='relative w-full px-2'>
-          <div className='flex items-center  lg:flex-col w-72'>
+          <div className='flex items-center lg:justify-end w-full lg:flex-col'>
             <Suspense>
               <ViewUser />
             </Suspense>

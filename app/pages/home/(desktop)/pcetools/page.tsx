@@ -21,7 +21,6 @@ export default function Dashboard() {
     const user: UserData | null = useMemo(() => {
         if (session?.user?.name) {
             try {
-                // É crucial verificar se 'session.user.name' é uma string JSON válida.
                 return JSON.parse(session.user.name) as UserData
             } catch (error) {
                 console.error("Erro ao fazer parse dos dados do usuário:", error)

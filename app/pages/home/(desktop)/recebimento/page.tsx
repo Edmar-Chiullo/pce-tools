@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import { TimerResetIcon } from "lucide-react";
 
 import Link from "next/link";
+import { useMemo } from "react";
 
 const formSchema = z.object({
   filial: z.string().min(2, {
@@ -43,17 +44,17 @@ const formSchema = z.object({
   }), 
 })
 
-// Component Login....
+type UserData = {
+    first: string
+    center: string
+}
 export default function ReceiptScreen() {
 
   const [ bulk, setBulk ] = useState<any[]>([])
   const [ userName, setUserName ] = useState<string | null>('')
-  const [ user, setUser ] = useState<string | null>('')
   const router = useRouter()
 
-  const {data}:any  = useSession()
-  const name = data?.user?.name
-  const ne = JSON.parse(name)
+  
   
   const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([])
   const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([])
@@ -61,49 +62,56 @@ export default function ReceiptScreen() {
   const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
   const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
 
-  useEffect(() => {
-    const userLogin:any = localStorage.getItem('userName')
-    userLogin ? setUserName(userLogin) : router.push('/')
+  const { data: session, status } = useSession()
+  
+    const user: UserData | null = useMemo(() => {
+        if (session?.user?.name) {
+            try {
+                return JSON.parse(session.user.name) as UserData
+            } catch (error) {
+                console.error("Erro ao fazer parse dos dados do usuário:", error)
+                return null
+            }
+        }
+        return null
+    }, [session])
 
-
-    getReceipt().then((val) => {
-      const arr = Object.values(val)
-      setBulk(arr)
-    
+    useEffect(() => {
+      getReceipt().then((val) => {
+        const arr = Object.values(val)
+        setBulk(arr)
     })
 
     const strDate = fullDate().replace(/\//g, "");
-
     const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
-
     const cargaReceipt = ref(db, basePath) 
-      onChildAdded(cargaReceipt, (snapshot) => {
-        if (snapshot.exists()) {
-          const arr = snapshot.val();
-          const { carga } = arr;
+    onChildAdded(cargaReceipt, (snapshot) => {
+      if (snapshot.exists()) {
+        const arr = snapshot.val();
+        const { carga } = arr;
 
-          setBulk((prev) => {
-            const exists = prev.some((item) => item.carga.bulkId === carga.bulkId);
-            if (!exists) {
-              return [...prev, { carga }];
-            }
-            return prev;
-          });
-        }
-      });  
+        setBulk((prev) => {
+          const exists = prev.some((item) => item.carga.bulkId === carga.bulkId);
+          if (!exists) {
+            return [...prev, { carga }];
+          }
+          return prev;
+        });
+      }
+    });  
 
     const alterCarga = ref(db, basePath)
-      onChildChanged(alterCarga, (snapshot) => {
-        if (snapshot.exists()) {
-          const { carga } = snapshot.val();
-          const id = carga.bulkId;
-          setBulk((prev) =>
-            prev.map((item) => item.carga.bulkId === id ? { carga } : item)
-          );
-        }
-      });
+    onChildChanged(alterCarga, (snapshot) => {
+      if (snapshot.exists()) {
+        const { carga } = snapshot.val();
+        const id = carga.bulkId;
+        setBulk((prev) =>
+          prev.map((item) => item.carga.bulkId === id ? { carga } : item)
+        );
+      }
+    });
 
-  }, [])
+  }, [status, user])
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -125,7 +133,7 @@ export default function ReceiptScreen() {
   function lbCarga(id:string) {
     const { status, box }:any = id
     const i = open(status)
-    const obj:any = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:ne.first})
+    const obj:any = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:user?.first})
     // setBulkCpd(obj)
     setBulkCpd(obj) 
   }
