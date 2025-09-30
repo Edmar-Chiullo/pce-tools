@@ -54,7 +54,6 @@ export default function ValidatyAddressProduct({ activity }: { activity: Activit
         loadProduct: values.loadProduct,  
         activityDate: dateDb()
     }    
-
     const result = await pushTaskActivity(data)
     setFocus("loadAddress")
   }

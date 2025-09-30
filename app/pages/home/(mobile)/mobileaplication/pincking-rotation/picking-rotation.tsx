@@ -66,7 +66,6 @@ export default function PickingRotation({ activity }: { activity: ActivityData |
     
     const result = await pushTaskActivity(data)
     setFocus("loadAddress")
-
   }
 
   return (
