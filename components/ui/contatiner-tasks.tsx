@@ -160,7 +160,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
               </div>
             </div>
             <div>
-
+          
             <ScrollArea className="flex lg:h-[420px] xl:h-[700px]  border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
               {activities && activities.map(({activity}:any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
