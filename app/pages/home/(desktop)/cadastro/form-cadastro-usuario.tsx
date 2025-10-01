@@ -135,7 +135,7 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
                         type="text"
                         placeholder='Nome'
                         {...register("name")} 
-                        className="w-full border px-3 py-2 rounded"
+                        className="w-full border px-3 py-2 rounded bg-zinc-50"
                     />
                     {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                 </div>
@@ -147,7 +147,7 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
                         type="email"
                         placeholder='E-mail'
                         {...register("email")}
-                        className="w-full border px-3 py-2 rounded"
+                        className="w-full border px-3 py-2 rounded bg-zinc-50"
                     />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                 </div>
@@ -191,7 +191,7 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
                         type="text"
                         placeholder='Centro (Ex: 1046)'
                         {...register("center")}
-                        className="w-full border px-3 py-2 rounded"
+                        className="w-full border px-3 py-2 rounded bg-zinc-50"
                     />
                     {errors.center && <p className="text-red-500 text-sm mt-1">{errors.center.message}</p>}
                 </div>
@@ -203,7 +203,7 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
                         type="password"
                         placeholder='Senha'
                         {...register("password")}
-                        className="w-full border px-3 py-2 rounded"
+                        className="w-full border px-3 py-2 rounded bg-zinc-50"
                     />
                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                 </div>

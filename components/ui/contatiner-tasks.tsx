@@ -161,7 +161,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
             </div>
             <div>
           
-            <ScrollArea className="flex lg:h-[420px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
+            <ScrollArea className="flex lg:h-[420px] 2xl:h-[700px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
               {activities && activities.map(({activity}:any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
@@ -209,7 +209,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-1 w-[35%] h-full bg-zinc-100 p-2 rounded-2xl">
+        <div className="flex flex-col gap-1 w-[35%] h-full max-h-[760px] bg-zinc-100 p-2 rounded-2xl">
           <div className="flex justify-start items-end w-full h-9">
             <h1 className="">Ferramentas</h1>
           </div>

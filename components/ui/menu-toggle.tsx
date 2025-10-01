@@ -16,7 +16,7 @@ export default function MenuToggle() {
       <div className='flex w-full md:hidden'>
         <IconMenuToggle props={openClose} />
         {
-          openCloseMenu && <div className={`absolute z-40 bottom-0 left-0 top-0 flex-col bg-zinc-50 w-full`}>
+          openCloseMenu && <div className={`absolute z-40 bottom-0 left-0 top-0 flex-col w-full bg-zinc-50`}>
             <BarMenu />
           </div>
         }

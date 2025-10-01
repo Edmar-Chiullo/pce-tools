@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation"
 import { useSession } from 'next-auth/react';
 import Link from "next/link";
 import clsx from "clsx";
+import SignOutButton from "./singOut";
 
 export default function BarMenu() {
   const pathname = usePathname();
@@ -151,6 +152,7 @@ export default function BarMenu() {
               </Link>
             </div>
           </ul>
+          <SignOutButton />
         </div>
       </div>
   )

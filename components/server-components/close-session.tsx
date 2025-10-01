@@ -1,9 +1,8 @@
 import { signOut } from "@/auth"
-import { redirect } from "next/dist/server/api-utils"
 
 export default function CloseSession() {
     return (
-        <div className='flex flex-col justify-start items-start lg:items-end w-full px-2'>
+        <div className='hidden lg:flex flex-col justify-start items-start lg:items-end w-full px-2'>
           <form
             action={async () => {
                 "use server"
