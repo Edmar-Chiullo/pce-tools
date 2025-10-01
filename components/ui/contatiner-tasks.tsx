@@ -215,7 +215,10 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
           </div>
           <div className="flex flex-col gap-1 w-full h-full bg-zinc-500/10 rounded-md p-1">
             <Link href={'/pages/home/pcetools/print-barcode'}>
-              <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] hover:cursor-pointer text-zinc-50">COD. BARRAS</h1>
+              <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] hover:cursor-pointer text-zinc-50">FICHA PALLET</h1>
+            </Link>
+            <Link href={'/pages/home/impressaobarras'}>
+              <h1 className={`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] hover:cursor-pointer text-zinc-50`}>ETIQUETAS</h1>
             </Link>
           </div>
         </div>

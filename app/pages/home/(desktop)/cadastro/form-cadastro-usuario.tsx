@@ -53,6 +53,7 @@ const checkPermission = (role:string) => {
 
 const user = (data:User) => {
     const idDoUsuario = data.email;
+    console.log(idDoUsuario.split('@'))
     const nomeDeUsuario = idDoUsuario.split('@')[0];
 
     const user: UserProps = {

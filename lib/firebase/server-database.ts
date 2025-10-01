@@ -11,7 +11,7 @@ const re = ref(db)
 
 // Função dedicada a somente iniciar/gravar a tarefa no banco.
 export async function setUsers(user:UserProps) {
-      const path = `users/${user.userID?.slice(0,8)}`;
+      const path = `users/${user.userID}`;
     try {
         await update(ref(db), {
             [path]: user,
