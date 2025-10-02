@@ -153,7 +153,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
                     {...form.register("date")}
                     className="input-quary rounded-sm h-8 p-1 bg-zinc-50"
                   />
-                  <button type="submit" className="w-16 h-8 bg-zinc-950 hover:scale-[1.01] rounded-sm">
+                  <button type="submit" className="w-16 h-8 bg-zinc-950 hover:scale-[1.01] transition-transform duration-100 ease-in-out rounded-sm">
                     <MagnifyingGlassIcon className="size-6 text-zinc-100 m-auto" />
                   </button>
                 </form>
@@ -197,7 +197,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
                       </div>
                     </div>
                     <button
-                      className="self-center w-20 h-8 text-[12px] rounded-md cursor-pointer hover:scale-[1.04] bg-zinc-950 text-zinc-100"
+                      className="self-center w-20 h-8 text-[12px] rounded-md cursor-pointer hover:scale-[1.03] transition-transform duration-100 ease-in-out bg-zinc-950 text-zinc-100"
                       onClick={() => printXLSX(activityID, activityName)}
                     >
                       {status}
@@ -215,10 +215,10 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
           </div>
           <div className="flex flex-col gap-1 w-full h-full bg-zinc-500/10 rounded-md p-1">
             <Link href={'/pages/home/pcetools/print-barcode'}>
-              <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] hover:cursor-pointer text-zinc-50">FICHA PALLET</h1>
+              <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50">FICHA PALLET</h1>
             </Link>
-            <Link href={'/pages/home/impressaobarras'}>
-              <h1 className={`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] hover:cursor-pointer text-zinc-50`}>ETIQUETAS</h1>
+            <Link href={'/pages/home/gercode'}>
+              <h1 className={`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`}>ETIQUETAS</h1>
             </Link>
           </div>
         </div>
