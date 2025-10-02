@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,8 @@ import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
 import Alert  from '@/components/ui/alertl'
 import { finishActivity, getActivity } from "@/lib/firebase/server-database";
+import clsx from "clsx";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   // pesquisar: z.string().min(2, {
@@ -24,9 +26,28 @@ const formSchema = z.object({
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
+type UserData = {
+    first: string
+    center: string
+}
+
 export default function ContainerTasks({ activities, listSwap }: { activities: ActivityProps[], listSwap: ( listSwap: ActivityProps[]) => void}) {
   const [ btnConfirm, setBtnPopUp ] = useState(false)
   const [ task, setTask] = useState<ActivityProps>()
+
+   const { data: session, status } = useSession()
+
+   const user: UserData | null = useMemo(() => {
+       if (session?.user?.name) {
+           try {
+               return JSON.parse(session.user.name) as UserData
+           } catch (error) {
+               console.error("Erro ao fazer parse dos dados do usuário:", error)
+               return null
+           }
+       }
+       return null
+   }, [session])
 
   function formatDateTime() {
     const date = new Date()
@@ -218,7 +239,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
               <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50">FICHA PALLET</h1>
             </Link>
             <Link href={'/pages/home/gercode'}>
-              <h1 className={`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`}>ETIQUETAS</h1>
+              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': user?.first !== 'cxoli' })}>ETIQUETAS</h1>
             </Link>
           </div>
         </div>
