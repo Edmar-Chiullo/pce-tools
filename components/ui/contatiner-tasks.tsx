@@ -1,14 +1,12 @@
 'use client'
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form";
 import { ActivityProps } from "@/app/interface/interface";
 import { fullDatePrint, hourPrint } from "@/utils/date-generate";
-import { validAddress } from "@/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import Link from "next/link";
 import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
@@ -16,6 +14,8 @@ import Alert  from '@/components/ui/alertl'
 import { finishActivity, getActivity } from "@/lib/firebase/server-database";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import { z } from "zod";
 
 const formSchema = z.object({
   // pesquisar: z.string().min(2, {
@@ -84,6 +84,21 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
     const item = activities.find((item:any) => item.activity.activityID === activityId);
     const { activity }:any = item
 
+    if(activity.activityTasks === 'no value') {
+      toast.warn('Tarefa não contém valores para serem importados.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+      return
+    }
+
     if (activity.activityState) {
       setBtnPopUp(true)
       setTask(item)
@@ -148,16 +163,25 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
 
         listSwap(arrList)
       } else {
-        alert("Não há dados a serem mostrados.")
+        toast.warn('Não foi encontrada atividades para esse dia.', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      return
       }
     }
   };
 
   return (
     <div className="relative flex flex-col justify-end w-full h-full">
-      {
-        btnConfirm && <Alert title="Tarefa em execução" description="Deseja finalizar?" acao="Deseja finalizar?" close={closePopUp} finish={finishTask}/>
-      }
+      <ToastContainer />
       <div className="flex justify-center items-start w-full py-2 px-28">
         <h1 className="text-3xl text-zinc-50">PCE Tools</h1>
       </div>
@@ -245,5 +269,5 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
         </div>
       </div>
     </div>
-  );
+    );
 }

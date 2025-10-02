@@ -114,7 +114,7 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: "dark",
+                theme: "light",
                 transition: Bounce,
             });
             

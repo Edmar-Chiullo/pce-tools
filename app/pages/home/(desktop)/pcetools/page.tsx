@@ -81,7 +81,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="flex w-full h-full p-2 rounded-2xl bg-zinc-800">
+        <div className="flex w-full h-full py-1 px-2 rounded-2xl bg-zinc-800">
             <ContainerTasks activities={lists} listSwap={listSwap}/>
         </div>
     )
