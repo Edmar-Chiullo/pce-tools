@@ -133,7 +133,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
   };
 
   return (
-    <div className="relative flex flex-col w-full h-full">
+    <div className="relative flex flex-col justify-end w-full h-full">
       {
         btnConfirm && <Alert title="Tarefa em execução" description="Deseja finalizar?" acao="Deseja finalizar?" close={closePopUp} finish={finishTask}/>
       }
@@ -141,7 +141,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
         <h1 className="text-3xl text-zinc-50">PCE Tools</h1>
       </div>
       <div className="flex items-end w-full h-full gap-3">
-        <div className="flex justify-start w-[70%] h-full">
+        <div className="flex justify-start w-[70%] h-full bg-zinc-100 p-2 rounded-2xl">
           <div className="flex flex-col w-full h-full justify-end gap-1 bg-zinc-100 p-2 rounded-2xl">
             <div className="flex justify-between w-full h-9">
               <h1 className="ml-2 self-end">Atividades em execução</h1>
@@ -161,7 +161,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
             </div>
             <div>
           
-            <ScrollArea className="flex lg:h-[420px] 2xl:h-[700px] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
+            <ScrollArea className="flex lg:h-[420px] 2xl:h-[72vh] border-t-2 pl-1 pr-1 bg-zinc-500/10 rounded-md">
               {activities && activities.map(({activity}:any, i) => {
                 const { activityID, activityState, activityInitDate, activityLocalWork, activtyUserName, activityName } = activity;
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
@@ -209,7 +209,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-1 w-[35%] h-full max-h-[760px] bg-zinc-100 p-2 rounded-2xl">
+        <div className="flex flex-col gap-1 w-[35%] h-full 2xl:h-[80vh] bg-zinc-100 p-2 rounded-2xl">
           <div className="flex justify-start items-end w-full h-9">
             <h1 className="">Ferramentas</h1>
           </div>
