@@ -58,12 +58,12 @@ export const formValAddressProduct = z.object({
   loadProduct: z.string()
   .min(1, {
     message: "Inserir a código do produto.",
-  }).max(14, {
+  }).max(50, {
       message: "Código inválido.",
   })
-  .refine((cod) => {
-    return !cod.split('').some(char => chars.includes(char.toLocaleUpperCase()));
-  }, "Código inválido"),
+  // .refine((cod) => {
+  //   return !cod.split('').some(char => chars.includes(char.toLocaleUpperCase()));
+  // }, "Código inválido"),
 })
 
 export const formFrctionalQuaren = z.object({
