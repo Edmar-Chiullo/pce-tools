@@ -28,11 +28,13 @@ type FormSchemaType = z.infer<typeof formSchema>;
 
 type UserData = {
     first: string
+    session: string
     center: string
 }
 
 export default function ContainerTasks({ activities, listSwap }: { activities: ActivityProps[], listSwap: ( listSwap: ActivityProps[]) => void}) {
   const [ btnConfirm, setBtnPopUp ] = useState(false)
+  const [ userData, setUserData ] = useState<UserData>()
   const [ task, setTask] = useState<ActivityProps>()
 
    const { data: session, status } = useSession()
@@ -40,6 +42,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
    const user: UserData | null = useMemo(() => {
        if (session?.user?.name) {
            try {
+               setUserData(JSON.parse(session.user.name) as UserData)
                return JSON.parse(session.user.name) as UserData
            } catch (error) {
                console.error("Erro ao fazer parse dos dados do usuário:", error)
@@ -212,7 +215,6 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
                 const color = activityState ? 'bg-orange-100' : 'bg-green-100';
                 const hColor = activityState ? 'hover:bg-orange-50' : 'hover:bg-green-50';
                 const status = activityState ? 'Executando' : 'Finalizado';
-                
               return (
                   <div key={i} className={`flex justify-between w-full h-12 mt-1 ${color} rounded-sm pl-2 pr-2 ${hColor}`}>
                     <div className="flex flex-col gap-1">
@@ -263,7 +265,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
               <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50">FICHA PALLET</h1>
             </Link>
             <Link href={'/pages/home/gercode'}>
-              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': user?.first !== 'cxoli' })}>ETIQUETAS</h1>
+              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Claudinei X. Oliveira' })}>ETIQUETAS</h1>
             </Link>
           </div>
         </div>
