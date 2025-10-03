@@ -16,12 +16,8 @@ import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
-import { it } from "node:test";
 
 const formSchema = z.object({
-  // pesquisar: z.string().min(2, {
-  //   message: "Inserir data a ser consultada.",
-  // }),
   date: z.string()
 });
 
