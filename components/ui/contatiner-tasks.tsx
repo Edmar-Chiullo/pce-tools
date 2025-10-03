@@ -16,6 +16,7 @@ import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
+import { it } from "node:test";
 
 const formSchema = z.object({
   // pesquisar: z.string().min(2, {
@@ -86,31 +87,35 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
   const printXLSX = (activityId: string, activityName: string) => {
     const item = activities.find((item:any) => item.activity.activityID === activityId);
     const { activity }:any = item
-
+    
     if(activity.activityTasks === 'no value') {
       toast.warn('Tarefa não contém valores para serem importados.', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-            });
-      return
-    }
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
 
+      return
+    } 
+
+    console.log(activity.activityState)
     if (activity.activityState) {
       setBtnPopUp(true)
       setTask(item)
       return
     }
+
     if (!item) {
       console.error(`Atividade com ID ${activityId} não encontrada.`);
       return;
     }
+
     const result = importXLSX(item, activityName)
   } 
 
@@ -184,6 +189,7 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
 
   return (
     <div className="relative flex flex-col justify-end w-full h-full">
+      {btnConfirm && <Alert title={'Tarefa em execução'} description={'Deseja finalizar a atividade?'} acao={''} close={closePopUp} finish={finishTask} />}
       <ToastContainer />
       <div className="flex justify-center items-start w-full py-2 px-28">
         <h1 className="text-3xl text-zinc-50">PCE Tools</h1>
