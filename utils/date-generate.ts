@@ -15,6 +15,7 @@ export function fullDate() {
     const month = addLeftZZero(datePrint().getMonth() + 1)
     const year = datePrint().getFullYear()
 
+    console.log(month)
     return `${day}/${month}/${year}`
 }
 
@@ -74,11 +75,13 @@ export function validateDate(valid:string) {
 }
 
 export function datePrint() {
-    const date = new Date()    
-    return date
+    const date = Date.now()    
+    const datePrint = new Date(date)
+    return datePrint
 }
 
 export function dateDb() {
-    const date = Date.now()    
+    const date = Date.now()  
+
     return date
 }
