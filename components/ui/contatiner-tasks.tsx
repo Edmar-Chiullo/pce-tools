@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form";
 import { ActivityProps } from "@/app/interface/interface";
-import { fullDatePrint, hourPrint } from "@/utils/date-generate";
+import { dateDb, fullDatePrint, hourPrint } from "@/utils/date-generate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { exportFileXlsx } from "@/utils/ger-xlsx";
@@ -16,6 +16,8 @@ import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
+import { ref, update } from "firebase/database";
+import { db } from "@/app/firebase/fbkey";
 
 const formSchema = z.object({
   date: z.string()
@@ -69,6 +71,27 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
     },
   });
 
+  async function finishActivity(activity:any) {
+      const strDate = fullDatePrint(activity.activityInitDate)
+      .replace('/','')
+      .replace('/','')
+    
+      const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity.activityName}/${activity.activityID}/activity/activityFinisDate`;
+      const pathState = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity.activityName}/${activity.activityID}/activity/activityState`;
+      try {
+          const date = dateDb()
+          await update(ref(db), {
+              [path]: date,
+              [pathState]: false,
+          });
+      } catch(erro) {
+          return {
+              success: false,
+              message: 'Falha ao finalizar a atividade'
+          };
+      }
+    }
+
   const finishTask = () => {
     const { activity }:any = task
 
@@ -100,7 +123,6 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
       return
     } 
 
-    console.log(activity.activityState)
     if (activity.activityState) {
       setBtnPopUp(true)
       setTask(item)
