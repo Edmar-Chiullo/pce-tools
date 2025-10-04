@@ -6,10 +6,12 @@ import HighNullRotation from "./high-rotation-null/highnull-rotatetion"
 import PickingRotation from "./pincking-rotation/picking-rotation"
 import FractionalQuarentine from "./fractional-quarentine/fractional-quarentine"
 import { Activity } from "@/app/class/class-activity"
-import { dateDb } from "@/utils/date-generate"
+import { dateDb, fullDate } from "@/utils/date-generate"
 import { ActivityProps } from "@/app/interface/interface"
 
-import { setActivityDb } from "@/lib/firebase/server-database"
+//import { setActivityDb } from "@/lib/firebase/server-database"
+import { ref, set } from "firebase/database"
+import { db } from "@/app/firebase/fbkey"
 
 type User = {
   first: string
@@ -70,6 +72,20 @@ export default function NavigationMenu({ user }: { user: User }) {
     }
   }
 
+  async function setActivityDb(activity:any) {
+    const strDate = fullDate()
+    .replace('/','')
+    .replace('/','')
+    try {
+        await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity?.activityName}/${activity?.activityID}`), {
+            activity: activity
+        });
+        return 'Confirmado sussesso!'
+    } catch (error) {
+        return 'Aldo deu errado!'
+    }
+  }
+
   function startActivity() {
     if (!activity) return
     atividade.updateInitDate(dateDb())
@@ -88,6 +104,7 @@ export default function NavigationMenu({ user }: { user: User }) {
         activityTasks: 'no value',
         activityFinisDate: 'no value'    
   }
+  console.log(atividade)
     setActivityDb(atividadeData)
     setStep("running")
   }

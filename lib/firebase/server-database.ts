@@ -27,6 +27,7 @@ export async function setActivityDb(activity:any) {
     const strDate = fullDate()
     .replace('/','')
     .replace('/','')
+    console.log(strDate)
     try {
         await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity?.activityName}/${activity?.activityID}`), {
             activity: activity

@@ -4,9 +4,11 @@ import { finishActivity, pushTaskActivity } from "@/lib/firebase/server-database
 import z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { dateDb } from "@/utils/date-generate"
+import { dateDb, fullDate, fullDatePrint } from "@/utils/date-generate"
 import { formFrctionalQuaren } from "@/utils/form-schemas"
 import { ActivityData } from "@/app/type/type"
+import { push, ref, update } from "firebase/database"
+import { db } from "@/app/firebase/fbkey"
 
 export default function FractionalQuarentine({ activity }: { activity: ActivityData | any }) {
   const  { reset, register, handleSubmit, setFocus, formState: { errors } } = useForm<z.infer<typeof formFrctionalQuaren>>({
@@ -20,6 +22,51 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
     },
   })
 
+
+  async function pushTaskActivity(values:any) {
+      const strDate = fullDate()
+      .replace('/','')
+      .replace('/','')
+  
+      const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${values.activityUserCenter}/${values.activityName}/${values.activityID}/activity/activityTasks`;
+      try {
+          await push(ref(db, path, ), {
+              activity: values
+          });
+          
+          return {
+              success: true,
+              message: 'Dados salvo com sucesso.'
+          }
+      } catch(erro) {
+          return {
+              success: false,
+              message: 'Falha gravar o endereço!'
+          };
+      }
+  }
+  
+  async function finishActivity(activity:any) {
+    const strDate = fullDatePrint(activity.activityInitDate)
+    .replace('/','')
+    .replace('/','')
+  
+    const path = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity.activityName}/${activity.activityID}/activity/activityFinisDate`;
+    const pathState = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity.activityName}/${activity.activityID}/activity/activityState`;
+    try {
+        const date = dateDb()
+        await update(ref(db), {
+            [path]: date,
+            [pathState]: false,
+        });
+    } catch(erro) {
+        return {
+            success: false,
+            message: 'Falha ao finalizar a atividade'
+        };
+    }
+  }
+  
   function getActivity(act: ActivityData) {
     const atividadeData = {
       activityUserCenter: activity.activityUserCenter,
