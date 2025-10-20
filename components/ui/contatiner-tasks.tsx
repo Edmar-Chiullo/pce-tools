@@ -291,6 +291,9 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
             <Link href={'/pages/home/gercode'}>
               <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Claudinei X. Oliveira' })}>ETIQUETAS</h1>
             </Link>
+            <Link href={'/pages/home/pcetools/create-json'}>
+              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Edmar Carlos' })}>Criar JSON</h1>
+            </Link>
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@ export function alterIdCarga({...data}) {
         bulkCpdDate: dataForm.carga.bulkCpdDate,
         bulkReceiptDate: dateDb(),
         bulkStateReceipt: situacao,
-        bulkStateCpd: dataForm.carga.bulkStateCpd,
+        bulkStateCpd: 'Em Conferência',
         bulkStateConf: dataForm.carga.bulkStateConf,
         bulkStateCpdDescription: dataForm.carga.bulkStateCpdDescription,
         bulkStateReceiptDescription: dataForm.carga.bulkStateReceiptDescription

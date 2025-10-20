@@ -96,12 +96,12 @@ export default function ReceiptScreen() {
   }
 
   return (
-    <div className="main flex flex-col justify-end p-2 w-full h-[97%] rounded-2xl bg-zinc-800">
-      <div className="flex justify-center items-center w-full h-10">
+    <div className="main flex flex-col justify-end p-2 w-full h-full rounded-2xl bg-zinc-800">
+      <div className="flex justify-center items-center w-full">
         <h1 className="text-3xl text-zinc-50">Canhotos Liberados</h1>
       </div>
-      <div className="flex justify-end py-2 w-full">
-        <div className="flex justify-between items-center gap-2 h-9 p-[1px] bg-zinc-50 rounded-sm">
+      <div className="flex justify-end w-full p-2">
+        <div className="flex justify-between items-center gap-2 h-9 bg-zinc-50 rounded-sm">
           <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 pr-1">           
                 <input type="text" placeholder="Insira o código" className="input-quary rounded-sm h-8 p-1 bg-zinc-50"/>
@@ -112,8 +112,8 @@ export default function ReceiptScreen() {
             </Form>          
         </div>
       </div>
-      <div className="flex gap-9 w-full h-[80%]">
-        <div className="relative w-full h-[100%] rounded-md bg-zinc-50">
+      <div className="flex gap-9 w-full h-full">
+        <div className="relative w-full h-full rounded-md bg-zinc-50">
           <div className="w-full bg-zinc-600 pl-1 pr-1 rounded-t-sm">
             <ul className="grid grid-cols-7 gap-8 text-zinc-50">
               <li className="col-start-1 place-self-center">Motorista</li>
@@ -125,7 +125,7 @@ export default function ReceiptScreen() {
               <li className="col-start-7 place-self-center mr-2">Situação</li>
             </ul>
           </div>
-          <ScrollArea className="w-full h-full">
+          <ScrollArea className="w-full">
             {
               bulk.map(({carga}, key) => {
                 if (carga.bulkStateCpd === 'liberar canhoto') return (

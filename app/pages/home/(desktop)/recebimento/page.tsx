@@ -133,19 +133,18 @@ export default function ReceiptScreen() {
   function lbCarga(id:string) {
     const { status, box }:any = id
     const i = open(status)
-    const obj:any = alterIdCarga({dataForm:i[0], situacao:'carro estacionado', box:box, user:user?.first})
-    // setBulkCpd(obj)
+    const obj:any = alterIdCarga({dataForm:i[0], situacao:'Carro estacionado', box:box, user:user?.first})
     setBulkCpd(obj) 
   }
 
   return (
-    <div className="main flex flex-col p-2 w-full h-full rounded-2xl bg-zinc-800">
+    <div className="main flex flex-col justify-center items-center p-2 w-full h-full rounded-2xl bg-zinc-800">
       <div className="flex justify-center items-end w-full p-2">
         <h1 className="text-3xl text-zinc-50">Recebimento cargas</h1>
       </div>
       <div className="flex gap-2 w-full h-full">
         <Combobox props={{carga:bulk, lbCarga:lbCarga}}/>
-        <div className="relative w-[85%] h-full rounded-md bg-zinc-50">
+        <div className="relative w-full h-full rounded-md bg-zinc-50">
           <Link href="/pages/home/recebimento/conferencia">
             <div className="absolute top-[-34px] right-28 flex gap-1 p-1 cursor-pointer hover:scale-[1.10] rounded-sm hover:bg-zinc-100/30 transition ease-in-out duration-75">
               <TimerResetIcon className=" size-4 text-zinc-50"/>
@@ -174,7 +173,7 @@ export default function ReceiptScreen() {
           <ScrollArea className="w-full bg-zinc-100 rounded-2xl">
             {
               bulk.map(({carga}, key) => {
-                if (carga.bulkStateReceipt === 'carro estacionado') return (
+                if (carga.bulkStateReceipt === 'Carro estacionado') return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-amber-100`}>
                     <ul className="grid grid-cols-8 gap-8 text-[15px] w-full">
                       <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>

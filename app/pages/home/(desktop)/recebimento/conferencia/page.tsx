@@ -97,13 +97,13 @@ export default function ReceiptScreen() {
               <li className="col-start-4 place-self-center">Data</li>
               <li className="col-start-5 place-self-center">Hora</li>
               <li className="col-start-6 place-self-center">Tempo</li>
-              <li className="col-start-7 place-self-center mr-2">Editar</li>
+              <li className="col-start-7 place-self-center mr-2">Liberar</li>
             </ul>
           </div>
           <ScrollArea className="w-full">
             {bulk.map(({ carga }, key) => (
-              carga.bulkStateReceipt === 'carro estacionado'  && (                
-                <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-zinc-100`}>
+              carga.bulkStateReceipt === 'Carro estacionado'  && (                
+                <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] bg-amber-100`}>
                   <ul className="grid grid-cols-7 gap-10 text-[15px] w-full">
                     <li className="col-start-1 place-self-center">{carga.bulkControl.toUpperCase()}</li>
                     <li className="col-start-2 place-self-center">{carga.bulkDoca?.toUpperCase()}</li>

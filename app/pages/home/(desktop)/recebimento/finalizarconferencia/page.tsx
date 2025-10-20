@@ -13,6 +13,7 @@ import { setBulkCpd } from "@/app/firebase/fbmethod"
 import { useRouter } from "next/navigation"
 import { useReceiptContext } from "@/app/context/carga-context"
 import { finishCarga } from "./finishCarga";
+import { Bounce, toast, ToastContainer } from "react-toastify";
         
 const FormSchema = z.object({
     conf: z.string().min(2, {
@@ -40,19 +41,15 @@ export default function PegeResponse() {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            conf: 'no value',    
-            tpallet: 'no value',
-            tcarga: 'no value',
+            conf: '',    
+            tpallet: '',
+            tcarga: '',
             items: [],
-            observation: 'no value'
+            observation: ''
         },
     })
 
     function onSubmit({conf, tpallet, tcarga, items, observation }: z.infer<typeof FormSchema>) {
-        if (conf === 'no value' && conf.length < 7) {
-            alert('Dado informado não correspode ao número de registro.')
-            return 
-        } 
         const obj = finishCarga({dataForm:receipt, label:items[0], text:observation, conf,  tpallet, tcarga})
         setBulkCpd(obj)
         setReceipt(obj)
@@ -65,17 +62,18 @@ export default function PegeResponse() {
     }
     const items = [
         {
-            id: "finalizada sucesso",
+            id: "Finalizada sucesso",
             label: "Finalizada com sucesso!",
         },
         {
-            id: "finalizada divergente",
+            id: "Finalizada divergente",
             label: "Carga com divergência",
         },
     ] as const
     
     return (
         <div className="w-full h-full bg-zinc-100 rounded-2xl pt-1 p-6">
+            <ToastContainer />
             <div className="flexitems-center justify-center w-full">
                 <Image 
                     onClick={() => router.push('/pages/home/recebimento/conferencia')}
@@ -194,7 +192,7 @@ export default function PegeResponse() {
                                     <FormControl>
                                         <Textarea
                                         placeholder="Observações..."
-                                        className="resize-none h-42"
+                                        className="resize-none h-36"
                                         {...field}
                                     />
                                     </FormControl>

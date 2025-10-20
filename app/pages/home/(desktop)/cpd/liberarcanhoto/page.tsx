@@ -77,7 +77,7 @@ export default function LiberarCanhoto() {
                     <li><strong>Agenda:</strong> {receipt?.bulkControl}</li>
                     <li><strong>Motorista:</strong> {receipt?.bulkDriver}</li>
                     <li><strong>Transportadora:</strong> {receipt?.bulkCarrier}</li>
-                    <li><strong>Situação:</strong> {receipt?.bulkState}</li>
+                    <li><strong>Situação:</strong> {receipt?.bulkStateReceipt}</li>
                 </ul>
                 <hr />
             </div>

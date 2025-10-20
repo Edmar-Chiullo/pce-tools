@@ -11,6 +11,7 @@ import { z } from "zod"
 import { EvolutionApi } from "@/app/evolution-api/evolution-methods"
 import { ReceiptMello } from "@/app/class/class-task"
 import { setBulkCpd } from '@/app/firebase/fbmethod'
+import { Bounce, toast, ToastContainer } from 'react-toastify'
 
 
 const formSchema = z.object({
@@ -55,9 +56,9 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
             return
         }
 
-        const statusCarga = 'chegada carro'
-        const descriptionCarga = 'chegada do motorista no centro de distribuição.'
-        
+        const statusCarga = 'Chegada carro'
+        const descriptionCarga = 'Chegada do motorista no centro de distribuição.'
+
         const userr = {
             userName: user.user.first
         }
@@ -71,8 +72,30 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         try {      
             const evolution = new EvolutionApi()
             const result = evolution.sentTextWelcome(carga)
+            toast.success(result, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
         } catch (error) {
-            return `Erro ao tentar enviar messagem. Error: ${error}`
+            toast.error(`Erro ao tentar enviar mensagem. Error: ${error}`, {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+                return `Erro ao tentar enviar messagem. Error: ${error}`
         }
 
         setBulkCpd(carga)
@@ -90,6 +113,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
     return (
         <>
             <Form {...form}>
+                <ToastContainer />
                 <form onSubmit={form.handleSubmit(onSubmit)} className="self-start flex flex-col w-72 h-full bg-zinc-100 p-4 rounded-2xl">
                 <FormField
                     control={form.control}

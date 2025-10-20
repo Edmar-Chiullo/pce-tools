@@ -19,7 +19,7 @@ export function carga({...data}) {
         bulkReceiptOperator: carga.bulkReceiptOperator,
         bulkCpdDate: carga.bulkCpdDate,
         bulkReceiptDate: carga.bulkReceiptDate,
-        bulkStateCpd: dataForm.liberado ? 'liberar entrada' : 'chegada carro',        
+        bulkStateCpd: dataForm.liberado ? 'Entrada liberada' : 'Chegada carro',        
         bulkStateConf: carga.bulkStateConf,
         bulkStateReceipt: carga.bulkStateReceipt,
         bulkStateCpdDescription: carga.bulkStateCpdDescription,

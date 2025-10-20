@@ -18,11 +18,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const form = new formidable.IncomingForm({ keepExtensions: true })
   
-
   form.parse(req, (err, fields, files) => {
 
     if (err) {
-      console.error(err)
       return res.status(500).json({ error: 'Erro ao processar o upload' })
     }
 
@@ -42,8 +40,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const sheetName = workbook.SheetNames[0]
     const worksheet = workbook.Sheets[sheetName]
     const json = XLSX.utils.sheet_to_json(worksheet)
-
-    console.log(json)
 
     res.status(200).json(json)
   })

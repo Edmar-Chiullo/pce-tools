@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { getReceipt } from "@/app/firebase/fbmethod";
 import { onChildAdded, onChildChanged, ref } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function ScrollCpd() {
     const [ bulk, setBulk ] = useState<any[]>([])
@@ -61,32 +62,40 @@ export default function ScrollCpd() {
         });
     }, [])
 
+    function openCarga(value: any) {
+      const parent = value.target.parentElement
+      const element = bulk.filter(({carga}) => carga.bulkId === parent.id)
+      const { carga } = element[0]
 
-
-      function openCarga(value: any) {
-        const parent = value.target.parentElement
-        const element = bulk.filter(({carga}) => carga.bulkId === parent.id)
-        const { carga } = element[0]
-    
-        if (carga.bulkStateReceipt === 'fim conferencia') {
-            if (carga.bulkStateConf === 'finalizada divergente' || carga.bulkStateConf === 'finalizada sucesso') {
-              setReceipt(carga)
-              router.push('/pages/home/cpd/liberarcanhoto')
-            } else {
-              alert('Carga não pode ser editada.')
-              return
-            }          
-        } else {
-          setReceipt(carga)
-          router.push('/pages/home/cpd/cpdatualizar')
-        }
-        
+      if (carga.bulkStateReceipt === 'Carro estacionado' && carga.bulkStateReceipt !== 'Conferência finalizada') {
+        toast.warn(`Carga não pode ser editada.`, {
+              position: "top-right",
+              autoClose: 4000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+          });
+        return
       }
+  
+      if (carga.bulkStateReceipt === 'Conferência finalizada') {
+        setReceipt(carga)
+        router.push('/pages/home/cpd/liberarcanhoto')
+      } else {
+        setReceipt(carga)
+        router.push('/pages/home/cpd/cpdatualizar')
+      }
+      
+    }
     
-
     return (
-        <div className="h-full">
-             <ScrollArea className="w-full" >
+        <div className="h-[calc(100%-40px)] overflow-hidden">
+            <ToastContainer />
+            <ScrollArea className="" >
             {
               bulk.map(({carga}, key) => {
                 return (
@@ -94,9 +103,9 @@ export default function ScrollCpd() {
                                             ${carga.bulkStateCpd === 'liberar canhoto' ? 'hidden' : 'none'}`}>
                     <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] 
                                     ${
-                                      carga.bulkStateReceipt === 'carro estacionado' ? 'bg-amber-300 hover:bg-amber-400' :
-                                      carga.bulkStateConf === 'finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 
-                                      carga.bulkStateConf === 'finalizada divergente' ? 'bg-red-500 hover:bg-red-600' : 'bg-zinc-200 hover:bg-zinc-300'
+                                      carga.bulkStateReceipt === 'Carro estacionado' ? 'bg-amber-300 hover:bg-amber-400' :
+                                      carga.bulkStateConf === 'Finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 
+                                      carga.bulkStateConf === 'Finalizada divergente' ? 'bg-red-500 hover:bg-red-600' : 'bg-zinc-200 hover:bg-zinc-300'
                                     }`
                                   }>
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>

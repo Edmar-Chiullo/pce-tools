@@ -3,6 +3,7 @@ import { dateDb } from "@/utils/date-generate"
 
 export function finishCarga({...data}) {
         const { dataForm, label, text, conf, tpallet, tcarga } = data
+        console.log(dataForm.bulkId)
     const obj = {
         bulkId: dataForm.bulkId,
         bulkDriver: dataForm.bulkDriver,
@@ -21,8 +22,8 @@ export function finishCarga({...data}) {
         bulkReceiptDate: dataForm.bulkReceiptDate,
         bulkConfDate: dateDb(),
         bulkStateConf: label,
-        bulkStateCpd: 'carga finalizada',
-        bulkStateReceipt: 'fim conferencia',
+        bulkStateCpd: 'Carga finalizada',
+        bulkStateReceipt: 'Conferência finalizada',
 
         bulkStateCpdDescription: dataForm.bulkStateCpdDescription,
         bulkStateReceiptDescription: text

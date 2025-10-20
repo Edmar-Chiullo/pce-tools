@@ -30,7 +30,7 @@ export default function UploadExcel() {
   
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-        setFile(e.target.files[0])
+            setFile(e.target.files[0])
         }
     }
 
@@ -41,8 +41,8 @@ export default function UploadExcel() {
         formData.append('file', file)
 
         const res = await fetch('/api/read-file', {
-        method: 'POST',
-        body: formData,
+            method: 'POST',
+            body: formData,
         })
 
         const data = await res.json()
@@ -51,6 +51,7 @@ export default function UploadExcel() {
     function onSubmit() {
         return
     }
+    
     return (
         <div className='flex flex-col w-full'>
             <Form {...form}>
