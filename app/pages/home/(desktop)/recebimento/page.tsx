@@ -13,8 +13,8 @@ import { z } from "zod"
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 import Timer from "@/components/ui/span";
 import { alterIdCarga } from "./alterIdCarga";
-import { setBulkCpd, setBulkReceipt } from "@/app/firebase/fbmethod";
-import { getReceipt } from "@/app/firebase/fbmethod";
+import { setBulkCpd } from "@/lib/firebase/server-database";
+import { getReceipt } from "@/lib/firebase/server-database";
 import { formatString } from "@/utils/strSeparator";
 import { useSession } from "next-auth/react";
 
@@ -43,7 +43,7 @@ const formSchema = z.object({
     message: "Inserir o número de telefone.",
   }), 
 })
-
+    //      <img src="${window.location.origin}/img-estoque.jpg" class="background-img" />
 type UserData = {
     first: string
     center: string
@@ -83,7 +83,7 @@ export default function ReceiptScreen() {
     })
 
     const strDate = fullDate().replace(/\//g, "");
-    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+    const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`;
     const cargaReceipt = ref(db, basePath) 
     onChildAdded(cargaReceipt, (snapshot) => {
       if (snapshot.exists()) {

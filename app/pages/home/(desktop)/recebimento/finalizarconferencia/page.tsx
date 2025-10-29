@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import Image from "next/image";
-import { setBulkCpd } from "@/app/firebase/fbmethod"
+import { setBulkCpd } from "@/lib/firebase/server-database";
 import { useRouter } from "next/navigation"
 import { useReceiptContext } from "@/app/context/carga-context"
 import { finishCarga } from "./finishCarga";

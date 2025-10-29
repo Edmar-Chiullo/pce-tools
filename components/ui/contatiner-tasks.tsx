@@ -11,7 +11,7 @@ import Link from "next/link";
 import { exportFileXlsx } from "@/utils/ger-xlsx";
 import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
 import Alert  from '@/components/ui/alertl'
-import { finishActivity, getActivity } from "@/lib/firebase/server-database";
+import { getActivity } from "@/lib/firebase/server-database";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
@@ -292,11 +292,11 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
               <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Claudinei X. Oliveira' })}>ETIQUETAS</h1>
             </Link>
             <Link href={'/pages/home/pcetools/create-json'}>
-              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Edmar Carlos' })}>Criar JSON</h1>
+              <h1 className={clsx(`hidden p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Edmar Carlos' })}>Criar JSON</h1>
             </Link>
           </div>
         </div>
       </div>
     </div>
-    );
+    )
 }

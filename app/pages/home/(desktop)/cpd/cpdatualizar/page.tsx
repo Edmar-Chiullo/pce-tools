@@ -14,7 +14,7 @@ import { z } from "zod"
 
 import Image from "next/image";
 
-import { setBulkCpd } from "@/app/firebase/fbmethod";
+import { setBulkCpd } from "@/lib/firebase/server-database";
 import { useRouter } from "next/navigation";
 import { carga } from "./create-carga";
 import { Textarea } from "@/components/ui/textarea";

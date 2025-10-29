@@ -52,11 +52,14 @@ export default function NavigationMenu({ user }: { user: User }) {
 
   function navigation(e: React.MouseEvent<HTMLButtonElement>) {
     setTitle(false)
+    console.log(atividade)
     let content = e.currentTarget.innerText
+    const userCenter = `Centro ${JSON.parse(user.name).center}`
+    
     if (content.startsWith("PP")) content = "PP"
 
-    if (content.startsWith("Centro")) {
-      atividade.updateLocalWork(content)
+    if (content.startsWith("Ferramentas")) {
+      atividade.updateLocalWork(userCenter)
       setStep("operation")
       setSubtitle("Selecione a operação")
       return
@@ -77,7 +80,7 @@ export default function NavigationMenu({ user }: { user: User }) {
     .replace('/','')
     .replace('/','')
     try {
-        await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity?.activityName}/${activity?.activityID}`), {
+        await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/pce/${activity?.activityName}/${activity?.activityID}`), {
             activity: activity
         });
         return 'Confirmado sussesso!'
@@ -104,7 +107,6 @@ export default function NavigationMenu({ user }: { user: User }) {
         activityTasks: 'no value',
         activityFinisDate: 'no value'    
   }
-  console.log(atividade)
     setActivityDb(atividadeData)
     setStep("running")
   }
@@ -123,7 +125,7 @@ export default function NavigationMenu({ user }: { user: User }) {
       
       {step === "center" && (
         <div className="flex flex-col gap-2 w-full">
-          <button onClick={navigation} className="bg-zinc-950 text-zinc-50 h-10 rounded-md">Centro 1046</button>
+          <button onClick={navigation} className="bg-zinc-950 text-zinc-50 h-10 rounded-md">Ferramentas PCE</button>
         </div>
       )}
 

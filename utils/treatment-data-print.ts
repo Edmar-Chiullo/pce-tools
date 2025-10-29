@@ -44,18 +44,19 @@ interface Activity {
  * @returns Array de objetos com dados formatados para exportação.
  */
 export function cargaPrintXlsx(cargaArray: Carga[]) {
+  console.log(cargaArray)
   return cargaArray.map((carga:any) => ({
     'Cod. Carga': carga.bulkId,
     'Agenda': carga.bulkAgenda,
     'Controle': carga.bulkControl,
     'Qt. Pallet': carga.bulkQtPallet,
-    'Tipo carga': carga.bulkTipoCarga,
+    'Tipo carga': carga.bulkTipoCarga.toUpperCase(),
     'Data': fullDatePrint(carga.bulkConfDate),
     'H. fim conferência': hourPrint(carga.bulkConfDate),
-    'Tempo de espera': carga.bulkLeadTimeReceipt ? hourPrint(carga.bulkLeadTimeReceipt) : 'Carga no recebimento.',
+    'Tempo de espera': carga.bulkLeadTimeReceipt !== 'no value' ? hourPrint(carga.bulkLeadTimeReceipt) : 'Carga no recebimento.',
     'Conferente': carga.bulkReceiptConf,
-    'Situação conferência': carga.bulkStateConf,
-    'Desc. Situação': carga.bulkStateReceiptDescription
+    'Situação conferência': carga.bulkStateConf.toUpperCase(),
+    'Desc. Situação': carga.bulkStateReceiptDescription.toUpperCase()
   }));
 }
 

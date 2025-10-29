@@ -34,7 +34,7 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
         JsBarcode(barcode1, item.Codigo, {
           format: 'CODE128',
           displayValue: true,
-          height: 150,
+          height: 80,
           width: 4,
         })
       }
@@ -43,8 +43,8 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
         JsBarcode(barcode2, formatDate(item.Validade), {
           format: 'CODE128',
           displayValue: true,
-          height: 150,
-          width: 3  ,
+          height: 80,
+          width: 3,
         })
       }
     })
@@ -57,7 +57,7 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
       <div ref={contentRef}>
         <ScrollArea>
           {data.map((item, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'end', pageBreakAfter: 'always', padding: '30px' }}>
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'end', gap: "20px", pageBreakAfter: 'always', padding: '20px' }}>
               <div className='flex justify-start w-full '>
                 <Image 
                   src={'/logo-muffato.png'}
@@ -70,24 +70,24 @@ export default function BarcodePrint({ data }: { data: BarcodeData[] }) {
                 <h3 className='mr-20'>Endereço:</h3>
                 <h1 className='text-3xl'>{item.Endereco}</h1>
               </div>
-              <div className='flex flex-col items-start w-full p-2 border-5 border-zinc-950 rounded-[6px]'>
+              <div className='flex flex-col items-start w-full p-2 border-4 border-zinc-950 rounded-[6px]'>
                 <h3>Descrição:</h3>
                 <h3 className='text-4xl'>{item.Descricao}</h3>
               </div>
               {/* Códigos de barras lado a lado */}
-              <div style={{ display: 'flex', gap: '30px', marginTop: '20px' }}>
-                <div className='border-8 border-zinc-950 rounded-[6px] p-1'>
-                  <p style={{ textAlign: 'center', fontSize: '32px' }}>Produto</p>
+              <div style={{ display: 'flex', gap: '50px', marginTop: '20px', height: 'auto' }}>
+                <div className='border-4 border-zinc-950 rounded-[6px] p-1'>
+                  <p style={{ textAlign: 'center', fontSize: '28px' }}>Produto</p>
                   <svg id={`barcode-codigo-${i}`} />
                 </div>
 
-                <div className='border-8 border-zinc-950 rounded-[6px] p-1'>
-                  <p style={{ textAlign: 'center', fontSize: '32px' }}>Validade</p>
+                <div className='border-4 border-zinc-950 rounded-[6px]'>
+                  <p style={{ textAlign: 'center', fontSize: '28px' }}>Validade</p>
                   <svg id={`barcode-validade-${i}`} />
                 </div>
               </div>
-              <div className='w-full h-10 bg-zinc-950 mt-30'>
-
+              <div className='flex justify-center w-full border-4 border-zinc-950 rounded-[6px] p-1 mt-4'>
+                <span className='text-8xl text-center'>{formatDate(item.Validade)}</span>
               </div>
             </div>
           ))}

@@ -10,9 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { EvolutionApi } from "@/app/evolution-api/evolution-methods"
 import { ReceiptMello } from "@/app/class/class-task"
-import { setBulkCpd } from '@/app/firebase/fbmethod'
+import { setBulkCpd } from '@/lib/firebase/server-database'
 import { Bounce, toast, ToastContainer } from 'react-toastify'
-
 
 const formSchema = z.object({
   motorista: z.string().min(2, {
@@ -51,16 +50,19 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
 
     function onSubmit(cargo: z.infer<typeof formSchema>) {
         if (cargo.telefone.length < 11) {
-            alert('Número de telefone não cerresponde ao número válido.')
+            toast.error('Número de telefone não corresponde ao número válido.', {
+                position: "top-right",
+                autoClose: 4000,
+            })
             form.setFocus('telefone')
             return
         }
 
         const statusCarga = 'Chegada carro'
         const descriptionCarga = 'Chegada do motorista no centro de distribuição.'
-
         const userr = {
-            userName: user.user.first
+            userName: user.user.first,
+            userLocalWork: user.user.center
         }
 
         const carga = new ReceiptMello({carga:cargo, cpdOperator:userr})
@@ -68,21 +70,27 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         carga.alterBulkStateConf('no value')
         carga.alterBulkStateReceipt('no value')
         carga.alterBulkStateCpdDescription(descriptionCarga)
+
+        try {
+            setBulkCpd({...carga, userCenter: user.user.center})
+        } catch (error) {
+            console.log(`Erro ao tentar enviar messagem. Error: ${error}`)      
+        }
         
         try {      
             const evolution = new EvolutionApi()
             const result = evolution.sentTextWelcome(carga)
-            toast.success(result, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-            });
+            // toast.success(result, {
+            //     position: "top-right",
+            //     autoClose: 3000,
+            //     hideProgressBar: false,
+            //     closeOnClick: true,
+            //     pauseOnHover: true,
+            //     draggable: true,
+            //     progress: undefined,
+            //     theme: "light",
+            //     transition: Bounce,
+            // });
         } catch (error) {
             toast.error(`Erro ao tentar enviar mensagem. Error: ${error}`, {
                 position: "top-right",
@@ -97,8 +105,6 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
             });
                 return `Erro ao tentar enviar messagem. Error: ${error}`
         }
-
-        setBulkCpd(carga)
 
         form.reset({
             motorista: "",

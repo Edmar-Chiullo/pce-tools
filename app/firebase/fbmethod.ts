@@ -43,7 +43,7 @@ export async function getReceipt() {
   const strDate = fullDate()
   .replace('/','')
   .replace('/','')
-  const result = get(child(re, `activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/`)).then((snapshot) => {
+  const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/receipt/`)).then((snapshot) => {
     return snapshot.exists() ? snapshot.val() : false
   }).catch((error) => {
       return error

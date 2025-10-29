@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
-import { setBulkCpd } from "@/app/firebase/fbmethod"
+import { setBulkCpd } from "@/lib/firebase/server-database";
 import { useRouter } from "next/navigation"
 import { carga } from "@/utils/create-carga";
 

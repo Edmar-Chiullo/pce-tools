@@ -1,4 +1,3 @@
-import { ReceiptMelloProps } from "@/app/interface/interface";
 import { hourPrint, fullDatePrint } from "./date-generate";
 
 export function handlePrint({
@@ -16,7 +15,7 @@ export function handlePrint({
   const printWindow = window.open('', '', 'width=800,height=600');
 
   if (printWindow) {
-    printWindow.document.write(`
+    printWindow.document.body.innerHTML = (`
       <html>
         <head>
           <title>Recibo de Carga</title>
@@ -39,7 +38,7 @@ export function handlePrint({
             }
           </style>
         </head>
-        <body>
+        <body style="position: relative;">
           <img src="${window.location.origin}/img-estoque.jpg" class="background-img" />
           <h1>Dados da Carga</h1>
           <div class="box">
@@ -54,7 +53,7 @@ export function handlePrint({
           </div>
         </body>
       </html>
-    `);
+    `); 
 
     printWindow.document.close();
     printWindow.focus();

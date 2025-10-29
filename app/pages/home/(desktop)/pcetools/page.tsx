@@ -29,6 +29,7 @@ export default function Dashboard() {
         }
         return null
     }, [session])
+    
    
     useEffect(() => {
         if (swap) {
@@ -41,10 +42,9 @@ export default function Dashboard() {
             setSwap(null)
         }
     }, [swap])
-
     useEffect(() => {    
         const strDate = fullDate().replace(/\//g, '');
-        const dbPath = `${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/${strDate.slice(0, 2)}/${user?.center}`;
+        const dbPath = `${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/${strDate.slice(0, 2)}/${user?.center}/pce`;
         const dbRef = ref(db, dbPath);
 
         let initialActivities: ActivityProps[] = []

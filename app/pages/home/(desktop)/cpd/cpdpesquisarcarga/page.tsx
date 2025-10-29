@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
 
@@ -19,13 +19,20 @@ import { z } from "zod"
 
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 
-import { getReceipt } from "@/app/firebase/fbmethod";
+import { getReceipt } from "@/lib/firebase/server-database";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
     message: "Inserir com o nome do motorista.",
   }),
 })
+
+type UserData = {
+    first: string
+    session: string
+    center: string
+}
 
 // Component Login....
 export default function ReceiptScreen() {
@@ -36,19 +43,27 @@ export default function ReceiptScreen() {
   const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);  
 
   const router = useRouter()
-  
+    const { data: session, status } = useSession()
+    const user: UserData | null = useMemo(() => {
+        if (session?.user?.name) {
+            try {
+                return JSON.parse(session.user.name) as UserData
+            } catch (error) {
+                console.error("Erro ao fazer parse dos dados do usuário:", error)
+                return null
+            }
+        }
+        return null
+    }, [session])
+
   useEffect(() => {
-    // const userLogin:any = localStorage.getItem('userName')
-    // userLogin ? setUserName(userLogin) : router.push('/')
-
-
     getReceipt().then((val) => {
       const arr = Object.values(val)
       setBulk(arr)
     })
 
     const strDate = fullDate().replace(/\//g, "");
-    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+    const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`;
 
     const cargaReceipt = ref(db, basePath) 
       onChildAdded(cargaReceipt, (snapshot) => {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
 
@@ -11,8 +11,6 @@ import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form"
@@ -21,7 +19,7 @@ import { z } from "zod"
 
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 import Timer from "@/components/ui/span";
-import { getReceipt, getCargasLiberadas, setBulkCpd } from "@/app/firebase/fbmethod";
+import { getReceipt, getCargasLiberadas, setBulkCpd } from "@/lib/firebase/server-database";
 import { handlePrint } from "@/utils/print";
 import { extraction } from "@/utils/extract-carga";
 
@@ -30,12 +28,17 @@ import { cargaPrintXlsx } from "@/utils/treatment-data-print";
 
 import ValidacaoCargaRetirada from "./validacao";
 import { finishCarga } from "./finishCarga";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
     message: "Inserir data a ser consultada.",
   }),
 })
+type UserData = {
+    first: string
+    center: string
+}
 
 // Component Login....
 export default function ReceiptScreen() {
@@ -63,16 +66,28 @@ export default function ReceiptScreen() {
         pesquisar: "",
       },
   })
+
+  const { data: session, status } = useSession()
+  const user: UserData | null = useMemo(() => {
+      if (session?.user?.name) {
+          try {
+              return JSON.parse(session.user.name) as UserData
+          } catch (error) {
+              console.error("Erro ao fazer parse dos dados do usuário:", error)
+              return null
+          }
+      }
+      return null
+  }, [session])
   
   useEffect(() => {
     getReceipt().then((val) => {
       const arr = Object.values(val)
       setBulk(arr)
-    
     })
 
     const strDate = fullDate().replace(/\//g, "");
-    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+    const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento//`;
 
     const cargaReceipt = ref(db, basePath) 
       onChildAdded(cargaReceipt, (snapshot) => {
@@ -101,7 +116,7 @@ export default function ReceiptScreen() {
         }
       });
 
-  }, [])
+  }, [status, user])
 
   function open(value: any) {
     const { carga } = extraction({value:value, bulk:bulk})
@@ -109,9 +124,10 @@ export default function ReceiptScreen() {
   }
 
   function printXlsx() {
-    const result:any = bulk.filter(({carga}:any) => carga.bulkStateConf === 'finalizada divergente' || 
-                                               carga.bulkStateConf === 'finalizada sucesso')
+    const result:any = bulk.filter(({carga}:any) => carga.bulkStateConf === 'Finalizada divergente' || 
+                                               carga.bulkStateConf === 'Finalizada sucesso')
     const cargas = result.map(({carga}:any) => carga)
+    console.log(cargas)
     const dataPrint = cargaPrintXlsx(cargas) 
     if (stateSwap) setBulk(varSwap)
     exportFileXlsxRecebimento(dataPrint)
@@ -122,9 +138,9 @@ export default function ReceiptScreen() {
   function onSubmit(value:z.infer<typeof formSchema>) {
     getCargasLiberadas().then((val) => {
       const arr = Object.values(val)
-      const result:any = arr.filter(({carga}:any) => carga.bulkStateConf === 'finalizada divergente' || 
-                                               carga.bulkStateConf === 'finalizada sucesso' && fullDatePrint(carga.bulkConfDate).slice(0, 2) === value.pesquisar.slice(0, 2))
-      
+      const result:any = arr.filter(({carga}:any) => carga.bulkStateConf === 'Finalizada divergente' || 
+                                               carga.bulkStateConf === 'Finalizada sucesso' && fullDatePrint(carga.bulkConfDate).slice(0, 2) === value.pesquisar.slice(0, 2))
+
       if (result[0] !== undefined) {
         setVarSwap(bulk)
         setBulk(result)
@@ -147,8 +163,6 @@ export default function ReceiptScreen() {
       const { carga } = element[0]
       const c = finishCarga(carga)
       setCargaLiberar(c)
-      console.log(val)
-
       return
     }
    
@@ -204,7 +218,7 @@ export default function ReceiptScreen() {
               bulk.map(({carga}, key) => {
                 if ((carga.bulkStateConf === 'finalizada sucesso' || carga.bulkStateCpd === 'liberar canhoto') && 
                     carga.bulkStatusLeadTimeReceipt === undefined || carga.bulkStatusLeadTimeReceipt === 'no value') return (
-                  <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] 
+                  <div key={key} className={`flex items-center w-full h-7 p-1 rounded-[4px] mb-[1.50px] 
                     ${
                        redTimeoutIds.includes(carga.bulkId)
                       ? 'bg-red-400 hover:bg-red-500'
@@ -228,7 +242,7 @@ export default function ReceiptScreen() {
                           redLimitSeconds: 3200 
                         }} />
                       </li>
-                      <li id={carga.bulkId} className="col-start-7 w-48 place-self-start"> 
+                      <li id={carga.bulkId} className="col-start-7 place-self-center text-center w-48"> 
                           {carga.bulkStateConf.toUpperCase()}
                       </li>        
                       <li id={carga.bulkId} className="col-start-8 place-self-end">

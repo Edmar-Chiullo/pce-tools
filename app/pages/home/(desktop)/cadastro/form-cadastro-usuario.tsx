@@ -9,7 +9,6 @@ import { dateDb } from '@/utils/date-generate';
 import { UserProps } from '@/app/interface/interface';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 
-
 type User = {
     name: string;
     email: string;
@@ -29,19 +28,19 @@ const middleNames = (words:string[]) => {
 }
 
 const firstLastName = (fullName: string) => {
-    const words = fullName.split(' '); 
+    const words = fullName.split(' ');     
     const firstName = words[0]; 
     const middleName = middleNames(words)
-    const lastName = words[words.length - 1]; 
+    const lastName = words[words.length - 1];
     const formattedName = `${firstName} ${middleName} ${lastName}`;
-    return formattedName
+    return words.length > 1 ? formattedName : firstName
 }
 
 const checkPermission = (role:string) => {
     switch (role) {
-        case 'operador':
+        case 'Aux. Logistico':
             return 'pce-operation'
-        case 'analista':
+        case 'Ana. Logistico':
             return 'pce-analytics'
         case 'admin':
             return 'admin'
@@ -53,10 +52,10 @@ const checkPermission = (role:string) => {
 
 const user = (data:User) => {
     const idDoUsuario = data.email;
-    console.log(idDoUsuario.split('@'))
     const nomeDeUsuario = idDoUsuario.split('@')[0];
 
     const user: UserProps = {
+        center: data.center,
         email: data.email,
         uid: process.env.NEXT_PUBLIC_AUTHTOKEN ?? '',
         userID: nomeDeUsuario,
@@ -73,8 +72,8 @@ const user = (data:User) => {
 const createUserSchema = z.object({
     name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
     email: z.string().email("Formato de e-mail inválido."),
-    role: z.enum(['operador', 'analista'], {
-        errorMap: () => ({ message: "Selecione uma função (Operador ou Analista)." })
+    role: z.enum(['Aux. Logistico', 'Ana. Logistico'], {
+        errorMap: () => ({ message: "Selecione uma função (Aux. Logistico ou Ana. Logistico)." })
     }),
     center: z.string().min(1, "O centro de trabalho é obrigatório."),
     password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
@@ -97,7 +96,7 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
         defaultValues: {
             name: '',
             email: '',
-            role: 'operador',
+            role: 'Aux. Logistico',
             center: '',
             password: '',
         }
@@ -120,7 +119,17 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
             
             reset()
         } catch (error) {
-            console.log('Não foi possivel concluir o cadastro,' + error)            
+             toast.error('Não foi possivel concluir o cadastro,' + error, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
         }
     };
 
@@ -162,11 +171,11 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
                                 <input
                                     id="role-operador"
                                     type="radio"
-                                    value="operador" // 👈 Valor estático
+                                    value="Aux. Logistico" // 👈 Valor estático
                                     {...register("role")} // 🔑 Ambos devem ter o mesmo nome!
                                     className="w-4 h-4 text-zinc-900 border-gray-300"
                                 />
-                                <label htmlFor="role-operador" className="font-medium">Operador</label>
+                                <label htmlFor="role-operador" className="font-medium">Aux. Logística</label>
                             </div>
                             
                             {/* Radio 2: Analista */}
@@ -174,11 +183,11 @@ const CreateUser: React.FC<CreateUserFormProps> = ({ onSubmit }) => {
                                 <input
                                     id="role-analista"
                                     type="radio"
-                                    value="analista" // 👈 Valor estático
+                                    value="Ana. Logistico" // 👈 Valor estático
                                     {...register("role")} // 🔑 Ambos devem ter o mesmo nome!
                                     className="w-4 h-4 text-zinc-900 border-gray-300"
                                 />
-                                <label htmlFor="role-analista" className="font-medium">Analista</label>
+                                <label htmlFor="role-analista" className="font-medium">Ana. Logística</label>
                             </div>
                         </div>
                     </div>

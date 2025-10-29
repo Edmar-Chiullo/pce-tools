@@ -143,6 +143,7 @@ export class ReceiptOperator implements ReceiptOperatorProps {
 }
 
 export class ReceiptMello implements ReceiptMelloProps {
+    bulkFilial: string | null
     bulkId: string | null
     bulkAgenda: string | null
     bulkDriver: string | null
@@ -166,6 +167,7 @@ export class ReceiptMello implements ReceiptMelloProps {
 
     constructor ({...data}) {
         const { carga, cpdOperator } = data
+        this.bulkFilial = cpdOperator.userLocalWork
         this.bulkId = generateId('RC')
         this.bulkDriver = carga.motorista
         this.bulkDriverPhoneNumber = carga.telefone

@@ -1,66 +1,84 @@
 'use client'
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useReceiptContext } from "@/app/context/carga-context";
 import Image from "next/image";
 import Timer from "./span";
 import { fullDate, fullDatePrint, hourPrint } from "@/utils/date-generate";
 import { useRouter } from "next/navigation";
-import { getReceipt } from "@/app/firebase/fbmethod";
+import { getReceipt } from "@/lib/firebase/server-database";
 import { onChildAdded, onChildChanged, ref } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { useSession } from "next-auth/react";
 
+type UserData = {
+    first: string
+    session: string
+    center: string
+}
 export default function ScrollCpd() {
     const [ bulk, setBulk ] = useState<any[]>([])
     const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
     const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);
-    const router = useRouter()
-    
+    const router = useRouter();
 
     const handleYellowTimeout = (bulkId: string) => setYellowTimeoutIds((prev) => [...prev, bulkId])
     const handleRedTimeout = (bulkId: string) => setRedTimeoutIds((prev) => [...prev, bulkId])
 
     const { setReceipt } = useReceiptContext()
+      
+    const { data: session, status } = useSession()
+    const user: UserData | null = useMemo(() => {
+      if (session?.user?.name) {
+          try {
+              return JSON.parse(session.user.name) as UserData
+          } catch (error) {
+              console.error("Erro ao fazer parse dos dados do usuário:", error)
+              return null
+          }
+      }
+      return null
+    }, [session])
 
     useEffect(() => {
-
-        getReceipt().then((val) => {
+      getReceipt().then((val) => {
         const arr = Object.values(val)
         setBulk(arr)
-        })
+      })
 
-        const strDate = fullDate().replace(/\//g, "");
-        const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+      const strDate = fullDate().replace(/\//g, "");
+      const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento`;
+      const cargaReceipt = ref(db, basePath)   
+      
+      onChildAdded(cargaReceipt, (snapshot) => {
+          if (snapshot.exists()) {
+          const arr = snapshot.val();
+          const { carga } = arr;
 
-        const alterCarga = ref(db, basePath)
-        onChildChanged(alterCarga, (snapshot) => {
-            if (snapshot.exists()) {
-            const { carga } = snapshot.val();
-            const id = carga.bulkId;
-
-            setBulk((prev) =>
-                prev.map((item) => item.carga.bulkId === id ? { carga } : item)
-            );
+          setBulk((prev) => {
+            const exists = prev.some((item) => item.carga.bulkId === carga.bulkId);
+            if (!exists) {
+              return [...prev, { carga }];
             }
-        });    
-        const cargaReceipt = ref(db, basePath)   
-        onChildAdded(cargaReceipt, (snapshot) => {
-            if (snapshot.exists()) {
-            const arr = snapshot.val();
-            const { carga } = arr;
+            return prev;
+          });
+          }
+      });
 
-            setBulk((prev) => {
-                const exists = prev.some((item) => item.carga.bulkId === carga.bulkId);
-                if (!exists) {
-                return [...prev, { carga }];
-                }
-                return prev;
-            });
-            }
-        });
-    }, [])
+      const alterCarga = ref(db, basePath)
+      onChildChanged(alterCarga, (snapshot) => {
+          if (snapshot.exists()) {
+          const { carga } = snapshot.val();
+          const id = carga.bulkId;
+          setBulk((prev) =>
+              prev.map((item) => item.carga.bulkId === id ? { carga } : item)
+          );
+          }
+      });    
+    }, [status, user])
+
 
     function openCarga(value: any) {
       const parent = value.target.parentElement
@@ -95,13 +113,13 @@ export default function ScrollCpd() {
     return (
         <div className="h-[calc(100%-40px)] overflow-hidden">
             <ToastContainer />
-            <ScrollArea className="" >
+            <ScrollArea>
             {
               bulk.map(({carga}, key) => {
                 return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] cursor-pointer 
                                             ${carga.bulkStateCpd === 'liberar canhoto' ? 'hidden' : 'none'}`}>
-                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px] 
+                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px]
                                     ${
                                       carga.bulkStateReceipt === 'Carro estacionado' ? 'bg-amber-300 hover:bg-amber-400' :
                                       carga.bulkStateConf === 'Finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
@@ -12,9 +12,9 @@ import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 
 import { useReceiptContext } from "@/app/context/carga-context";
 import Timer from "@/components/ui/span";
-import { ArrowBigRightIcon, ArrowDownRight } from "lucide-react";
+import { ArrowBigRightIcon } from "lucide-react";
 import Link from "next/link";
-import { ArrowLongRightIcon } from "@heroicons/react/24/solid";
+import { useSession } from "next-auth/react";
 
 // Função utilitária para atualizar um item pelo bulkId
 function updateById(array: any[], updatedItem: any, key: string = 'bulkId') {
@@ -27,6 +27,11 @@ function updateById(array: any[], updatedItem: any, key: string = 'bulkId') {
 function addUniqueById(array: any[], newItem: any, key: string = 'bulkId') {
   const exists = array.some(item => item.carga[key] === newItem[key]);
   return exists ? array : [...array, { carga: newItem }];
+}
+
+type UserData = {
+    first: string
+    center: string
 }
 
 export default function ReceiptScreen() {
@@ -42,13 +47,25 @@ export default function ReceiptScreen() {
   
   const router = useRouter();
 
+  const { data: session, status } = useSession()
+  const user: UserData | null = useMemo(() => {
+      if (session?.user?.name) {
+          try {
+              return JSON.parse(session.user.name) as UserData
+          } catch (error) {
+              console.error("Erro ao fazer parse dos dados do usuário:", error)
+              return null
+          }
+      }
+      return null
+  }, [session])
+
   useEffect(() => {
     const userLogin:any = localStorage.getItem('userName')
     userLogin ? setUserName(userLogin) : router.push('/')
 
     const strDate = fullDate().replace(/\//g, "");
-
-    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+    const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`;
 
     const cargaReceipt = ref(db, basePath);
     onChildAdded(cargaReceipt, (snapshot) => {

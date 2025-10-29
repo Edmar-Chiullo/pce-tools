@@ -27,7 +27,6 @@ export async function setActivityDb(activity:any) {
     const strDate = fullDate()
     .replace('/','')
     .replace('/','')
-    console.log(strDate)
     try {
         await set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity?.activityName}/${activity?.activityID}`), {
             activity: activity
@@ -84,26 +83,25 @@ export async function finishActivity(activity:any) {
     }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 
-export async function setBulkCpd({...carga}:ReceiptMelloProps | undefined) {
+export async function setBulkCpd({...carga}:ReceiptMelloProps | undefined | any) {
+    const session = await auth();
+  const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
   const strDate = fullDate()
   .replace('/','')
   .replace('/','')
 
-  set(ref(db,`activity/receipt/${strDate.slice(4,8)}/${strDate.slice(2,8)}/${carga.bulkId}`), {
+  set(ref(db,`${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user.center}/recebimento/${carga.bulkId}` ), {
     carga
   });
 }
-
 
 export async function setTaskActivity(
   prevState: string | undefined,
   formData: FormData
 ) {
   const values = Object.fromEntries(formData)
-
-
     // const prefix = values.activityID.slice(0,2)
     // if (prefix === 'RP') {
     //     // Validação Zod
@@ -113,7 +111,6 @@ export async function setTaskActivity(
     //       return `Erro de validação: ${parsed.error.issues[0].message}`
     //     }        
     // }
-
   const value = {
     data: formData,
     date: dateDb()
@@ -125,7 +122,6 @@ export async function setTaskActivity(
     return `Erro ao confirmar o lançamento. ${error}`
   }
 }
-
 
 // Função auxiliar dedicada somente a finaização da atividade/tarefa.
 export async function finishTask(
@@ -139,12 +135,41 @@ export async function finishTask(
     }
 }
 
-
 //####################################################
 
 // Açoes de busca no banco.
 
 const strDate = fullDate().replace(/\//g, '');
+
+export async function getReceipt() {
+  const session = await auth();
+  const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
+
+  const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`)).then((snapshot) => {
+    return snapshot.exists() ? snapshot.val() : false
+  }).catch((error) => {
+      return error
+  })
+
+  return result
+}
+
+export async function getCargasLiberadas() {
+  const strDate = fullDate()
+  .replace('/','')
+  .replace('/','')
+
+  const session = await auth();
+  const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
+
+  const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`)).then((snapshot) => {
+    return snapshot.exists() ? snapshot.val() : false
+  }).catch((error) => {
+      return error
+  })
+
+  return result
+}
 
 export async function getTaskes() {
     const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/`)).then((snapshot) => {

@@ -1,17 +1,14 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 import { ref, onChildAdded, onChildChanged } from "firebase/database";
 import { db } from "@/app/firebase/fbkey";
 
-import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem  } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
+import { Form } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,23 +16,41 @@ import { z } from "zod"
 
 import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 
-import { getReceipt } from "@/app/firebase/fbmethod";
+import { getReceipt } from "@/lib/firebase/server-database";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
     message: "Inserir com o nome do motorista.",
   }),
 })
+type UserData = {
+    first: string
+    session: string
+    center: string
+}
 
 // Component Login....
 export default function ReceiptScreen() {
-
   const [ bulk, setBulk ] = useState<any[]>([])
-  const [ userName, setUserName ] = useState<string | null>('')
-  const [yellowTimeoutIds, setYellowTimeoutIds] = useState<string[]>([]);
-  const [redTimeoutIds, setRedTimeoutIds] = useState<string[]>([]);  
+  const [yellowTimeoutIds] = useState<string[]>([]);
+  const [redTimeoutIds] = useState<string[]>([]);  
+  const [ userData, setUserData ] = useState<UserData>()
+  
+  const { data: session, status } = useSession()
 
-  const router = useRouter()
+  const user: UserData | null = useMemo(() => {
+      if (session?.user?.name) {
+          try {
+              setUserData(JSON.parse(session.user.name) as UserData)
+              return JSON.parse(session.user.name) as UserData
+          } catch (error) {
+              console.error("Erro ao fazer parse dos dados do usuário:", error)
+              return null
+          }
+      }
+      return null
+  }, [session])
   
   useEffect(() => {
     getReceipt().then((val) => {
@@ -44,14 +59,14 @@ export default function ReceiptScreen() {
     })
 
     const strDate = fullDate().replace(/\//g, "");
-    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+    const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`;
 
     const cargaReceipt = ref(db, basePath) 
       onChildAdded(cargaReceipt, (snapshot) => {
         if (snapshot.exists()) {
           const arr = snapshot.val();
           const { carga } = arr;
-
+          console.log('CARGA RECEIPT ADICIONADA: ', carga)
           setBulk((prev) => {
             const exists = prev.some((item) => item.carga.bulkId === carga.bulkId);
             if (!exists) {

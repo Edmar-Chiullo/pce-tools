@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
 
@@ -29,13 +29,17 @@ import { cargaPrintXlsx } from "@/utils/treatment-data-print";
 import ValidacaoCargaRetirada from "./validacao";
 import { finishCarga } from "./finishCarga";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
     message: "Inserir data a ser consultada.",
   }),
 })
-
+type UserData = {
+    first: string
+    center: string
+}
 // Component Login....
 export default function ReceiptScreen() {
 
@@ -64,6 +68,19 @@ export default function ReceiptScreen() {
       },
   })
   
+  const { data: session, status } = useSession()
+    
+      const user: UserData | null = useMemo(() => {
+          if (session?.user?.name) {
+              try {
+                  return JSON.parse(session.user.name) as UserData
+              } catch (error) {
+                  console.error("Erro ao fazer parse dos dados do usuário:", error)
+                  return null
+              }
+          }
+          return null
+      }, [session])
   useEffect(() => {
     getReceipt().then((val) => {
       const arr = Object.values(val)
@@ -72,7 +89,7 @@ export default function ReceiptScreen() {
     })
 
     const strDate = fullDate().replace(/\//g, "");
-    const basePath = `activity/receipt/${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/`;
+    const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`;
 
     const cargaReceipt = ref(db, basePath) 
       onChildAdded(cargaReceipt, (snapshot) => {
