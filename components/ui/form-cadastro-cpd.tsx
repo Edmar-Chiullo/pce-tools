@@ -80,17 +80,32 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         try {      
             const evolution = new EvolutionApi()
             const result = evolution.sentTextWelcome(carga)
-            if (result) toast.success(result, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-            });
+            if (result === 'Mensagem enviada com sucesso.') {
+                toast.success(result, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            } else {
+                toast.error(result, {
+                    position: "top-right",  
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                        
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            } 
         } catch (error) {
             toast.error(`Erro ao tentar enviar mensagem. Error: ${error}`, {
                 position: "top-right",

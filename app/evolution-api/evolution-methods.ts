@@ -80,10 +80,10 @@ export class EvolutionApi {
             .then(response => {return response})
             .catch(err => {return err});
 
-            return 'Mensagem enviada com sussesso.'
+            return 'Mensagem enviada com sucesso.'
         } catch (error) {
-            return `Mensagem enviada com sussesso. Error: ${error}`
-            
+            return `Mensagem não enviada. Error: ${error}`
+
         }
     }
 
