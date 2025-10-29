@@ -11,7 +11,7 @@ export default async function ReceiptScreen() {
   const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
   
   return (
-    <div className="main flex flex-col justify-start w-full h-full bg-zinc-800 rounded-2xl pb-2 pt-2 pr-2">
+    <div className="main flex flex-col justify-start w-full h-full bg-zinc-800 rounded-2xl pb-2 pt-2 pr-2 pl-2 gap-2">
       <div className="flex justify-center items-center p-2 w-full">
         <h1 className="text-3xl text-zinc-50">Processamento de notas</h1>
       </div>

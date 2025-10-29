@@ -112,7 +112,6 @@ export default function ScrollCpd() {
     
     return (
         <div className="h-[calc(100%-40px)] overflow-hidden">
-            <ToastContainer />
             <ScrollArea>
             {
               bulk.map(({carga}, key) => {

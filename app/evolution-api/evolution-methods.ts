@@ -1,13 +1,3 @@
-
-interface ContentProps  {
-    motorista: string
-    transportadora: string
-    telefone: string
-    placa: string 
-    ticket: string
-    controle: string
-}
-
 interface NotificationProps  {
     motorista: string
     transportadora: string

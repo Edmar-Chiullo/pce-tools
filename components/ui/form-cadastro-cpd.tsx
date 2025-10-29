@@ -80,17 +80,17 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         try {      
             const evolution = new EvolutionApi()
             const result = evolution.sentTextWelcome(carga)
-            // toast.success(result, {
-            //     position: "top-right",
-            //     autoClose: 3000,
-            //     hideProgressBar: false,
-            //     closeOnClick: true,
-            //     pauseOnHover: true,
-            //     draggable: true,
-            //     progress: undefined,
-            //     theme: "light",
-            //     transition: Bounce,
-            // });
+            if (result) toast.success(result, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
         } catch (error) {
             toast.error(`Erro ao tentar enviar mensagem. Error: ${error}`, {
                 position: "top-right",
@@ -117,10 +117,10 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
     }
 
     return (
-        <>
+        <div className='h-full'>
             <Form {...form}>
                 <ToastContainer />
-                <form onSubmit={form.handleSubmit(onSubmit)} className="self-start flex flex-col w-72 h-full bg-zinc-100 p-4 rounded-2xl">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="self-start flex flex-col w-60 h-full bg-zinc-100 p-4 rounded-2xl">
                 <FormField
                     control={form.control}
                     name="motorista"
@@ -209,6 +209,6 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                 <Button type="submit" className="w-full h-8 cursor-pointer mt-3">Salvar</Button>
                 </form>
             </Form>
-        </>
+        </div>
     )
 }
