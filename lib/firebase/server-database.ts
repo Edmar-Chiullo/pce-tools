@@ -196,7 +196,7 @@ export async function getActivity(mesano: string, dia: string) {
     const session = await auth();
     const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
     
-    const result = get(child(re, `${strDate.slice(4,8)}/${mesano}/${dia}/${user.center}`))
+    const result = get(child(re, `${strDate.slice(4,8)}/${mesano}/${dia}/${user.center}/pce`))
     .then((snapshot) => {
         return snapshot.exists() ? snapshot.val() : null
     }).catch((error) => {

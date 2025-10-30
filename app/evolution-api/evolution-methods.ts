@@ -59,7 +59,7 @@ Solicitamos que compareça ao setor de recebimento com o caminhão.`
 
 export class EvolutionApi {
     constructor() {}    
-    sentTextWelcome({...value}: NotificationCarga) {
+    async sentTextWelcome({...value}: NotificationCarga) {
         const text = welcomeText({motorista:value.bulkDriver, id:value.bulkId})
         
         const content = {
@@ -75,12 +75,12 @@ export class EvolutionApi {
                 body: JSON.stringify(content)
             };
 
-            fetch('http://31.97.24.67:8080/message/sendText/muffatomello', options)
+            const response = await fetch('http://31.97.24.67:8080/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
 
-            return 'Mensagem enviada com sucesso.'
+            return response//'Mensagem enviada com sucesso.'
         } catch (error) {
             return `Mensagem não enviada. Error: ${error}`
 
