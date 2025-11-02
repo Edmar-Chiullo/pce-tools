@@ -74,13 +74,13 @@ export class EvolutionApi {
                 headers: {apikey: process.env.NEXT_PUBLIC_AUTHENTICATION_API_KEY  + '', 'Content-Type': 'application/json'},
                 body: JSON.stringify(content)
             };
-
+            //https://precipitation-repository-arise-logan.trycloudflare.com
             const response = await fetch('http://31.97.24.67:8080/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
 
-            return response//'Mensagem enviada com sucesso.'
+            return 'Mensagem enviada com sucesso.'
         } catch (error) {
             return `Mensagem não enviada. Error: ${error}`
 
@@ -101,11 +101,11 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('http://31.97.24.67:8080/message/sendText/muffatomello', options)
+            const result = fetch('www.apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
-
+            
             return 'Mensagem enviada com sussesso.'
         } catch (error) {
             return `Mensagem enviada com sussesso. Error: ${error}`
@@ -127,7 +127,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('http://31.97.24.67:8080/message/sendText/muffatomello', options)
+            fetch('www.apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
@@ -153,7 +153,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('http://31.97.24.67:8080/message/sendText/muffatomello', options)
+            fetch('www.apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
