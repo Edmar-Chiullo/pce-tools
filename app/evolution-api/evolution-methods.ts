@@ -74,12 +74,12 @@ export class EvolutionApi {
                 headers: {apikey: process.env.NEXT_PUBLIC_AUTHENTICATION_API_KEY  + '', 'Content-Type': 'application/json'},
                 body: JSON.stringify(content)
             };
-            const response = await fetch('https://www.apiwhatss.shop/message/sendText/muffatomello', options)
+            const response = await fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
             
-            return response //'Mensagem enviada com sucesso.'
+            return response 
         } catch (error) {
             return `Mensagem não enviada. Error: ${error}`
 
@@ -100,7 +100,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            const result = fetch('https://www.apiwhatss.shop/message/sendText/muffatomello', options)
+            const result = fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
@@ -126,7 +126,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('https://www.apiwhatss.shop/message/sendText/muffatomello', options)
+            fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
@@ -152,7 +152,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('https://www.apiwhatss.shop/message/sendText/muffatomello', options)
+            fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});

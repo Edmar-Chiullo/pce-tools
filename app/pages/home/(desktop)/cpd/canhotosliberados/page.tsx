@@ -18,6 +18,7 @@ import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 
 import { getReceipt } from "@/lib/firebase/server-database";
 import { useSession } from "next-auth/react";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 const formSchema = z.object({
   pesquisar: z.string().min(2, {
@@ -100,8 +101,45 @@ export default function ReceiptScreen() {
   function onSubmit(value:z.infer<typeof formSchema>) {
     const listaDeCarga = Object.values(bulk)
     const result = listaDeCarga.filter(({carga}) => carga.bulkId === value.pesquisar.toUpperCase())
-    
-    const {carga} = result[0]
+    console.log(result[0])
+    if (result[0] !== undefined) {
+      if (result[0].carga.bulkStateCpd !== 'liberar canhoto') {
+        toast.warn('Carga pode não existir ou estar em processo de conferência.', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+
+        form.reset({
+          pesquisar: ''
+        })  
+        return
+      }
+    } else {
+      toast.warn('Carga não encontrada.', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+
+      form.reset({
+        pesquisar: ''
+      })  
+      return
+    }
+
     setBulk(result)
 
     form.reset({
@@ -112,6 +150,7 @@ export default function ReceiptScreen() {
 
   return (
     <div className="main flex flex-col justify-end p-2 w-full h-full rounded-2xl bg-zinc-800">
+      <ToastContainer />
       <div className="flex justify-center items-center w-full">
         <h1 className="text-3xl text-zinc-50">Canhotos Liberados</h1>
       </div>
@@ -119,7 +158,7 @@ export default function ReceiptScreen() {
         <div className="flex justify-between items-center gap-2 h-9 bg-zinc-50 rounded-sm">
           <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-end items-center gap-2 pr-1">           
-                <input type="text" placeholder="Insira o código" className="input-quary rounded-sm h-8 p-1 bg-zinc-50"/>
+                <input type="text" {...form.register("pesquisar")} placeholder="Insira o código" className="input-quary rounded-sm h-8 p-1 bg-zinc-50"/>
                 <button type="submit" className="w-16 h-8 bg-zinc-950 hover:scale-[1.01] rounded-sm" >
                     <MagnifyingGlassIcon className="size-6 text-zinc-100 m-auto"/>
                 </button>

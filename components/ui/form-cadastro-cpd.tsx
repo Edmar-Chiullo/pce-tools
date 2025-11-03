@@ -35,6 +35,12 @@ const formSchema = z.object({
 
 export default function FormCadastroCpd(user: {user: {user: string} | any}) {
       
+    function getNameMotorista(name:any) {
+        const { conversation } = name
+        const n = conversation.split(' ')
+        return n[1]
+    }
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -79,9 +85,12 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         try {      
             const evolution = new EvolutionApi()
             const result = await evolution.sentTextWelcome(carga)
-            console.log('result', result);
-            if (result === 'Mensagem enviada com sucesso.') {
-                toast.success(result, {
+
+            if (result.message) {
+                const name = result.message
+                const motorista = getNameMotorista(name)
+                const msg = `Mensagem enviada com sucesso para o motorista: ${motorista}`
+                toast.success(msg, {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -120,14 +129,14 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                 return `Erro ao tentar enviar messagem. Error: ${error}`
         }
 
-        form.reset({
-            motorista: "",
-            transportadora: "",
-            placa: "",
-            ticket: "",
-            controle: "",
-            telefone: ""
-        })
+        // form.reset({
+        //     motorista: "",
+        //     transportadora: "",
+        //     placa: "",
+        //     ticket: "",
+        //     controle: "",
+        //     telefone: ""
+        // })
     }
 
     return (
