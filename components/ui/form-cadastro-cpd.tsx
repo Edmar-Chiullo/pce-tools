@@ -79,6 +79,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         try {      
             const evolution = new EvolutionApi()
             const result = await evolution.sentTextWelcome(carga)
+            console.log('result', result);
             if (result === 'Mensagem enviada com sucesso.') {
                 toast.success(result, {
                     position: "top-right",
