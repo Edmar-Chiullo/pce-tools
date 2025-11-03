@@ -129,14 +129,14 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                 return `Erro ao tentar enviar messagem. Error: ${error}`
         }
 
-        // form.reset({
-        //     motorista: "",
-        //     transportadora: "",
-        //     placa: "",
-        //     ticket: "",
-        //     controle: "",
-        //     telefone: ""
-        // })
+        form.reset({
+            motorista: "",
+            transportadora: "",
+            placa: "",
+            ticket: "",
+            controle: "",
+            telefone: ""
+        })
     }
 
     return (
