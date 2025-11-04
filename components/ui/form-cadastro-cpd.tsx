@@ -11,6 +11,8 @@ import { EvolutionApi } from "@/app/evolution-api/evolution-methods"
 import { ReceiptMello } from "@/app/class/class-task"
 import { setBulkCpd } from '@/lib/firebase/server-database'
 import { Bounce, toast, ToastContainer } from 'react-toastify'
+import LaddaButton, {EXPAND_LEFT} from 'react-ladda-button'
+import { useState } from 'react'
 
 const formSchema = z.object({
   motorista: z.string().min(2, {
@@ -34,6 +36,7 @@ const formSchema = z.object({
 })
 
 export default function FormCadastroCpd(user: {user: {user: string} | any}) {
+    const [ isSubmitting, setIsSubmitting] = useState(false);
       
     function getNameMotorista(name:any) {
         const { conversation } = name
@@ -54,6 +57,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
     })
 
     async function onSubmit(cargo: z.infer<typeof formSchema>) {
+        setIsSubmitting(true);
         if (cargo.telefone.length < 11) {
             toast.error('Número de telefone não corresponde ao número válido.', {
                 position: "top-right",
@@ -75,9 +79,10 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         carga.alterBulkStateConf('no value')
         carga.alterBulkStateReceipt('no value')
         carga.alterBulkStateCpdDescription(descriptionCarga)
-
+        let val = false
         try {
             setBulkCpd({...carga, userCenter: user.user.center})
+            val = true
         } catch (error) {
             console.log(`Erro ao tentar enviar messagem. Error: ${error}`)      
         }
@@ -102,7 +107,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                     transition: Bounce,
                 });
             } else {
-                toast.error(result, {
+                toast.error('Edmar'/**result*/, {
                     position: "top-right",  
                     autoClose: 4000,
                     hideProgressBar: false,
@@ -114,6 +119,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                     transition: Bounce,
                 });
             } 
+            console.log(val)
         } catch (error) {
             toast.error(`Erro ao tentar enviar mensagem. Error: ${error}`, {
                 position: "top-right",
@@ -137,6 +143,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
             controle: "",
             telefone: ""
         })
+        setIsSubmitting(false);
     }
 
     return (
@@ -229,7 +236,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                     </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full h-8 cursor-pointer mt-3">Salvar</Button>
+                <Button type="submit" disabled={isSubmitting} className="w-full h-8 cursor-pointer mt-3">Salvar</Button>
                 </form>
             </Form>
         </div>
