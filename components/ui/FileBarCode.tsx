@@ -9,7 +9,7 @@ interface Props {
 export default function FileBarCode({ onDataParsed }: Props) {
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-   
+
     if (!file) return;
 
     const reader = new FileReader();
@@ -21,6 +21,7 @@ export default function FileBarCode({ onDataParsed }: Props) {
       const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
       onDataParsed(data as any[]);
     };
+
     reader.readAsBinaryString(file);
   };
 

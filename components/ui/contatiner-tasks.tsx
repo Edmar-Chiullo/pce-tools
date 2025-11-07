@@ -36,20 +36,20 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
   const [ userData, setUserData ] = useState<UserData>()
   const [ task, setTask] = useState<ActivityProps>()
 
-   const { data: session, status } = useSession()
+  const { data: session, status } = useSession()
 
-   const user: UserData | null = useMemo(() => {
-       if (session?.user?.name) {
-           try {
-               setUserData(JSON.parse(session.user.name) as UserData)
-               return JSON.parse(session.user.name) as UserData
-           } catch (error) {
-               console.error("Erro ao fazer parse dos dados do usuário:", error)
-               return null
-           }
-       }
-       return null
-   }, [session])
+  const user: UserData | null = useMemo(() => {
+    if (session?.user?.name) {
+      try {
+          setUserData(JSON.parse(session.user.name) as UserData)
+          return JSON.parse(session.user.name) as UserData
+      } catch (error) {
+          console.error("Erro ao fazer parse dos dados do usuário:", error)
+          return null
+      }
+    }
+    return null
+  }, [session])
 
   function formatDateTime() {
     const date = new Date()
@@ -286,10 +286,13 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
           </div>
           <div className="flex flex-col gap-1 w-full h-full bg-zinc-500/10 rounded-md p-1">
             <Link href={'/pages/home/pcetools/print-barcode'}>
-              <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50">FICHA PALLET</h1>
+              <h1 className="p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50">Ficha Pallet</h1>
             </Link>
             <Link href={'/pages/home/gercode'}>
-              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Claudinei X. Oliveira' })}>ETIQUETAS</h1>
+              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'none': userData?.first !== 'Claudinei X. Oliveira' })}>Etiquetas Pendentes</h1>
+            </Link>
+            <Link href={'/pages/home/pcetools/gercodedunean'}>
+              <h1 className={clsx(`p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`)}>Barras Produto x Endereço</h1>
             </Link>
             <Link href={'/pages/home/pcetools/create-json'}>
               <h1 className={clsx(`hidden p-1 bg-zinc-950 rounded-[6px] hover:scale-[1.01] transition-transform duration-400 ease-in-out hover:cursor-pointer text-zinc-50`, { 'hidden': userData?.first !== 'Edmar Carlos' })}>Criar JSON</h1>

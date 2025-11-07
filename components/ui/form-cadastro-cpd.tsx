@@ -11,7 +11,6 @@ import { EvolutionApi } from "@/app/evolution-api/evolution-methods"
 import { ReceiptMello } from "@/app/class/class-task"
 import { setBulkCpd } from '@/lib/firebase/server-database'
 import { Bounce, toast, ToastContainer } from 'react-toastify'
-import LaddaButton, {EXPAND_LEFT} from 'react-ladda-button'
 import { useState } from 'react'
 
 const formSchema = z.object({
