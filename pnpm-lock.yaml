@@ -89,6 +89,9 @@ importers:
       react-hook-form:
         specifier: ^7.54.2
         version: 7.62.0(react@19.1.1)
+      react-ladda-button:
+        specifier: ^1.0.5
+        version: 1.0.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-to-print:
         specifier: ^3.1.1
         version: 3.1.1(react@19.1.1)
@@ -2738,6 +2741,13 @@ packages:
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
+  react-ladda-button@1.0.5:
+    resolution: {integrity: sha512-EV4NhnmLVIhDlFMJIjLkkefJi679yY6D+PvMHZGTR5R6Jrw5qGSmNyGl6LG5afR07zgAAETCT8PgAH7tQBzqIA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16.13.1'
+      react-dom: '>=16.13.1'
+
   react-remove-scroll-bar@2.3.8:
     resolution: {integrity: sha512-9r+yi9+mgU33AKcj6IbT9oRCO78WriSj6t/cF8DWBZJ9aOGPOTEDvdUDz1FwKim7QXWwmHqtdHnRJfhAxEG46Q==}
     engines: {node: '>=10'}
@@ -2909,6 +2919,9 @@ packages:
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
+
+  spin.js@4.1.2:
+    resolution: {integrity: sha512-ua/yEpxEwyEUWs57tMQYdik/KJ12sQRyMXjSlK/Ai927aEUDVY3FXUi4ml4VvlLCTQNIjC6tHyjSLBrJzFAqMA==}
 
   stable-hash@0.0.5:
     resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
@@ -6122,6 +6135,12 @@ snapshots:
 
   react-is@16.13.1: {}
 
+  react-ladda-button@1.0.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+    dependencies:
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+      spin.js: 4.1.2
+
   react-remove-scroll-bar@2.3.8(@types/react@19.1.10)(react@19.1.1):
     dependencies:
       react: 19.1.1
@@ -6346,6 +6365,8 @@ snapshots:
       react-dom: 19.1.1(react@19.1.1)
 
   source-map-js@1.2.1: {}
+
+  spin.js@4.1.2: {}
 
   stable-hash@0.0.5: {}
 
