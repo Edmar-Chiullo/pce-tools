@@ -6,11 +6,12 @@ import { useReactToPrint } from 'react-to-print'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
 
 interface BarcodeData {
-  endereco: string
-  codigo: string
+  Endereco: string
+  Descricao: string
+  Codigo: string
 }
 
-export default function BarcodePrintEt({ data }: { data: BarcodeData[] }) {
+export default function BarcodePrintEnd({ data }: { data: BarcodeData[] }) {
   const contentRef = useRef<HTMLDivElement>(null)
 
   const handlePrint = useReactToPrint({
@@ -22,8 +23,8 @@ export default function BarcodePrintEt({ data }: { data: BarcodeData[] }) {
   useEffect(() => {
     data.forEach((item, i) => {
       const barcode2 = document.getElementById(`barcode-codigo-${i}`)
-      if (barcode2 && item.codigo) {
-        JsBarcode(barcode2, item.codigo, {
+      if (barcode2 && item.Codigo) {
+        JsBarcode(barcode2, item.Codigo, {
           format: 'CODE128',
           displayValue: true,
           height: 150,
@@ -42,15 +43,16 @@ export default function BarcodePrintEt({ data }: { data: BarcodeData[] }) {
             {data.map((item, i) => (
               <div key={i}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
-                  <h1>{'Decrição'}</h1>
+                  <h1 className='text-4xl'>{item.Descricao}</h1>
                   <div className='flex'>
                     <div className='flex flex-col items-end w-full'>
                         <h3 className='mr-10'>Endereço:</h3>
-                        <h1 className='text-[18px] self-start'>{item.endereco}</h1>
+                        <h1 className='text-[18px] self-start'>{item.Endereco}</h1>
                     </div>
                     <div className='p-1'>
                         <svg id={`barcode-codigo-${i}`} />
                     </div>
+                    <hr className='mt-4' />
                   </div>
                 </div>
               </div>
