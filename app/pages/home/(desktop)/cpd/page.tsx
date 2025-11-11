@@ -27,16 +27,15 @@ export default async function ReceiptScreen() {
           </div>
           <div className="h-full">
             <div className="w-full bg-zinc-600 px-1 rounded-t-sm">
-              <ul className="grid grid-cols-11 gap-8 text-zinc-50">
+              <ul className="grid grid-cols-10 gap-8 text-zinc-50">
                 <li className="col-start-1 col-span-2">Motorista</li>
                 <li className="col-start-3 col-span-2">Transportadora</li>
                 <li className="col-start-5 place-self-center">Agenda</li>
                 <li className="col-start-6 place-self-center">Controle</li>
-                <li className="col-start-7 place-self-center">Telefone</li>
-                <li className="col-start-8 place-self-center">Status</li>
-                <li className="col-start-9 place-self-center">Data</li>
-                <li className="col-start-10 place-self-center">Tempo</li>
-                <li className="col-start-11 place-self-end mr-2">Editar</li>
+                <li className="col-start-7 place-self-center">Identificador</li>
+                <li className="col-start-8 place-self-center">Hora</li>
+                <li className="col-start-9 place-self-center">Tempo</li>
+                <li className="col-start-10 place-self-end mr-2">Editar</li>
               </ul>
             </div>
             <ScrollCpd />

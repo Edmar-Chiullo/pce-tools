@@ -100,7 +100,7 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            const result = fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
+            fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});

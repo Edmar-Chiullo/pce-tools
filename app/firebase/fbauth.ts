@@ -9,9 +9,7 @@ export default async function AppAuth(email:string, password:string) {
                             const user = userCredential.user
                             return { user: user, uid: auth.currentUser }
                         })
-                        .catch((error) => {
-                            const errorCode = error.code
-                            const errorMessage = error.message
+                        .catch(() => {
                             return null
                         });
 

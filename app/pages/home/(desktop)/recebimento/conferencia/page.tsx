@@ -22,19 +22,6 @@ type UserData = {
 }
 
 export default function ReceiptScreen() {
-  // Função utilitária para atualizar um item pelo bulkId
-  function updateById(array: any[], updatedItem: any, key: string = 'bulkId') {
-    return array.map(item =>
-      item.carga[key] === updatedItem[key] ? { carga: updatedItem } : item
-    );
-  }
-
-  // Função utilitária para adicionar item sem duplicar
-  function addUniqueById(array: any[], newItem: any, key: string = 'bulkId') {
-    const exists = array.some(item => item.carga[key] === newItem[key]);
-    return exists ? array : [...array, { carga: newItem }];
-  }
-
   const [bulk, setBulk] = useState<any[]>([]);
   const { setReceipt } = useReceiptContext();
   const [ userName, setUserName ] = useState<string | null>('')
@@ -48,6 +35,7 @@ export default function ReceiptScreen() {
   const router = useRouter();
 
   const { data: session, status } = useSession()
+
   const user: UserData | null = useMemo(() => {
       if (session?.user?.name) {
           try {
@@ -92,6 +80,17 @@ export default function ReceiptScreen() {
       setReceipt(element.carga);
       router.push('/pages/home/recebimento/finalizarconferencia');
     }
+  }
+
+  function updateById(array: any[], updatedItem: any, key: string = 'bulkId') {
+    return array.map(item =>
+      item.carga[key] === updatedItem[key] ? { carga: updatedItem } : item
+    );
+  }
+
+  function addUniqueById(array: any[], newItem: any, key: string = 'bulkId') {
+    const exists = array.some(item => item.carga[key] === newItem[key]);
+    return exists ? array : [...array, { carga: newItem }];
   }
 
   return (

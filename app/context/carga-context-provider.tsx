@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { useState, ReactNode } from "react";
 
 import { ReceiptProps } from "../interface/interface";
 import { ReceiptContext } from "./carga-context";

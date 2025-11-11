@@ -60,7 +60,6 @@ export default function PagePataria() {
             );
             }
         });
-        console.log(user)
         
     }, [status, user])
 

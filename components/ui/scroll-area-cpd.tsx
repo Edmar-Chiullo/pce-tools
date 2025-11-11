@@ -118,7 +118,7 @@ export default function ScrollCpd() {
                 return (
                   <div key={key} className={`flex items-center w-full h-6 rounded-[4px] mb-[1.50px] cursor-pointer 
                                             ${carga.bulkStateCpd === 'liberar canhoto' ? 'hidden' : 'none'}`}>
-                    <ul className={`grid grid-cols-11 gap-10 pl-1 text-[15px]
+                    <ul className={`grid grid-cols-10 gap-10 pl-1 text-[15px]
                                     ${
                                       carga.bulkStateReceipt === 'Carro estacionado' ? 'bg-amber-300 hover:bg-amber-400' :
                                       carga.bulkStateConf === 'Finalizada sucesso' ? 'bg-green-300 hover:bg-green-400' : 
@@ -128,11 +128,10 @@ export default function ScrollCpd() {
                       <li className="col-start-1 col-span-2">{carga.bulkDriver.toUpperCase()}</li>
                       <li className="col-start-3 col-span-2">{carga.bulkCarrier.toUpperCase()}</li>
                       <li className="col-start-5 place-self-center">{carga.bulkAgenda.toUpperCase()}</li>
-                      <li className="col-start-6 place-self-center">{carga.bulkId.toUpperCase()}</li>
-                      <li className="col-start-7 place-self-center">{carga.bulkDriverPhoneNumber.toUpperCase()}</li>
-                      <li className="col-start-8 place-self-center">{fullDatePrint(carga.bulkCpdDate)}</li>
-                      <li className="col-start-9 place-self-center">{hourPrint(carga.bulkCpdDate)}</li>
-                      <li className="col-start-10 place-self-center">
+                      <li className="col-start-6 place-self-center">{carga.bulkControl.toUpperCase()}</li>
+                      <li className="col-start-7 place-self-center">{carga.bulkId.toUpperCase()}</li>
+                      <li className="col-start-8 place-self-center">{hourPrint(carga.bulkCpdDate)}</li>
+                      <li className="col-start-9 place-self-center">
                         <Timer props={{
                           date: carga.bulkCpdDate,
                           onYellowLimitReached: () => handleYellowTimeout(carga.bulkId),
@@ -141,7 +140,7 @@ export default function ScrollCpd() {
                           redLimitSeconds: 2400 
                         }} />
                       </li>
-                      <li id={carga.bulkId} className="col-start-11 place-self-end self-start pr-5"> 
+                      <li id={carga.bulkId} className="col-start-10 place-self-end self-start pr-5"> 
                         <Image 
                           onClick={(value) => openCarga(value)}
                           className="cursor-pointer hover:scale-[1.10]"

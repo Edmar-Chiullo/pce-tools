@@ -1,7 +1,4 @@
 'use client'
-
-import React from "react";
-
 import { UserProps } from "@/app/interface/interface";
 import { createContext, useContext } from "react";
 
