@@ -1,5 +1,4 @@
 'use client'
-
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
@@ -49,9 +48,6 @@ export default function ReceiptScreen() {
   }, [session])
 
   useEffect(() => {
-    const userLogin:any = localStorage.getItem('userName')
-    userLogin ? setUserName(userLogin) : router.push('/')
-
     const strDate = fullDate().replace(/\//g, "");
     const basePath = `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`;
 
