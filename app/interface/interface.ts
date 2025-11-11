@@ -62,6 +62,9 @@ export interface ReceiptProps {
     bulkDate: number | null
     bulkState: string | undefined | null
     bulkStateDescription: string | undefined | null
+    bulkStateReceiptDescription?: string
+    bulkStateCpd?: boolean | string
+
 }
 
 export interface ReceiptMelloProps {

@@ -13,9 +13,13 @@ type UserData = {
     center: string
 }
 
+type ActiviProps = {
+    activity: ActivityProps
+}
+
 export default function Dashboard() {
     const [lists, setLists] = useState<ActivityProps[]>([]);
-    const [ swap, setSwap ] = useState<any>() 
+    const [ swap, setSwap ] = useState< ActiviProps | null>() 
     const { data: session, status } = useSession()
 
     const user: UserData | null = useMemo(() => {
@@ -29,19 +33,19 @@ export default function Dashboard() {
         }
         return null
     }, [session])
-    
    
     useEffect(() => {
         if (swap) {
-            const id = swap.activity.activityID;
+            const id = swap?.activity.activityID
             setLists((taskElement:any) => {
                 const filteredLists = taskElement.filter((task:any) => id !== task.activity.activityID)
                 return [...filteredLists, swap]
-            }) 
+            })  
             
             setSwap(null)
         }
     }, [swap])
+
     useEffect(() => {    
         const strDate = fullDate().replace(/\//g, '');
         const dbPath = `${strDate.slice(4, 8)}/${strDate.slice(2, 8)}/${strDate.slice(0, 2)}/${user?.center}/pce`;

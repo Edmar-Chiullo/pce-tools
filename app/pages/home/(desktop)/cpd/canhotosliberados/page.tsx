@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
@@ -30,7 +29,6 @@ type UserData = {
     session: string
     center: string
 }
-
 // Component Login....
 export default function ReceiptScreen() {
   const [ bulk, setBulk ] = useState<any[]>([])

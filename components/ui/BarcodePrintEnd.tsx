@@ -3,46 +3,38 @@
 import JsBarcode from 'jsbarcode'
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { useReactToPrint } from 'react-to-print'
-import { ScrollArea } from '@radix-ui/react-scroll-area' // Mantido, mas pode não ser ideal para impressão
 
-// Estrutura do item de dado original
 interface BarcodeData {
   Endereco: string
   Descricao: string
   Codigo: string
 }
 
-// Estrutura do dado agrupado
 interface GroupedData {
   Endereco: string
   items: BarcodeData[]
 }
 
-// Função para agrupar os dados
 const groupDataByEndereco = (data: BarcodeData[]): GroupedData[] => {
   const grupos: { [key: string]: GroupedData } = {}
 
   data.forEach((item) => {
     const { Endereco } = item
     if (!grupos[Endereco]) {
-      // Se o endereço não existe, inicializa o grupo
       grupos[Endereco] = {
         Endereco: Endereco,
         items: [],
       }
     }
-    // Adiciona o item ao array do endereço correspondente
     grupos[Endereco].items.push(item)
   })
 
-  // Retorna um array dos valores (os grupos)
   return Object.values(grupos)
 }
 
 export default function BarcodePrintEnd({ data }: { data: BarcodeData[] }) {
   const contentRef = useRef<HTMLDivElement>(null)
 
-  // 1. Agrupamento dos dados usando useMemo para performance
   const groupedData = useMemo(() => groupDataByEndereco(data), [data])
 
   // const handlePrint = useReactToPrint({
@@ -62,17 +54,15 @@ export default function BarcodePrintEnd({ data }: { data: BarcodeData[] }) {
     onAfterPrint: () => console.log('Impressão concluída'),
   })
 
-  // 2. Adaptação do useEffect para percorrer a estrutura agrupada
   useEffect(() => {
     groupedData.forEach((grupo, grupoIndex) => {
       grupo.items.forEach((item, itemIndex) => {
-        // ID único baseado no índice do grupo e do item
         const barcodeElement = document.getElementById(
           `barcode-grupo-${grupoIndex}-item-${itemIndex}`,
         )
 
         if (barcodeElement && item.Codigo) {
-          JsBarcode(barcodeElement, item.Codigo, {
+          JsBarcode(barcodeElement, item.Codigo.trim(), {
             format: 'CODE128',
             displayValue: true,
             height: 100,
@@ -85,7 +75,6 @@ export default function BarcodePrintEnd({ data }: { data: BarcodeData[] }) {
 
   return (
     <>
-      {/* Botão de impressão (não deve aparecer na impressão, classe 'no-print') */}
       <button 
         onClick={handlePrint} 
         className="bg-blue-500 text-white p-2 rounded-[6px] hover:scale-[1.01] cursor-pointer no-print"
@@ -94,48 +83,37 @@ export default function BarcodePrintEnd({ data }: { data: BarcodeData[] }) {
       </button>
 
       <div ref={contentRef}>
-        {/*
-          O componente ScrollArea do Radix pode interferir na impressão.
-          Se precisar de scroll na tela, mantenha. Para impressão, é melhor que o conteúdo flua naturalmente.
-        */}
-        {/* <ScrollArea> */}
           <div style={{ display: 'flex', height: '100%', flexDirection: 'column', alignItems: 'center', padding: '30px' }}>
             
-            {/* 3. Renderização com loop aninhado */}
             {groupedData.map((grupo, grupoIndex) => (
-              // Contêiner do grupo: garante a quebra de página após o último item do endereço
               <div 
                 key={grupoIndex} 
-                className='page-break' // Esta classe força uma quebra de página após o grupo
-                style={{ width: '100%', marginBottom: '120px' }} // Adiciona algum espaço entre grupos
+                className='page-break'
+                style={{ width: '100%', marginBottom: '120px' }}
               >
-                {/* Cabeçalho do endereço, que só é renderizado uma vez por grupo */}
                 <div style={{ padding: '10px 0', borderBottom: '2px solid #ccc', marginBottom: '10px' }}>
-                    <h1 className='text-xl font-bold'>Endereço: {grupo.Endereco}</h1>
+                    <h1 className='text-xl font-bold'>Endereço: {grupo.Endereco.trim()}</h1>
                 </div>
 
-                {/* Loop sobre os itens (códigos) dentro do endereço */}
                 {grupo.items.map((item, itemIndex) => (
                     <div 
-                        key={itemIndex} 
-                        style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', gap: '5px', alignItems: 'center', borderBottom: '1px dotted #eee' }}
+                      key={itemIndex} 
+                      style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', gap: '5px', alignItems: 'center', borderBottom: '1px dotted #eee' }}
                     >
-                        <div style={{ flexGrow: 1 }}>
-                            <h1 className='text-4xl'>{item.Descricao}</h1>
-                        </div>
-                        
-                        <div style={{ display: 'flex', alignItems: 'center', minWidth: '350px' }}>
-                            {/* O SVG com o ID único */}
-                            <svg 
-                                id={`barcode-grupo-${grupoIndex}-item-${itemIndex}`} 
-                            />
-                        </div>
-                    </div>
+                      <div style={{ flexGrow: 1 }}>
+                        <h1 className='text-4xl'>{item.Descricao.trim()}</h1>
+                      </div>
+                      
+                      <div style={{ display: 'flex', alignItems: 'center', minWidth: '350px' }}>
+                        <svg 
+                            id={`barcode-grupo-${grupoIndex}-item-${itemIndex}`} 
+                        />
+                      </div>
+                  </div>
                 ))}
               </div>
             ))}
           </div>
-        {/* </ScrollArea> */}
       </div>
     </>
   )

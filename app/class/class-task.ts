@@ -108,6 +108,7 @@ export class ReceiptOperator implements ReceiptOperatorProps {
     bulkStateConf: string | undefined | null
     bulkStateReceipt: string | undefined | null
     bulkStateDescription: string | undefined | null
+    bulkStatusEntrie?: boolean | undefined | null
 
 
     constructor (data:any) {
@@ -123,6 +124,7 @@ export class ReceiptOperator implements ReceiptOperatorProps {
         this.bulkStateConf = undefined
         this.bulkStateReceipt = undefined
         this.bulkStateDescription = undefined
+        this.bulkStatusEntrie = undefined
     }
 
     alterBulkStateCpd(params:string) {
@@ -139,6 +141,10 @@ export class ReceiptOperator implements ReceiptOperatorProps {
 
     alterBulkStateDescription(params:string) {
         this.bulkStateDescription = params
+    }
+
+    alterBulkStateEntrie(params:boolean) {
+        this.bulkStatusEntrie = params
     }
 }
 
@@ -164,6 +170,7 @@ export class ReceiptMello implements ReceiptMelloProps {
     bulkStateCpd: string | undefined | null
     bulkStateConf: string | undefined | null
     bulkStateReceipt: string | undefined | null
+    bulkStateEntrie?: string | undefined | null | boolean
 
     constructor ({...data}) {
         const { carga, cpdOperator } = data
@@ -190,6 +197,7 @@ export class ReceiptMello implements ReceiptMelloProps {
         this.bulkStateReceipt = undefined
         this.bulkStateCpdDescription = 'no value'
         this.bulkStateReceiptDescription = 'no value'
+        this.bulkStateEntrie = 'no value'
     }
 
     alterBulkStateCpd(params:string) {
@@ -217,5 +225,9 @@ export class ReceiptMello implements ReceiptMelloProps {
         this.bulkReceiptOperator = data.operator
         this.bulkReceiptDate = dateDb()
         this.bulkTipoCarga = data.typeCarga
+    }
+
+    alterBulkStateEntrie(parmas: string) {
+        this.bulkStateEntrie = parmas
     }
 }

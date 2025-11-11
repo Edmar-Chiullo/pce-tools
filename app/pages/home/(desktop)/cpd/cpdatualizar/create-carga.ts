@@ -1,6 +1,3 @@
-import { dateDb } from "@/utils/date-generate"
-
-
 export function carga({...data}) {
         const { dataForm, carga } = data
     const obj = {

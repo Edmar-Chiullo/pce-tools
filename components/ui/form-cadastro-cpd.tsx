@@ -78,6 +78,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         carga.alterBulkStateConf('no value')
         carga.alterBulkStateReceipt('no value')
         carga.alterBulkStateCpdDescription(descriptionCarga)
+        carga.alterBulkStateEntrie('Aguardando')
         let val = false
         try {
             setBulkCpd({...carga, userCenter: user.user.center})
@@ -118,7 +119,6 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                     transition: Bounce,
                 });
             } 
-            console.log(val)
         } catch (error) {
             toast.error(`Erro ao tentar enviar mensagem. Error: ${error}`, {
                 position: "top-right",

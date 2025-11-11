@@ -20,6 +20,7 @@ import { carga } from "./create-carga";
 import { Textarea } from "@/components/ui/textarea";
 
 import { EvolutionApi } from "@/app/evolution-api/evolution-methods";
+import { ReceiptProps } from "@/app/interface/interface";
 
 const formSchema = z.object({
   motorista: z.string().min(2, {
@@ -50,10 +51,10 @@ export default function PegeResponse() {
 
     const [ state, setState ] = useState<string | null>(null)
     
-    const { receipt }:any = useReceiptContext()
+    const { receipt } = useReceiptContext()
 
     useEffect(() => {
-        setState(receipt.bulkState)
+        setState(receipt?.bulkState as string)
     }, [])
 
     const router = useRouter()
@@ -61,13 +62,13 @@ export default function PegeResponse() {
     const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        motorista: receipt?.bulkDriver,
-        transportadora: receipt?.bulkCarrier,
-        placa: receipt?.bulkPlate,
-        ticket: receipt?.bulkAgenda,
-        controle: receipt?.bulkControl,
-        telefone: receipt?.bulkDriverPhoneNumber,
-        textarea: receipt?.bulkStateReceiptDescription,
+        motorista: receipt?.bulkDriver as string,
+        transportadora: receipt?.bulkCarrier as string,
+        placa: receipt?.bulkPlate as string,
+        ticket: receipt?.bulkAgenda as string,
+        controle: receipt?.bulkControl as string,
+        telefone: receipt?.bulkDriverPhoneNumber as string,
+        textarea: receipt?.bulkStateReceiptDescription as string,
         liberado: receipt?.bulkStateCpd != 'Chegada carro' ? true : false
     },
     })
@@ -77,7 +78,7 @@ export default function PegeResponse() {
             const obj = carga({dataForm:cargo, carga:receipt })
             setBulkCpd(obj)  
 
-            if (cargo.telefone != receipt.bulkDriverPhoneNumber && cargo.telefone.length === 11) {
+            if (cargo.telefone != receipt?.bulkDriverPhoneNumber && cargo.telefone.length === 11) {
                 try {      
                     const evolution = new EvolutionApi()
                     const restult = evolution.sentTextWelcome(obj)

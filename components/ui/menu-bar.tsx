@@ -112,8 +112,7 @@ export default function BarMenu() {
                 </div>
               </Link>
             </div>
-            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none hidden': name.permission === "pce-operation" 
-              && name.permission === "pce-analytics" && name.permission === "admin"})}>
+            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none hidden': name.permission !== "pce-operation" && name.permission !== "admin"})}>
               <Link href={'/pages/home/mobileaplication'}>
                 <div className={clsx("flex justify-center gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home/mobileaplication" })}>
                   {
@@ -128,6 +127,24 @@ export default function BarMenu() {
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-10 md:size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3" />
                       </svg>
+                    )
+                  }
+                </div>
+              </Link>
+            </div>
+            <div className={clsx({'opacity-50 cursor-not-allowed pointer-events-none hidden': name.permission !== "portaria" && name.permission !== "admin"})}>
+              <Link href={'/pages/home/portaria'}>
+                <div className={clsx("flex justify-center gap-4 cursor-pointer px-1 py-2 hover:bg-zinc-300 rounded-sm text-[12px]", { "font-bold bg-zinc-300 rounded-sm": pathname === "/pages/home/portaria" })}>
+                  {
+                    pathname === "/pages/home/portaria" ? (               
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                      <path fillRule="evenodd" d="M2.25 5.25a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3V15a3 3 0 0 1-3 3h-3v.257c0 .597.237 1.17.659 1.591l.621.622a.75.75 0 0 1-.53 1.28h-9a.75.75 0 0 1-.53-1.28l.621-.622a2.25 2.25 0 0 0 .659-1.59V18h-3a3 3 0 0 1-3-3V5.25Zm1.5 0v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5Z" clipRule="evenodd" />
+                    </svg>
+                    ):
+                    (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+                    </svg>
                     )
                   }
                 </div>

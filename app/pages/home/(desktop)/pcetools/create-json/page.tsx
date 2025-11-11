@@ -1,8 +1,7 @@
 'use client';
-
 import { db } from "@/app/firebase/fbkey";
-import { datePrintInt, fullDatePrint } from "@/utils/date-generate";
-import { push, ref, set } from "firebase/database";
+import { fullDatePrint } from "@/utils/date-generate";
+import { ref, set } from "firebase/database";
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
@@ -21,18 +20,18 @@ export default function Page() {
           const jsonData = JSON.parse(content as string);
           const dataFull = Object.values(jsonData);
 
-          dataFull.map((item: any) => {
-            const values = Object.values(item);
-            values.map((subItem: any) => {
-              const tasks =  Object.values(subItem);
-              tasks.map((task: any) => {    
-                const taskValues = Object.values(task);
+          dataFull.map((item:unknown) => {
+            const values = Object.values(item as string);
+            values.map((subItem: unknown) => {
+              const tasks =  Object.values(subItem as string);
+              tasks.map((task: unknown) => {    
+                const taskValues = Object.values(task as string);
                 taskValues.map((taskDetail: any) => {
                   const activity = Object.values(taskDetail);
-                  activity.map((act: any) => {
+                  activity.map((act:unknown) => {
                     const activity = createContent(act);
                     if (activity) {
-                      setListData((prevList:any) => [...prevList, activity]);
+                      setListData((prevList:unknown) => [...prevList as string, activity]);
                     }
                   });
                 });
@@ -62,23 +61,8 @@ export default function Page() {
     }
   }
 
-  function pushTaskActivity(task: any, activityID: string, activityName: string) {
-
-    const activity = {
-      activityID: activityID,
-      activityName: activityName,
-      activityDate: task.date,
-      loadProduct: task.product ?? null,
-      loadAddress: task.address ?? null,
-      loadQuant: task.quant ?? null,
-      loadValid: task.valid ?? null
-    };
-
-    return activity;
-  }
-
-  function createContent(data: any) {
-    const { activity } = data
+  function createContent(data:unknown) {
+    const { activity }:any = data
 
     if (!activity.updateTask) {
       return null;
@@ -114,25 +98,6 @@ export default function Page() {
         await set(ref(db, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${activity.activityUserCenter}/${activity?.activityName}/${activity?.activityID}`), {
           activity  
         });
-
-        // for (const task of activity.activityTasks) {
-        //   const activi = pushTaskActivity(task, activity.activityID, activity.activityName);
-        //   const data = fullDatePrint(activi?.activityDate)
-        //  .replace('/','')
-        //  .replace('/','')
-        //  const path = `${data.slice(4,8)}/${data.slice(2,8)}/${data.slice(0,2)}/${activity.activityUserCenter}/${activity.activityName}/${activity.activityID}/activity/activityTasks`;
-        
-        //   try {
-        //     await push(ref(db, path, ), {
-        //       activity: activi
-        //     });
-        //   } catch(erro) {
-        //       return {
-        //           success: false,
-        //           message: 'Falha gravar o endereço!'
-        //       };
-        //   }
-        // }
       }      
 
       return 'Dados enviados com sucesso!'

@@ -34,7 +34,7 @@ export default function PegeResponse() {
     })
 
     function onSubmit(cargo: z.infer<typeof formSchema>) {
-        const obj:any = carga({dataForm:cargo, carga:receipt, situacao:'recebendo', user:user})
+        const obj:unknown = carga({dataForm:cargo, carga:receipt, situacao:'recebendo', user:user})
         setBulkCpd(obj)  
         
         form.reset({

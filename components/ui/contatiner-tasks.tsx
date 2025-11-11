@@ -130,7 +130,17 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
     }
 
     if (!item) {
-      console.error(`Atividade com ID ${activityId} não encontrada.`);
+      toast.info(`Atividade com ID ${activityId} não encontrada.`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       return;
     }
 

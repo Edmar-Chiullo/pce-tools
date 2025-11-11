@@ -10,4 +10,5 @@ export type ActivityData = {
   activityTasks?: string
   activityUserID?: string
   activtyUserName?: string
+  activityUserCenter?: string
 }

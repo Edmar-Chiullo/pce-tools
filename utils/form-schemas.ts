@@ -1,3 +1,4 @@
+import { ActivityData } from "@/app/type/type";
 import z from "zod";
 
 const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF"]

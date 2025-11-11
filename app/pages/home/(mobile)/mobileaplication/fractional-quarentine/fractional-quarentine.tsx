@@ -1,6 +1,5 @@
 'use client'
 
-import { finishActivity, pushTaskActivity } from "@/lib/firebase/server-database"
 import z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"

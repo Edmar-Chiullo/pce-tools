@@ -4,12 +4,9 @@ import { useState } from 'react'
 import { Input } from "@/components/ui/input";
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
-
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
-
 
 const formSchema = z.object({
     file: z.string().min(2, {
@@ -19,7 +16,6 @@ const formSchema = z.object({
 
 export default function UploadExcel() {
     const [file, setFile] = useState<File | null>(null)
-
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
