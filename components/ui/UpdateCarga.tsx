@@ -1,26 +1,22 @@
 'use client'
 
-import { useEffect, useState } from "react";
-
-import { useReceiptContext } from "@/app/context/carga-context"
+import { useMemo, useState } from "react";
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem,  } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form"
 import { Switch } from "@/components/ui/switch";
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-
 import Image from "next/image";
-
 import { setBulkCpd } from "@/lib/firebase/server-database";
 import { useRouter } from "next/navigation";
-import { carga } from "./create-carga";
+import { carga } from "@/app/pages/home/(desktop)/cpd/[id]/cpdatualizar/create-carga";
 import { Textarea } from "@/components/ui/textarea";
-
 import { EvolutionApi } from "@/app/evolution-api/evolution-methods";
 import { ReceiptProps } from "@/app/interface/interface";
+import { useSession } from "next-auth/react";
+import { Bounce, toast } from "react-toastify";
 
 const formSchema = z.object({
   motorista: z.string().min(2, {
@@ -46,51 +42,86 @@ const formSchema = z.object({
   }), 
   liberado: z.boolean()
 })
-        
-export default function PegeResponse() {
 
-    const [ state, setState ] = useState<string | null>(null)
+type UserData = {
+    first: string
+    center: string
+}
+
+type Carga = {
+  carga: ReceiptProps
+}
+
+export default function UpdateCarga(props: {props: Carga}) {
+    const [ bulk, setBulk ] = useState<any>(props.props.carga)
     
-    const { receipt } = useReceiptContext()
-
-    useEffect(() => {
-        setState(receipt?.bulkState as string)
-    }, [])
+    const { data: session} = useSession()
+    
+    const user: UserData | null = useMemo(() => {
+        if (session?.user?.name) {
+            try {
+                return JSON.parse(session.user.name) as UserData
+            } catch (error) {
+                console.error("Erro ao fazer parse dos dados do usuário:", error)
+                return null
+            }
+        }
+        return null
+    }, [session])
 
     const router = useRouter()
-
     const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-        motorista: receipt?.bulkDriver as string,
-        transportadora: receipt?.bulkCarrier as string,
-        placa: receipt?.bulkPlate as string,
-        ticket: receipt?.bulkAgenda as string,
-        controle: receipt?.bulkControl as string,
-        telefone: receipt?.bulkDriverPhoneNumber as string,
-        textarea: receipt?.bulkStateReceiptDescription as string,
-        liberado: receipt?.bulkStateCpd != 'Chegada carro' ? true : false
-    },
+        defaultValues: {
+            motorista: bulk?.bulkDriver as string,
+            transportadora: bulk?.bulkCarrier as string,
+            placa: bulk?.bulkPlate as string,
+            ticket: bulk?.bulkAgenda as string,
+            controle: bulk?.bulkControl as string,
+            telefone: bulk?.bulkDriverPhoneNumber as string,
+            textarea: bulk?.bulkStateReceiptDescription as string,
+            liberado: bulk?.bulkStateCpd != 'Chegada carro' ? true : false
+        },
     })
 
-    function onSubmit(cargo: z.infer<typeof formSchema>) {
+    async function onSubmit(cargo: z.infer<typeof formSchema>) {
         if (cargo.textarea === 'no value') {
-            const obj = carga({dataForm:cargo, carga:receipt })
-            setBulkCpd(obj)  
-
-            if (cargo.telefone != receipt?.bulkDriverPhoneNumber && cargo.telefone.length === 11) {
+            const obj:any = carga({dataForm:cargo, carga:bulk, situacao: cargo.liberado, user:user?.first })
+            const result = await setBulkCpd(obj)  
+            if (cargo.telefone != bulk?.bulkDriverPhoneNumber && cargo.telefone.length === 11) {
                 try {      
                     const evolution = new EvolutionApi()
-                    const restult = evolution.sentTextWelcome(obj)
+                    const result = evolution.sentTextWelcome(obj)
+                    toast.success('Mensagem enviada com sucesso.', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Bounce,
+                    });
                 } catch (error) {
                     return `Erro ao tentar enviar messagem. Error: ${error}`
                 }
             } 
-
             if (cargo.liberado) {
                 try {      
                     const evolution = new EvolutionApi()
                     const restult = evolution.sendTextConvocationDriver(cargo)
+                     toast.success('Mensagem enviada com sucesso.', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Bounce,
+                    });
                 } catch (error) {
                     return `Erro ao tentar enviar messagem. Error: ${error}`
                 }
@@ -112,7 +143,6 @@ export default function PegeResponse() {
             } catch (error) {
                 return `Erro ao tentar enviar messagem. Error: ${error}`
             }
-
             router.push('/pages/home/cpd')
         }
     }

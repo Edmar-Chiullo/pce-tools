@@ -6,8 +6,7 @@ import { onChildAdded, onChildChanged, ref, set, update } from 'firebase/databas
 import { useSession } from 'next-auth/react'
 import { useEffect, useMemo, useState } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-//import Timer from './span'
-
+import { ReceiptProps } from '@/app/interface/interface'
 
 type UserData = {
     first: string
@@ -15,8 +14,12 @@ type UserData = {
     center: string
 }
 
-export default function PagePataria() {
-    const [ bulk, setBulk ] = useState<any[]>([])
+type Carga = {
+    carga: ReceiptProps[]
+}
+
+export default function Page({ props }: {props: Carga[]}) {
+    const [ bulk, setBulk ] = useState<any[]>(props)
     const { data: session, status } = useSession()
 
     const user: UserData | null = useMemo(() => {
@@ -62,6 +65,10 @@ export default function PagePataria() {
         });
         
     }, [status, user])
+
+    useEffect(() => {
+        setBulk(props)
+    }, [props])
 
     function handleSearchStatus({...element}) {   
         const status = element.select === 'Confirmada' ? 'Confirmada' : 'Aguardando'

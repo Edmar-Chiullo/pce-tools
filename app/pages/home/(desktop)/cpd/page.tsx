@@ -3,12 +3,16 @@ import { ArrowBigRightIcon } from "lucide-react";
 import ScrollCpd from "@/components/ui/scroll-area-cpd";
 import FormCadastroCpd from "@/components/ui/form-cadastro-cpd";
 import { auth } from "@/auth";
+import { getReceipt } from "@/lib/firebase/server-database";
 
 // Component Login....
-export default async function ReceiptScreen() {
+export default async function ReceiptScreen(props: {searchParams?: Promise<{query?: string; page?: string;}>}) {
 
   const session = await auth();
   const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
+
+  const cargas:any = await getReceipt()
+  const carga:any = Object.values(cargas)
   
   return (
     <div className="main flex flex-col justify-start w-full h-full bg-zinc-800 rounded-2xl pb-2 pt-2 pr-2 pl-2 gap-2">
@@ -38,7 +42,7 @@ export default async function ReceiptScreen() {
                 <li className="col-start-10 place-self-end mr-2">Editar</li>
               </ul>
             </div>
-            <ScrollCpd />
+            <ScrollCpd  carga={carga}/>
           </div>
         </div>
       </div>

@@ -6,7 +6,6 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import BarMenu from "@/components/ui/menu-bar";
 import MenuToggle from '@/components/ui/menu-toggle';
 
-import { auth } from '@/auth';
 import ViewUser from '@/components/server-components/view-user';
 import CloseSession from '@/components/server-components/close-session';
 

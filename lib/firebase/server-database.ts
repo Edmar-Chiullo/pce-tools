@@ -86,9 +86,10 @@ export async function finishActivity(activity:any) {
 ////////////////////////////////////////////////////////////////////////////////////
 
 export async function setBulkCpd({...carga}:ReceiptMelloProps | undefined | any) {
-    const session = await auth();
+  const session = await auth();
   const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
   const strDate = fullDate()
+  
   .replace('/','')
   .replace('/','')
 
@@ -146,6 +147,19 @@ export async function getReceipt() {
   const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
 
   const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/`)).then((snapshot) => {
+    return snapshot.exists() ? snapshot.val() : false
+  }).catch((error) => {
+      return error
+  })
+
+  return result
+}
+
+export async function getReceiptById(id: string) {
+  const session = await auth();
+  const user = JSON.parse(String(session?.user?.name)) ?? "Sem user";
+
+  const result = get(child(re, `${strDate.slice(4,8)}/${strDate.slice(2,8)}/${strDate.slice(0,2)}/${user?.center}/recebimento/${id}`)).then((snapshot) => {
     return snapshot.exists() ? snapshot.val() : false
   }).catch((error) => {
       return error

@@ -47,7 +47,18 @@ A partir deste momento, todas as informações sobre a sua carga serão enviadas
 
 Atenção: este canal é usado apenas para envio de status da carga.
 Não envie mensagens, pois não serão respondidas.`
-    // const text = "Olá, "+""+value.bulkDriver.trim()+"!"+" Seja bem vindo ao centro de distribuição do grupo Muffato. A partir deste momento todos os processos sobre sua carga será informado por meio deste canal. Fique atento as notficações. O número de seu controle é: " + value.bulkId
+    return text
+}
+
+function errorNfsText({...value}:any) {
+    const text = `Olá, ${value.motorista}.
+Bem-vindo ao Centro de Distribuição do Grupo Muffato.
+
+O número do seu controle é ${value.id}.
+A partir deste momento, todas as informações sobre a sua carga serão enviadas por este canal.
+
+Atenção: este canal é usado apenas para envio de status da carga.
+Não envie mensagens, pois não serão respondidas.`
     return text
 }
 
@@ -59,6 +70,7 @@ Solicitamos que compareça ao setor de recebimento com o caminhão.`
 
 export class EvolutionApi {
     constructor() {}    
+
     async sentTextWelcome({...value}: NotificationCarga) {
         const text = welcomeText({motorista:value.bulkDriver, id:value.bulkId})
         
@@ -86,7 +98,7 @@ export class EvolutionApi {
         }
     }
 
-    sendTextConvocationDriver({...value}: NotificationProps) {
+    async sendTextConvocationDriver({...value}: NotificationProps) {
         const text = senText(value.motorista.trim())           
         try {         
             const payload = {
@@ -100,12 +112,12 @@ export class EvolutionApi {
                 body: JSON.stringify(payload)
             };
 
-            fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
+            const response = await fetch('https://apiwhatss.shop/message/sendText/muffatomello', options)
             .then(response => response.json())
             .then(response => {return response})
             .catch(err => {return err});
             
-            return 'Mensagem enviada com sussesso.'
+            return response
         } catch (error) {
             return `Mensagem enviada com sussesso. Error: ${error}`
             

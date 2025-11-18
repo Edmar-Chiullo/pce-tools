@@ -64,7 +64,7 @@ export interface ReceiptProps {
     bulkStateDescription: string | undefined | null
     bulkStateReceiptDescription?: string
     bulkStateCpd?: boolean | string
-
+    bulkCpdDate?: number | string | undefined | null 
 }
 
 export interface ReceiptMelloProps {
@@ -108,8 +108,4 @@ export interface ReceiptOperatorProps {
 export interface HourTaskProps {
     data: FormData,
     date: Date | Number
-}
-
-interface TaskData {
-    
 }

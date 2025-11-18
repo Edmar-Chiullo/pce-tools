@@ -80,6 +80,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         carga.alterBulkStateCpdDescription(descriptionCarga)
         carga.alterBulkStateEntrie('Aguardando')
         let val = false
+        
         try {
             setBulkCpd({...carga, userCenter: user.user.center})
             val = true
@@ -90,7 +91,6 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
         try {      
             const evolution = new EvolutionApi()
             const result = await evolution.sentTextWelcome(carga)
-
             if (result.message) {
                 const name = result.message
                 const motorista = getNameMotorista(name)
@@ -107,7 +107,7 @@ export default function FormCadastroCpd(user: {user: {user: string} | any}) {
                     transition: Bounce,
                 });
             } else {
-                toast.error('Edmar'/**result*/, {
+                toast.error(result, {
                     position: "top-right",  
                     autoClose: 4000,
                     hideProgressBar: false,

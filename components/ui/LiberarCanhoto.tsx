@@ -1,56 +1,50 @@
 'use client'
 
 import { useEffect, useState } from "react";
-
 import { useReceiptContext } from "@/app/context/carga-context"
 import { Form, FormControl, FormDescription, FormField, FormLabel, FormMessage, FormItem } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-
 import Image from "next/image";
-
 import { setBulkCpd } from "@/lib/firebase/server-database";
 import { useRouter } from "next/navigation";
-import { carga } from "./carga";
+import { carga } from "@/app/pages/home/(desktop)/cpd/[id]/liberarcanhoto/carga";
 import { Textarea } from "@/components/ui/textarea";
-
 import { EvolutionApi } from "@/app/evolution-api/evolution-methods";
+import { ReceiptProps } from "@/app/interface/interface";
 
 const formSchema = z.object({
   textarea: z.string().min(2, {
     message: "Inserir descrição sobre a carga.",
   }), 
 })
+
+type Carga = {
+  carga: ReceiptProps
+}
         
-export default function LiberarCanhoto() {
+export default function LiberarCanhoto(props: {props: Carga}) {
 
     const [ state, setState ] = useState<string | null>(null)
-    
-    const { receipt }:any = useReceiptContext()
-
-    useEffect(() => {
-        setState(receipt.bulkState)
-    }, [])
-
+    const [ bulk, setBulk ] = useState<any>(props.props.carga)
     const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            textarea: receipt?.bulkStateReceiptDescription,
+            textarea: bulk?.bulkStateReceiptDescription,
         },
     })
 
     function onSubmit(cargo: z.infer<typeof formSchema>) {
-        const obj = carga({dataForm:cargo, carga:receipt })
+        const obj = carga({dataForm:cargo, carga:bulk })
         setBulkCpd(obj)  
         try {      
             const evolution = new EvolutionApi()
-            const restult = evolution.sentTextDiverCpdCanhoto({motorista: receipt.bulkDriver, 
-                                                        telefone: receipt.bulkDriverPhoneNumber, 
+            const restult = evolution.sentTextDiverCpdCanhoto({motorista: bulk.bulkDriver, 
+                                                        telefone: bulk.bulkDriverPhoneNumber, 
                                                         textarea: cargo.textarea })
         } catch (error) {
             return `Erro ao tentar enviar messagem. Error: ${error}`
@@ -74,10 +68,10 @@ export default function LiberarCanhoto() {
             />
             <div className="flex items-end w-full h-16">
                 <ul className="flex items-center w-full gap-4 list-none ml-4 mr-4 bg-zinc-100 px-2 rounded-[4px]">
-                    <li><strong>Agenda:</strong> {receipt?.bulkControl}</li>
-                    <li><strong>Motorista:</strong> {receipt?.bulkDriver}</li>
-                    <li><strong>Transportadora:</strong> {receipt?.bulkCarrier}</li>
-                    <li><strong>Situação:</strong> {receipt?.bulkStateReceipt}</li>
+                    <li><strong>Agenda:</strong> {bulk?.bulkControl}</li>
+                    <li><strong>Motorista:</strong> {bulk?.bulkDriver}</li>
+                    <li><strong>Transportadora:</strong> {bulk?.bulkCarrier}</li>
+                    <li><strong>Situação:</strong> {bulk?.bulkStateReceipt}</li>
                 </ul>
                 <hr />
             </div>
