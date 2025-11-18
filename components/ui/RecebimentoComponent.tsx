@@ -14,7 +14,6 @@ import { fullDatePrint, fullDate, hourPrint } from "@/utils/date-generate";
 import Timer from "@/components/ui/span";
 import { alterIdCarga } from "@/app/pages/home/(desktop)/recebimento/alterIdCarga";
 import { setBulkCpd } from "@/lib/firebase/server-database";
-import { getReceipt } from "@/lib/firebase/server-database";
 import { formatString } from "@/utils/strSeparator";
 import { useSession } from "next-auth/react";
 
@@ -23,27 +22,6 @@ import { TimerResetIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 
-const formSchema = z.object({
-  filial: z.string().min(2, {
-    message: "Inserir com o nome do motorista.",
-  }),
-  agenda: z.string().min(2, {
-    message: "Inserir o nome da transportadora",
-  }),
-  doca: z.string().min(2, {
-    message: "Inserir o número da placa.",
-  }),
-  controle: z.string().min(2, {
-    message: "Inserir o número do ticket.",
-  }),
-  tipo_carga: z.string().min(2, {
-    message: "Inserir o número do controle.",
-  }),  
-  qt_pallet: z.string().min(2, {
-    message: "Inserir o número de telefone.",
-  }), 
-})
-    //      <img src="${window.location.origin}/img-estoque.jpg" class="background-img" />
 type UserData = {
     first: string
     center: string
@@ -100,33 +78,19 @@ export default function RecebimentoComponent({ props }: {props: any[]}) {
         }
     });
 
-    }, [status, user, props])
+    }, [status, user])
 
+    function open(value: any) {
+        const element = bulk.filter(({carga}) => carga.bulkControl === value)
+        return element
+    }
 
-  
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      filial: "",
-      agenda: "",
-      doca: "",
-      controle: "",
-      tipo_carga: "",
-      qt_pallet: ""
-    },
-  })
-
-  function open(value: any) {
-    const element = bulk.filter(({carga}) => carga.bulkControl === value)
-    return element
-  }
-
-  function lbCarga(id:string) {
-    const { status, box }:any = id
-    const i = open(status)
-    const obj:any = alterIdCarga({dataForm:i[0], situacao:'Carro estacionado', box:box, user:user?.first})
-    setBulkCpd(obj) 
-  }
+    function lbCarga(id:string) {
+        const { status, box }:any = id
+        const i = open(status)
+        const obj:any = alterIdCarga({dataForm:i[0], situacao:'Carro estacionado', box:box, user:user?.first})
+        setBulkCpd(obj) 
+    }
 
   return (
     <div className="main flex flex-col justify-center items-center p-2 w-full h-full rounded-2xl bg-zinc-800">
