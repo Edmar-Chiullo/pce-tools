@@ -110,6 +110,24 @@ export function trackEndNull(activity: Activity | any) {
   }));
 }
 
+export function validMaster(activity: Activity | any) {
+  const tasks = processActivityTasks(activity);
+  if (!tasks) return null;
+
+  const { activityLocalWork, activtyUserName } = activity.activity;
+
+  return tasks.map((task:any) => ({
+    'Centro': activityLocalWork,
+    'Tarefa': task.activity.activityID,
+    'Master': task.activity.validMaster,
+    'Situação': 'Vázio',
+    'Operador': activtyUserName,
+    'Data': fullDatePrint(task.activity.activityDate),
+    'Hora': hourPrint(task.activity.activityDate),
+    'Atividade': task.activity.activityName,
+  }));
+}
+
 /**
  * Gera um relatório para a atividade "Validação endereço x produto".
  * @param activity Objeto de atividade.

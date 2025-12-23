@@ -2,6 +2,7 @@ import { ActivityData } from "@/app/type/type";
 import z from "zod";
 
 const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF"]
+const validMaster = ["PL"]
 const validSides = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 const chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "/", "(", ")", ".", ","]
 
@@ -30,6 +31,24 @@ export const formHighAddressNull = z.object({
     )
   }, "Endereço inválido (ex: PP010010A)"),  
 })
+
+export const formValidMaster = z.object({
+  activityID: z.string(),
+  activityName: z.string(),
+  validMaster: z.string()
+  .min(1, {
+    message: "Lei o master.",
+  }).max(14, {
+      message: "Código inválido.",
+  })
+  .refine((val) => {
+    const sector = val.slice(0, 2)
+    return (
+      validMaster.includes(sector)
+    )
+  }, "Valor inválido (ex: PL010010A)"),  
+})
+
 
 export const formValAddressProduct = z.object({
   activityID: z.string(),

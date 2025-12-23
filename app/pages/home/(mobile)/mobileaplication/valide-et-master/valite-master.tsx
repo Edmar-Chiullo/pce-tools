@@ -1,25 +1,30 @@
 'use client'
 
+import { useEffect } from "react"
 import z from "zod"
+import { formValidMaster } from "@/utils/form-schemas"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { dateDb, fullDate, fullDatePrint } from "@/utils/date-generate"
-import { formFrctionalQuaren } from "@/utils/form-schemas"
 import { ActivityData } from "@/app/type/type"
 import { push, ref, update } from "firebase/database"
 import { db } from "@/app/firebase/fbkey"
 
-export default function FractionalQuarentine({ activity }: { activity: ActivityData | any }) {
-  const  { reset, register, handleSubmit, setFocus, formState: { errors } } = useForm<z.infer<typeof formFrctionalQuaren>>({
-    resolver: zodResolver(formFrctionalQuaren),
+export default function ValideMasterExpedition({ activity }: { activity: ActivityData | any }) {
+
+  const  { reset, register, handleSubmit, setFocus, formState: { errors } } = useForm<z.infer<typeof formValidMaster>>({
+    resolver: zodResolver(formValidMaster),
     defaultValues: {
       activityID: activity?.activityID,
       activityName: activity?.activityName,
-      loadProduct: "",
-      loadQuant: "",
-      loadValid: ""
+      validMaster: ""
     },
-  })
+  })  
+
+  useEffect(() => {
+    const inputEnd:any = document.querySelector('.loadAddress')
+    inputEnd.focus()
+  }, [])
 
   async function pushTaskActivity(values:any) {
       const strDate = fullDate()
@@ -64,8 +69,9 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
         };
     }
   }
-  
+
   function getActivity(act: ActivityData) {
+
     const atividadeData = {
       activityUserCenter: activity.activityUserCenter,
       activityID: activity.activityID,
@@ -74,66 +80,52 @@ export default function FractionalQuarentine({ activity }: { activity: ActivityD
     }
 
     finishActivity(atividadeData)
+
     window.location.reload()
   }
 
-  async function onSubmit(values: z.infer<typeof formFrctionalQuaren>) {
+  async function onSubmit(values: z.infer<typeof formValidMaster>) {
 
     reset({
-      loadProduct: '',
-      loadQuant:  '',
-      loadValid: '',
+      validMaster: '',
       activityID: activity?.activityID,
       activityName: activity?.activityName,
     })
 
-     const data = {
+      const data = {
         activityUserCenter: activity.activityUserCenter,
         activityID: values.activityID,
         activityName: values.activityName,
-        loadProduct: values.loadProduct,
-        loadQuant: values.loadQuant,
-        loadValid: values.loadValid,
+        validMaster: values.validMaster,
         activityDate: dateDb()
     }
     
     const result = await pushTaskActivity(data)
-    setFocus("loadProduct")
-  }
+    setFocus("validMaster")
 
+  }
+  
   return (
     <div className="absolute top-10 flex flex-col gap-2 w-full h-auto px-4">
-      <h1 className="md:text-xl lg:text-2xl">Quarentena Fracionada</h1>
+      <h1 className="md:text-xl lg:text-2xl">Valide master</h1>
       <span className="self-end">{activity.activityID}</span>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full md:gap-4">
-          <div>
-            <label htmlFor="">Produto</label>
-            <input type="text" placeholder="Leia o produto" {...register("loadProduct", { required: true })} className="loadProduct w-full border rounded-sm p-2"/>
-            {errors.loadProduct && <span className="text-red-500 text-sm">{errors.loadProduct.message}</span>}
-          </div>
-         
-          <div>
-            <label htmlFor="">Quantidade</label>
-            <input type="text" placeholder="Informe a quantidade" {...register("loadQuant", { required: true })} className="w-full border rounded-sm p-2" />
-            {errors.loadQuant && <span className="text-red-500 text-sm">{errors.loadQuant.message}</span>}
-          </div>
-
-          <div>
-            <label htmlFor="">Validade</label>
-            <input type="text" placeholder="Informe a validade" {...register("loadValid", { required: true })} className="loadValid w-full border rounded-sm p-2" />
-            {errors.loadValid && <span className="text-red-500 text-sm">{errors.loadValid.message}</span>}
-          </div>
-         
-          <input type="hidden" name="activityID"  />
-          <input type="hidden" name="activityName" />
-         
-          <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
-            Confirmar
-          </button>
-        </form>
-        <button onClick={() => getActivity(activity)} className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
-          Finalizar
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full md:gap-4">
+       <div>
+        <label htmlFor="">Master</label>
+        <input type="text" placeholder="Leia o endereço" {...register("validMaster", { required: true })} className="loadAddress w-full border rounded-sm p-2" />
+        {errors.validMaster && <span className="text-red-500 text-sm">{errors.validMaster.message}</span>}
+       </div>
+       
+        <input type="hidden" {...register("activityID", { required: true })} name="activityID" defaultValue={activity?.activityID ?? ""} />
+        <input type="hidden" {...register("activityName", { required: true })} name="activityName" defaultValue={activity?.activityName ?? ""} />
+       
+        <button type="submit" className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
+          Confirmar
         </button>
+      </form>
+      <button onClick={() => getActivity(activity)} className="w-full h-10 bg-zinc-950 text-zinc-50 rounded-sm">
+        Finalizar
+      </button>
     </div>
-  );
+  )
 }

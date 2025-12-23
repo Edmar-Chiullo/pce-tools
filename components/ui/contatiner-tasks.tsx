@@ -9,7 +9,7 @@ import { dateDb, fullDatePrint, hourPrint } from "@/utils/date-generate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { exportFileXlsx } from "@/utils/ger-xlsx";
-import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation } from "@/utils/treatment-data-print";
+import { trackEndNull, trackEndProd, trackFractional, trackPickingRotation, validMaster } from "@/utils/treatment-data-print";
 import Alert  from '@/components/ui/alertl'
 import { getActivity } from "@/lib/firebase/server-database";
 import clsx from "clsx";
@@ -161,6 +161,9 @@ export default function ContainerTasks({ activities, listSwap }: { activities: A
         break;
       case 'Quarentena fracionada':
         track = trackFractional(item);
+        break;
+      case 'Valide master expedição':
+        track = validMaster(item);
         break;
       default:
         console.error('Tipo de atividade desconhecido:', activityName);

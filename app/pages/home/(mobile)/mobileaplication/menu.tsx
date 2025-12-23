@@ -5,6 +5,7 @@ import ValidatyAddressProduct from "./validate-address-product/validaty-addressp
 import HighNullRotation from "./high-rotation-null/highnull-rotatetion"
 import PickingRotation from "./pincking-rotation/picking-rotation"
 import FractionalQuarentine from "./fractional-quarentine/fractional-quarentine"
+import ValideMasterExpedition from "./valide-et-master/valite-master"
 import { Activity } from "@/app/class/class-activity"
 import { dateDb, fullDate } from "@/utils/date-generate"
 import { ActivityProps } from "@/app/interface/interface"
@@ -47,12 +48,15 @@ export default function NavigationMenu({ user }: { user: User }) {
     "Quarentena fracionada": {
       prefix: "PL",
       form: <FractionalQuarentine activity={activity} />
+    },
+    "Valide master expedição": {
+      prefix: "PL",
+      form: <ValideMasterExpedition activity={activity} />
     }
   } as const
 
   function navigation(e: React.MouseEvent<HTMLButtonElement>) {
     setTitle(false)
-    console.log(atividade)
     let content = e.currentTarget.innerText
     const userCenter = `Centro ${JSON.parse(user.name).center}`
     
