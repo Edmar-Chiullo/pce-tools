@@ -38,15 +38,15 @@ export const formValidMaster = z.object({
   validMaster: z.string()
   .min(1, {
     message: "Lei o master.",
-  }).max(14, {
+  }).max(20, {
       message: "Código inválido.",
   })
   .refine((val) => {
-    const sector = val.slice(0, 2)
+    const sector = val.slice(0, 5)
     return (
       validMaster.includes(sector)
     )
-  }, "Valor inválido (ex: PL010010A)"),  
+  }, "Valor inválido (ex: WISPL2456789)"),  
 })
 
 
