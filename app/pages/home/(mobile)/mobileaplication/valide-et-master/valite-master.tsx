@@ -112,7 +112,7 @@ export default function ValideMasterExpedition({ activity }: { activity: Activit
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full md:gap-4">
        <div>
         <label htmlFor="">Master</label>
-        <input type="text" placeholder="Leia o endereço" {...register("validMaster", { required: true })} className="loadAddress w-full border rounded-sm p-2" />
+        <input type="text" placeholder="Leia o master" {...register("validMaster", { required: true })} className="loadAddress w-full border rounded-sm p-2" />
         {errors.validMaster && <span className="text-red-500 text-sm">{errors.validMaster.message}</span>}
        </div>
        

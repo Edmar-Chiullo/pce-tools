@@ -1,4 +1,3 @@
-import { ActivityProps } from "react";
 import { fullDatePrint, hourPrint, validateDate } from "./date-generate";
 
 // Definições de tipos para garantir a segurança do código
@@ -44,7 +43,6 @@ interface Activity {
  * @returns Array de objetos com dados formatados para exportação.
  */
 export function cargaPrintXlsx(cargaArray: Carga[]) {
-  console.log(cargaArray)
   return cargaArray.map((carga:any) => ({
     'Cod. Carga': carga.bulkId,
     'Agenda': carga.bulkAgenda,
@@ -120,7 +118,6 @@ export function validMaster(activity: Activity | any) {
     'Centro': activityLocalWork,
     'Tarefa': task.activity.activityID,
     'Master': task.activity.validMaster,
-    'Situação': 'Vázio',
     'Operador': activtyUserName,
     'Data': fullDatePrint(task.activity.activityDate),
     'Hora': hourPrint(task.activity.activityDate),

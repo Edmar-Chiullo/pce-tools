@@ -2,7 +2,7 @@ import { ActivityData } from "@/app/type/type";
 import z from "zod";
 
 const validSectors = ["PP", "FR", "TP", "FB", "BL", "CF"]
-const validMaster = ["PL"]
+const validMaster = ["PL", "WISPL"]
 const validSides = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 const chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "O", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "/", "(", ")", ".", ","]
 
